@@ -1,0 +1,7 @@
+rsa:
+  key:
+    jks:
+      password: 123456
+      alias: jwt
+server:
+  port: 9977
