@@ -1,0 +1,28 @@
+GET http://127.0.0.1:{{http-port}}/grpc/device?name=Air Pod Pro 2
+
+###
+POST http://127.0.0.1:{{http-port}}/grpc/device
+Content-Type: application/json
+
+{
+  "name": "Air Pod Pro 2",
+  "mac": "11:22:33:44"
+}
+
+###
+GRPC {{grpc-host}}:{{grpc-port}}/com.livk.grpc.DeviceService/query
+
+{
+  "name": "Air Pod 3"
+}
+
+###
+GRPC {{grpc-host}}:{{grpc-port}}/com.livk.grpc.DeviceService/add
+
+{
+  "name": "Air Pod Pro 2",
+  "mac": "11:22:33:44"
+}
+
+###
+GET http://127.0.0.1:{{http-port}}/grpc/device/array?scopes=1,2,3

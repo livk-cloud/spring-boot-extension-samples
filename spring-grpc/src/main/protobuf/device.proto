@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+option java_package = "com.livk.grpc.proto.entity";
+option java_outer_classname = "ProtoDevice";
+
+message DeviceQuery {
+  string name = 1;
+}
+
+message Device {
+  string name = 1;
+  string mac = 2;
+}

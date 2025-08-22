@@ -1,0 +1,25 @@
+server:
+  port: 9092
+
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+    open-in-view: false
+  sql:
+    init:
+      mode: embedded
+      platform: h2
+  grpc:
+    server:
+      port: 9091
+    client:
+      default-channel:
+        address: static://localhost:${spring.grpc.server.port}
+

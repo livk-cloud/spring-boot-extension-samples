@@ -1,0 +1,6 @@
+GET http://localhost:8080/users
+X-API-Version: v1
+
+#####
+GET http://localhost:8080/users
+X-API-Version: v2
