@@ -112,7 +112,7 @@
             <dependency>
                 <groupId>io.github.livk-cloud</groupId>
                 <artifactId>spring-extension-dependencies</artifactId>
-                <version>1.5.3.1-SNAPSHOT</version>
+                <version>1.5.3.2-SNAPSHOT</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
