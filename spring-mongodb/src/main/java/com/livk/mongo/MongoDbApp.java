@@ -23,35 +23,28 @@ import org.springframework.data.mongodb.observability.MongoObservationCommandLis
 @SpringBootApplication
 public class MongoDbApp {
 
-    public static void main(String[] args) {
-        SpringApplication.run(MongoDbApp.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(MongoDbApp.class, args);
+	}
 
-    @Bean
-    public MongoConverter mappingMongoConverter(
-            MongoDatabaseFactory factory,
-            MongoMappingContext context,
-            CustomConversions customConversions
-    ) {
-        DefaultDbRefResolver resolver = new DefaultDbRefResolver(factory);
-        MappingMongoConverter converter = new MappingMongoConverter(resolver, context);
-        converter.setCustomConversions(customConversions);
-        converter.setTypeMapper(new DefaultMongoTypeMapper());
-        return converter;
-    }
+	@Bean
+	public MongoConverter mappingMongoConverter(MongoDatabaseFactory factory, MongoMappingContext context,
+			CustomConversions customConversions) {
+		DefaultDbRefResolver resolver = new DefaultDbRefResolver(factory);
+		MappingMongoConverter converter = new MappingMongoConverter(resolver, context);
+		converter.setCustomConversions(customConversions);
+		converter.setTypeMapper(new DefaultMongoTypeMapper());
+		return converter;
+	}
 
-    @Bean
-    public MongoClientSettingsBuilderCustomizer mongoClientSettingsBuilderCustomizer(
-            ObservationRegistry observationRegistry,
-            MongoConnectionDetails connectionDetails,
-            MeterRegistry meterRegistry
-    ) {
-        return builder -> builder
-                .addCommandListener(
-                        new MongoObservationCommandListener(
-                                observationRegistry,
-                                connectionDetails.getConnectionString()
-                        )
-                ).addCommandListener(new MongoMetricsCommandListener(meterRegistry));
-    }
+	@Bean
+	public MongoClientSettingsBuilderCustomizer mongoClientSettingsBuilderCustomizer(
+			ObservationRegistry observationRegistry, MongoConnectionDetails connectionDetails,
+			MeterRegistry meterRegistry) {
+		return builder -> builder
+			.addCommandListener(
+					new MongoObservationCommandListener(observationRegistry, connectionDetails.getConnectionString()))
+			.addCommandListener(new MongoMetricsCommandListener(meterRegistry));
+	}
+
 }

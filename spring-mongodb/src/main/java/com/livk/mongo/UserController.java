@@ -24,31 +24,32 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
+	private final UserService userService;
 
-    @GetMapping
-    public HttpEntity<List<User>> list() {
-        return ResponseEntity.ok(userService.findAll());
-    }
+	@GetMapping
+	public HttpEntity<List<User>> list() {
+		return ResponseEntity.ok(userService.findAll());
+	}
 
-    @PostMapping
-    public HttpEntity<User> save(@RequestBody User user) {
-        return ResponseEntity.ok(userService.save(user));
-    }
+	@PostMapping
+	public HttpEntity<User> save(@RequestBody User user) {
+		return ResponseEntity.ok(userService.save(user));
+	}
 
-    @PutMapping("/{id}")
-    public HttpEntity<User> update(@PathVariable ObjectId id, @RequestBody User user) {
-        return ResponseEntity.ok(userService.update(id, user));
-    }
+	@PutMapping("/{id}")
+	public HttpEntity<User> update(@PathVariable ObjectId id, @RequestBody User user) {
+		return ResponseEntity.ok(userService.update(id, user));
+	}
 
-    @GetMapping("/query")
-    public HttpEntity<User> findByName(@RequestParam String name) {
-        return ResponseEntity.ok(userService.findByName(name));
-    }
+	@GetMapping("/query")
+	public HttpEntity<User> findByName(@RequestParam String name) {
+		return ResponseEntity.ok(userService.findByName(name));
+	}
 
-    @DeleteMapping("/{id}")
-    public HttpEntity<Void> remove(@PathVariable ObjectId id) {
-        userService.delete(id);
-        return ResponseEntity.ok().build();
-    }
+	@DeleteMapping("/{id}")
+	public HttpEntity<Void> remove(@PathVariable ObjectId id) {
+		userService.delete(id);
+		return ResponseEntity.ok().build();
+	}
+
 }

@@ -23,27 +23,35 @@ import java.io.IOException;
 @Document("user")
 @Accessors(chain = true)
 public class User {
-    @Id
-    @JsonSerialize(using = ObjectIdJsonSerializer.class)
-    @JsonDeserialize(using = ObjectIdJsonDeserializer.class)
-    private ObjectId id;
 
-    private String name;
+	@Id
+	@JsonSerialize(using = ObjectIdJsonSerializer.class)
+	@JsonDeserialize(using = ObjectIdJsonDeserializer.class)
+	private ObjectId id;
 
-    private Integer age;
+	private String name;
 
-    private static class ObjectIdJsonSerializer extends JsonSerializer<ObjectId> {
-        @Override
-        public void serialize(ObjectId objectId, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException {
-            jsonGenerator.writeString(objectId.toHexString());
-        }
-    }
+	private Integer age;
 
-    private static class ObjectIdJsonDeserializer extends JsonDeserializer<ObjectId> {
-        @Override
-        public ObjectId deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-            String hex = jsonParser.getValueAsString();
-            return hex == null ? null : new ObjectId(hex);
-        }
-    }
+	private static class ObjectIdJsonSerializer extends JsonSerializer<ObjectId> {
+
+		@Override
+		public void serialize(ObjectId objectId, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+				throws IOException {
+			jsonGenerator.writeString(objectId.toHexString());
+		}
+
+	}
+
+	private static class ObjectIdJsonDeserializer extends JsonDeserializer<ObjectId> {
+
+		@Override
+		public ObjectId deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
+				throws IOException {
+			String hex = jsonParser.getValueAsString();
+			return hex == null ? null : new ObjectId(hex);
+		}
+
+	}
+
 }

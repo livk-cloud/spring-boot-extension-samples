@@ -36,87 +36,84 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers(disabledWithoutDocker = true)
 class UserControllerTests {
 
-    @Container
-    @ServiceConnection
-    static MongoDBContainer mongo = new MongoDBContainer(DockerImageName.parse("mongo:latest"));
+	@Container
+	@ServiceConnection
+	static MongoDBContainer mongo = new MongoDBContainer(DockerImageName.parse("mongo:latest"));
 
-    @DynamicPropertySource
-    static void properties(DynamicPropertyRegistry registry) {
-        registry.add("spring.data.mongodb.host", mongo::getHost);
-        registry.add("spring.data.mongodb.port", mongo::getFirstMappedPort);
-    }
+	@DynamicPropertySource
+	static void properties(DynamicPropertyRegistry registry) {
+		registry.add("spring.data.mongodb.host", mongo::getHost);
+		registry.add("spring.data.mongodb.port", mongo::getFirstMappedPort);
+	}
 
-    @Autowired
-    MockMvc mockMvc;
+	@Autowired
+	MockMvc mockMvc;
 
-    @Test
-    @Order(1)
-    void save() throws Exception {
-        User user = new User()
-                .setName("root")
-                .setAge(17);
-        mockMvc.perform(post("/user")
-                        .content(JsonMapperUtils.writeValueAsString(user))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.name").value("root"))
-                .andExpect(jsonPath("$.age").value(17));
-    }
+	@Test
+	@Order(1)
+	void save() throws Exception {
+		User user = new User().setName("root").setAge(17);
+		mockMvc
+			.perform(post("/user").content(JsonMapperUtils.writeValueAsString(user))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$.name").value("root"))
+			.andExpect(jsonPath("$.age").value(17));
+	}
 
-    @Test
-    @Order(3)
-    void update() throws Exception {
-        byte[] body = mockMvc.perform(get("/user/query?name=root"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsByteArray();
-        User user = JsonMapperUtils.readValue(body, User.class);
-        user.setAge(18);
-        mockMvc.perform(put("/user/{id}", user.getId())
-                        .content(JsonMapperUtils.writeValueAsString(user))
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.name").value("root"))
-                .andExpect(jsonPath("$.age").value(18));
-    }
+	@Test
+	@Order(3)
+	void update() throws Exception {
+		byte[] body = mockMvc.perform(get("/user/query?name=root"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andReturn()
+			.getResponse()
+			.getContentAsByteArray();
+		User user = JsonMapperUtils.readValue(body, User.class);
+		user.setAge(18);
+		mockMvc
+			.perform(put("/user/{id}", user.getId()).content(JsonMapperUtils.writeValueAsString(user))
+				.contentType(MediaType.APPLICATION_JSON))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$.name").value("root"))
+			.andExpect(jsonPath("$.age").value(18));
+	}
 
-    @Test
-    @Order(2)
-    void findByName() throws Exception {
-        mockMvc.perform(get("/user/query?name=root"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("root"))
-                .andExpect(jsonPath("$.age").value(17));
-    }
+	@Test
+	@Order(2)
+	void findByName() throws Exception {
+		mockMvc.perform(get("/user/query?name=root"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("$.name").value("root"))
+			.andExpect(jsonPath("$.age").value(17));
+	}
 
-    @Test
-    @Order(4)
-    void list() throws Exception {
-        mockMvc.perform(get("/user"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("[0].name").value("root"))
-                .andExpect(jsonPath("[0].age").value(18));
-    }
+	@Test
+	@Order(4)
+	void list() throws Exception {
+		mockMvc.perform(get("/user"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(jsonPath("[0].name").value("root"))
+			.andExpect(jsonPath("[0].age").value(18));
+	}
 
-    @Test
-    void remove() throws Exception {
-        byte[] body = mockMvc.perform(get("/user/query?name=root"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andReturn()
-                .getResponse()
-                .getContentAsByteArray();
-        User user = JsonMapperUtils.readValue(body, User.class);
-        mockMvc.perform(delete("/user/{id}", user.getId()))
-                .andDo(print())
-                .andExpect(status().isOk());
-    }
+	@Test
+	void remove() throws Exception {
+		byte[] body = mockMvc.perform(get("/user/query?name=root"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andReturn()
+			.getResponse()
+			.getContentAsByteArray();
+		User user = JsonMapperUtils.readValue(body, User.class);
+		mockMvc.perform(delete("/user/{id}", user.getId())).andDo(print()).andExpect(status().isOk());
+	}
+
 }
