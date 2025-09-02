@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+#      uri: mongodb://root:123456@livk.com:27017/admin
+      username: root
+      password: '123456'
+      host: livk.com
+      port: 27017
+      database: admin

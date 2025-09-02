@@ -38,6 +38,7 @@
         <module>spring-zookeeper</module>
         <module>spring-restful-version</module>
         <module>spring-grpc</module>
+        <module>spring-mongodb</module>
     </modules>
 
     <properties>
@@ -50,6 +51,16 @@
         <dependency>
             <groupId>io.github.livk-cloud</groupId>
             <artifactId>spring-extension-commons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-bridge-otel</artifactId>
         </dependency>
 
         <dependency>
@@ -79,12 +90,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-metadata</artifactId>
             <scope>provided</scope>
         </dependency>
 

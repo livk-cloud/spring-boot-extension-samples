@@ -130,6 +130,7 @@
                         <arg>-Xlint:varargs</arg>
                         <arg>-Xlint:rawtypes</arg>
                         <arg>-Xlint:deprecation</arg>
+                        <arg>-Amapstruct.unmappedTargetPolicy=IGNORE</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>
