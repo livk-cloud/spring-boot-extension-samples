@@ -27,27 +27,37 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    # 获取 mvnd 最新 release
+    # 获取 mvnd 最新 release 版本号
     - name: Get mvnd latest release
       id: mvnd_release
       run: |
         LATEST=$(curl -s https://api.github.com/repos/apache/maven-mvnd/releases/latest | jq -r .tag_name)
         echo "version=$LATEST" >> $GITHUB_OUTPUT
 
-    # 缓存 mvnd
-    - name: Cache mvnd
+    # 缓存 mvnd 仅限解压后的版本目录（避免日志和临时文件）
+    - name: Cache mvnd binaries
       uses: actions/cache@v4
       with:
-        path: ~/.mvnd
+        path: ~/.mvnd/maven-mvnd-${{ steps.mvnd_release.outputs.version }}-linux-amd64
         key: mvnd-${{ runner.os }}-${{ steps.mvnd_release.outputs.version }}
 
     # 安装 mvnd（如果缓存里没有）
     - name: Install mvnd
       run: |
         VERSION=${{ steps.mvnd_release.outputs.version }}
-        curl -L "https://github.com/apache/maven-mvnd/releases/download/${VERSION}/maven-mvnd-${VERSION}-linux-amd64.zip" -o mvnd.zip
-        unzip -o mvnd.zip -d ~/.mvnd
-        echo "$HOME/.mvnd/maven-mvnd-${VERSION}-linux-amd64/bin" >> $GITHUB_PATH
+        if [ ! -d "$HOME/.mvnd/maven-mvnd-${VERSION}-linux-amd64" ]; then
+          curl -L "https://github.com/apache/maven-mvnd/releases/download/${VERSION}/maven-mvnd-${VERSION}-linux-amd64.zip" -o mvnd.zip
+          unzip -o mvnd.zip -d ~/.mvnd
+        fi
+
+    # 把 mvnd 加到 PATH（避免重复写入）
+    - name: Add mvnd to PATH
+      run: |
+        VERSION=${{ steps.mvnd_release.outputs.version }}
+        BIN="$HOME/.mvnd/maven-mvnd-${VERSION}-linux-amd64/bin"
+        if ! grep -qxF "$BIN" "$GITHUB_PATH"; then
+          echo "$BIN" >> $GITHUB_PATH
+        fi
 
     # 缓存 Maven 仓库
     - name: Cache Maven repository
@@ -60,4 +70,5 @@ jobs:
 
     - name: Build with mvnd
       run: mvnd -B package --file pom.xml
+
 
