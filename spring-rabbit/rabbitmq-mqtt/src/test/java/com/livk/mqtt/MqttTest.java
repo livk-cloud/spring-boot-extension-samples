@@ -18,6 +18,7 @@ package com.livk.mqtt;
 
 import com.livk.mqtt.handler.MqttSender;
 import com.livk.testcontainers.DockerImageNames;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -39,11 +40,14 @@ class MqttTest {
 
 	@Container
 	@ServiceConnection
-	@SuppressWarnings("deprecation")
 	static final RabbitMQContainer rabbit = new RabbitMQContainer(DockerImageNames.rabbitmq()).withExposedPorts(1883)
-		.withPluginsEnabled("rabbitmq_mqtt", "rabbitmq_web_mqtt")
 		.withAdminPassword("admin")
 		.withStartupTimeout(Duration.ofMinutes(4));
+
+	@BeforeAll
+	static void beforeAll() throws Exception {
+		rabbit.execInContainer("rabbitmq-plugins", "enable", "rabbitmq_mqtt", "rabbitmq_web_mqtt");
+	}
 
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {

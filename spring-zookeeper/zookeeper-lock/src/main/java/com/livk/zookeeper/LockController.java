@@ -38,13 +38,13 @@ public class LockController {
 	private final LockRegistry lockRegistry;
 
 	@GetMapping
-	public void lock(@RequestParam Integer id) throws InterruptedException {
+	public void lock(@RequestParam Integer id) {
 		Lock lock = lockRegistry.obtain("zookeeper");
-		while (!lock.tryLock()) {
-			// 获取不到锁直接空转
-			Thread.sleep(100);
-		}
 		try {
+			while (!lock.tryLock()) {
+				// 获取不到锁直接空转
+				Thread.sleep(100);
+			}
 			log.info("{} is locked", id);
 			Thread.sleep(1000);
 		}
