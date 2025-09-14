@@ -29,7 +29,7 @@
             <plugin>
                 <groupId>io.github.ascopes</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
-                <version>3.9.0</version>
+                <version>3.9.1</version>
                 <configuration>
                     <protocVersion>4.32.0</protocVersion>
                     <binaryMavenPlugins>
