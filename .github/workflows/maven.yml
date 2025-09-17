@@ -25,7 +25,7 @@ jobs:
       uses: actions/setup-java@v5
       with:
         java-version: '25'
-        distribution: 'temurin'
+        distribution: 'oracle'
 
     # 获取 mvnd 最新 release 版本号
     - name: Get mvnd latest release
