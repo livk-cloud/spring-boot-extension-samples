@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class GrpcApp {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(GrpcApp.class, args);
 	}
 

@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TreeApp {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(TreeApp.class, args);
 	}
 

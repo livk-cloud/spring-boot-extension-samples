@@ -34,7 +34,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @SpringBootApplication
 public class App {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		System.setProperty("server.port", "9099");
 		SpringApplication.run(App.class, args);
 	}

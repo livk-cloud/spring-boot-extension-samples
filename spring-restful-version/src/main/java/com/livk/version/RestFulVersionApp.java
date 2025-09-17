@@ -11,7 +11,7 @@ import org.springframework.boot.web.servlet.ServletComponentScan;
 @SpringBootApplication
 public class RestFulVersionApp {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(RestFulVersionApp.class, args);
 	}
 

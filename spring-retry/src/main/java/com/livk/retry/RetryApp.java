@@ -27,7 +27,7 @@ import org.springframework.retry.annotation.EnableRetry;
 @SpringBootApplication
 public class RetryApp {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(RetryApp.class, args);
 	}
 
