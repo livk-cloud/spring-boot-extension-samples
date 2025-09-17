@@ -21,11 +21,11 @@ jobs:
     steps:
     - uses: actions/checkout@v5
 
-    - name: Set up JDK 21
+    - name: Set up JDK 25
       uses: actions/setup-java@v5
       with:
-        java-version: '21'
-        distribution: 'temurin'
+        java-version: '25'
+        distribution: 'oracle'
 
     # 获取 mvnd 最新 release 版本号
     - name: Get mvnd latest release
