@@ -41,12 +41,6 @@
         <module>spring-mongodb</module>
     </modules>
 
-    <properties>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
     <dependencies>
         <dependency>
             <groupId>io.github.livk-cloud</groupId>
@@ -187,8 +181,8 @@
                 <version>3.14.0</version>
                 <configuration>
                     <!-- Java 版本 -->
-                    <source>${maven.compiler.source}</source>
-                    <target>${maven.compiler.target}</target>
+                    <release>21</release>
+                    <encoding>UTF-8</encoding>
                     <parameters>true</parameters>
                     <!-- 添加参数 -->
                     <compilerArgs>

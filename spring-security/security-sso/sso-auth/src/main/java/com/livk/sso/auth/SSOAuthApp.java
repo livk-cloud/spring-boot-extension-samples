@@ -29,7 +29,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 @SpringBootApplication
 public class SSOAuthApp {
 
-	void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(SSOAuthApp.class, args);
 	}
 

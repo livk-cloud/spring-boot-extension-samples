@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication(exclude = { R2dbcAutoConfiguration.class, R2dbcDataAutoConfiguration.class })
 public class ClickHouseR2dbcApp {
 
-	void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(ClickHouseR2dbcApp.class, args);
 	}
 

@@ -27,7 +27,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class AmqpApplication {
 
-	void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(AmqpApplication.class, args);
 	}
 

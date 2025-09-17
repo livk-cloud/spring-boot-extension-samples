@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ClickHouseJdbcApp {
 
-	void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(ClickHouseJdbcApp.class, args);
 	}
 

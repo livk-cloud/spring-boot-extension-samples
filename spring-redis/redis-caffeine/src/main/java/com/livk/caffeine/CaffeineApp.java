@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class CaffeineApp {
 
-	void main(String[] args) {
+	public static void main(String[] args) {
 		SpringApplication.run(CaffeineApp.class, args);
 	}
 
