@@ -181,7 +181,7 @@
                 <version>3.14.1</version>
                 <configuration>
                     <!-- Java 版本 -->
-                    <release>21</release>
+                    <release>25</release>
                     <encoding>UTF-8</encoding>
                     <parameters>true</parameters>
                     <!-- 添加参数 -->
