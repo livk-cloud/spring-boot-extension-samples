@@ -23,7 +23,7 @@ import org.springframework.data.mongodb.observability.MongoObservationCommandLis
 @SpringBootApplication
 public class MongoDbApp {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(MongoDbApp.class, args);
 	}
 

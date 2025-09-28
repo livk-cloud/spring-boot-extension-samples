@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class Hateoas {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(Hateoas.class, args);
 	}
 

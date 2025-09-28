@@ -30,7 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 @SpringBootApplication
 public class AuthServerApp {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(AuthServerApp.class, args);
 	}
 

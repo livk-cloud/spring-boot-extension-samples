@@ -28,7 +28,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 @SpringBootApplication
 public class KafkaApp {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(KafkaApp.class, args);
 	}
 

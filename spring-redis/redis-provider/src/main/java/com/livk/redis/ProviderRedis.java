@@ -29,7 +29,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication
 public class ProviderRedis {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(ProviderRedis.class, args);
 	}
 

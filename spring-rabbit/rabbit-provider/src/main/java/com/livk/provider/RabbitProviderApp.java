@@ -25,7 +25,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class RabbitProviderApp {
 
-	public static void main(String[] args) {
+	void main(String[] args) {
 		SpringApplication.run(RabbitProviderApp.class, args);
 	}
 

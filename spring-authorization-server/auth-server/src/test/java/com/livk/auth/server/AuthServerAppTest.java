@@ -55,7 +55,7 @@ class AuthServerAppTest {
 		params.set("username", "livk");
 		params.set("password", "123456");
 		params.set("scope", "livk.read");
-		String json = mockMvc
+		mockMvc
 			.perform(post("/oauth2/token")
 				.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -66,11 +66,7 @@ class AuthServerAppTest {
 			.andExpect(jsonPath("iss").value("http://localhost"))
 			.andExpect(jsonPath("token_type").value("Bearer"))
 			.andExpect(jsonPath("client_id").value("livk-client"))
-			.andReturn()
-			.getResponse()
-			.getContentAsString();
-		String accessToken = JsonMapperUtils.readTree(json).get("access_token").asText();
-		assertThat(accessToken).isNotNull().isNotBlank();
+			.andExpect(jsonPath("access_token").isNotEmpty());
 	}
 
 	@Test
@@ -80,7 +76,7 @@ class AuthServerAppTest {
 		params.set("mobile", "18664960000");
 		params.set("code", "123456");
 		params.set("scope", "livk.read");
-		String json = mockMvc
+		mockMvc
 			.perform(post("/oauth2/token")
 				.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -91,11 +87,7 @@ class AuthServerAppTest {
 			.andExpect(jsonPath("iss").value("http://localhost"))
 			.andExpect(jsonPath("token_type").value("Bearer"))
 			.andExpect(jsonPath("client_id").value("livk-client"))
-			.andReturn()
-			.getResponse()
-			.getContentAsString();
-		String accessToken = JsonMapperUtils.readTree(json).get("access_token").asText();
-		assertThat(accessToken).isNotNull().isNotBlank();
+			.andExpect(jsonPath("access_token").isNotEmpty());
 	}
 
 }
