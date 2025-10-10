@@ -69,7 +69,7 @@ class DocControllerTest {
 
 	@Test
 	void testPost() throws Exception {
-		Map<String, String> map = Map.of("username", "livk", "password", "123456");
+		var map = Map.of("username", "livk", "password", "123456");
 		mockMvc.perform(post("/doc").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(map)))
 			.andExpect(status().isOk())
 			.andExpect(jsonPath("$.username").value("livk"))

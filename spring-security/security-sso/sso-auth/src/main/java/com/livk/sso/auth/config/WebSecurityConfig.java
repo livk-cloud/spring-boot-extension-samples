@@ -49,13 +49,13 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManagerBuilder.class).build();
+		var authenticationManager = http.getSharedObject(AuthenticationManagerBuilder.class).build();
 
-		TokenLoginFilter tokenLoginFilter = new TokenLoginFilter(authenticationManager);
+		var tokenLoginFilter = new TokenLoginFilter(authenticationManager);
 		tokenLoginFilter.setAuthenticationSuccessHandler(new CustomAuthenticationSuccessHandler());
 		tokenLoginFilter.setAuthenticationFailureHandler(new CustomAuthenticationFailureHandler());
 
-		TokenVerifyFilter tokenVerifyFilter = new TokenVerifyFilter(authenticationManager);
+		var tokenVerifyFilter = new TokenVerifyFilter(authenticationManager);
 		return http.csrf(AbstractHttpConfigurer::disable)
 			.authenticationManager(authenticationManager)
 			.authorizeHttpRequests(registry -> registry.requestMatchers("/user/query")

@@ -56,7 +56,7 @@ class ProducerControllerTest {
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
 		registry.add("spring.kafka.bootstrap-servers",
-				() -> String.format("%s:%s", kafka.getHost(), kafka.getFirstMappedPort()));
+				() -> "%s:%s".formatted(kafka.getHost(), kafka.getFirstMappedPort()));
 	}
 
 	@Autowired

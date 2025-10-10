@@ -53,8 +53,8 @@ public class MqttReceiverConfig {
 	@Bean
 	public MessageProducer inbound(MqttPahoClientFactory factory, MqttProperties mqttProperties) {
 		// 可以同时消费（订阅）多个Topic
-		MqttPahoMessageDrivenChannelAdapter adapter = new MqttPahoMessageDrivenChannelAdapter(
-				mqttProperties.getReceiver().getClientId(), factory, mqttProperties.getReceiver().getDefaultTopic());
+		var adapter = new MqttPahoMessageDrivenChannelAdapter(mqttProperties.getReceiver().getClientId(), factory,
+				mqttProperties.getReceiver().getDefaultTopic());
 		adapter.setCompletionTimeout(5000);
 		adapter.setConverter(new DefaultPahoMessageConverter());
 		adapter.setQos(1);
@@ -70,8 +70,8 @@ public class MqttReceiverConfig {
 	@ServiceActivator(inputChannel = CHANNEL_NAME_IN)
 	public MessageHandler handler() {
 		return message -> {
-			String topic = Objects.requireNonNull(message.getHeaders().get("mqtt_receivedTopic")).toString();
-			String msg = message.getPayload().toString();
+			var topic = Objects.requireNonNull(message.getHeaders().get("mqtt_receivedTopic")).toString();
+			var msg = message.getPayload().toString();
 			log.info("接收到订阅消息:\ttopic:{}\tmessage:{}", topic, msg);
 		};
 	}

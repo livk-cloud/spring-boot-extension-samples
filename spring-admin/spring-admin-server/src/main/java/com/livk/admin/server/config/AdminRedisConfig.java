@@ -43,14 +43,11 @@ public class AdminRedisConfig {
 	@Bean
 	public ReactiveRedisOps reactiveRedisOps(AdminServerModule adminJacksonModule,
 			ReactiveRedisConnectionFactory redisConnectionFactory) {
-		JsonMapper mapper = JsonMapper.builder().addModule(adminJacksonModule).addModule(new JavaTimeModule()).build();
-		Jackson2JsonRedisSerializer<InstanceId> hashKeySerializer = new Jackson2JsonRedisSerializer<>(mapper,
-				InstanceId.class);
-		CollectionType collectionType = TypeFactoryUtils.listType(InstanceEvent.class);
-		Jackson2JsonRedisSerializer<List<InstanceEvent>> hashValueSerializer = new Jackson2JsonRedisSerializer<>(mapper,
-				collectionType);
-		RedisSerializationContext<String, Object> serializationContext = RedisSerializationContext
-			.<String, Object>newSerializationContext()
+		var mapper = JsonMapper.builder().addModule(adminJacksonModule).addModule(new JavaTimeModule()).build();
+		var hashKeySerializer = new Jackson2JsonRedisSerializer<>(mapper, InstanceId.class);
+		var collectionType = TypeFactoryUtils.listType(InstanceEvent.class);
+		var hashValueSerializer = new Jackson2JsonRedisSerializer<>(mapper, collectionType);
+		var serializationContext = RedisSerializationContext.<String, Object>newSerializationContext()
 			.key(RedisSerializer.string())
 			.value(JacksonSerializerUtils.json())
 			.hashKey(hashKeySerializer)

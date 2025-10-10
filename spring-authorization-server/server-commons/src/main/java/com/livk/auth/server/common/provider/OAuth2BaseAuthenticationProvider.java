@@ -119,7 +119,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 	 */
 	@Override
 	public boolean supports(Class<?> authentication) {
-		Class<T> childType = ClassUtils.resolveTypeArgument(this.getClass(), OAuth2BaseAuthenticationProvider.class);
+		var childType = ClassUtils.resolveTypeArgument(this.getClass(), OAuth2BaseAuthenticationProvider.class);
 		Assert.notNull(childType, "child Type is null");
 		return childType.isAssignableFrom(authentication);
 	}
@@ -141,16 +141,16 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 	@Override
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 		@SuppressWarnings("unchecked")
-		T baseAuthentication = (T) authentication;
+		var baseAuthentication = (T) authentication;
 
-		OAuth2ClientAuthenticationToken clientPrincipal = OAuth2AuthenticationProviderUtils
+		var clientPrincipal = OAuth2AuthenticationProviderUtils
 			.getAuthenticatedClientElseThrowInvalidClient(baseAuthentication);
 
-		RegisteredClient registeredClient = clientPrincipal.getRegisteredClient();
+		var registeredClient = clientPrincipal.getRegisteredClient();
 
 		checkClient(registeredClient);
 
-		Set<String> authorizedScopes = Objects.requireNonNull(registeredClient).getScopes();
+		var authorizedScopes = Objects.requireNonNull(registeredClient).getScopes();
 		if (!CollectionUtils.isEmpty(baseAuthentication.getScopes())) {
 			if (baseAuthentication.getScopes()
 				.stream()
@@ -160,13 +160,13 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 			authorizedScopes = Sets.newLinkedHashSet(baseAuthentication.getScopes());
 		}
 
-		Map<String, Object> reqParameters = baseAuthentication.getAdditionalParameters();
+		var reqParameters = baseAuthentication.getAdditionalParameters();
 		try {
-			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = assemble(reqParameters);
+			var usernamePasswordAuthenticationToken = assemble(reqParameters);
 
-			Authentication principal = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+			var principal = authenticationManager.authenticate(usernamePasswordAuthenticationToken);
 
-			DefaultOAuth2TokenContext.Builder tokenContextBuilder = DefaultOAuth2TokenContext.builder()
+			var tokenContextBuilder = DefaultOAuth2TokenContext.builder()
 				.registeredClient(registeredClient)
 				.principal(principal)
 				.authorizationServerContext(AuthorizationServerContextHolder.getContext())
@@ -174,19 +174,18 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 				.authorizationGrantType(baseAuthentication.getGrantType())
 				.authorizationGrant(baseAuthentication);
 
-			OAuth2Authorization.Builder authorizationBuilder = OAuth2Authorization
-				.withRegisteredClient(registeredClient)
+			var authorizationBuilder = OAuth2Authorization.withRegisteredClient(registeredClient)
 				.principalName(principal.getName())
 				.authorizationGrantType(baseAuthentication.getGrantType())
 				.authorizedScopes(authorizedScopes);
 
-			OAuth2TokenContext tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.ACCESS_TOKEN).build();
+			var tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.ACCESS_TOKEN).build();
 
-			OAuth2Token generatedAccessToken = Optional.ofNullable(this.tokenGenerator.generate(tokenContext))
+			var generatedAccessToken = Optional.ofNullable(this.tokenGenerator.generate(tokenContext))
 				.orElseThrow(() -> new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR,
 						"The token generator failed to generate the access token.", ERROR_URI)));
 
-			OAuth2AccessToken accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER,
+			var accessToken = new OAuth2AccessToken(OAuth2AccessToken.TokenType.BEARER,
 					generatedAccessToken.getTokenValue(), generatedAccessToken.getIssuedAt(),
 					generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
 
@@ -203,7 +202,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 			if (registeredClient.getAuthorizationGrantTypes().contains(AuthorizationGrantType.REFRESH_TOKEN)
 					&& !clientPrincipal.getClientAuthenticationMethod().equals(ClientAuthenticationMethod.NONE)) {
 				tokenContext = tokenContextBuilder.tokenType(OAuth2TokenType.REFRESH_TOKEN).build();
-				OAuth2Token generatedRefreshToken = this.tokenGenerator.generate(tokenContext);
+				var generatedRefreshToken = this.tokenGenerator.generate(tokenContext);
 				if (generatedRefreshToken == null) {
 					throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.SERVER_ERROR,
 							"The token generator failed to generate the refresh token.", ERROR_URI));
@@ -218,7 +217,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 				authorizationBuilder.refreshToken(refreshToken);
 			}
 
-			OAuth2Authorization authorization = authorizationBuilder.build();
+			var authorization = authorizationBuilder.build();
 
 			this.authorizationService.save(authorization);
 

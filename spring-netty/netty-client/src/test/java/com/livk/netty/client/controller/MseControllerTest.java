@@ -40,7 +40,7 @@ class MseControllerTest {
 
 	@Test
 	void testSend() {
-		Map<String, String> body = Map.of("username", "root", "password", "root");
+		var body = Map.of("username", "root", "password", "root");
 		client.post()
 			.uri("/msg")
 			.contentType(MediaType.APPLICATION_JSON)

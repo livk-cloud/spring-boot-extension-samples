@@ -65,9 +65,9 @@ class InfoControllerTests {
 
 	@Test
 	void upload() throws Exception {
-		ClassPathResource resource = new ClassPathResource("mobile-test.xlsx");
+		var resource = new ClassPathResource("mobile-test.xlsx");
 
-		MockMultipartFile file = new MockMultipartFile("file", "mobile-test.xlsx", MediaType.MULTIPART_FORM_DATA_VALUE,
+		var file = new MockMultipartFile("file", "mobile-test.xlsx", MediaType.MULTIPART_FORM_DATA_VALUE,
 				resource.getInputStream());
 
 		mockMvc.perform(multipart(HttpMethod.POST, "/upload").file(file)).andDo(print()).andExpect(status().isOk());
@@ -75,9 +75,9 @@ class InfoControllerTests {
 
 	@Test
 	void up() throws Exception {
-		ClassPathResource resource = new ClassPathResource("mobile-test.xlsx");
+		var resource = new ClassPathResource("mobile-test.xlsx");
 
-		MockMultipartFile file = new MockMultipartFile("file", "mobile-test.xlsx", MediaType.MULTIPART_FORM_DATA_VALUE,
+		var file = new MockMultipartFile("file", "mobile-test.xlsx", MediaType.MULTIPART_FORM_DATA_VALUE,
 				resource.getInputStream());
 
 		mockMvc.perform(multipart(POST, "/excel").file(file))

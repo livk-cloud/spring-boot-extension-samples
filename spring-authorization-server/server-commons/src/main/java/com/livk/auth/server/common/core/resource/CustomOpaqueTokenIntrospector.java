@@ -47,10 +47,9 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
 
 	@Override
 	public OAuth2AuthenticatedPrincipal introspect(String token) {
-		OAuth2Authorization oldAuthorization = authorizationService.findByToken(token, OAuth2TokenType.ACCESS_TOKEN);
+		var oldAuthorization = authorizationService.findByToken(token, OAuth2TokenType.ACCESS_TOKEN);
 
-		Optional<Oauth2UserDetailsService> optional = SpringContextHolder
-			.getBeanProvider(Oauth2UserDetailsService.class)
+		var optional = SpringContextHolder.getBeanProvider(Oauth2UserDetailsService.class)
 			.orderedStream()
 			.filter(service -> service.support(Objects.requireNonNull(oldAuthorization).getRegisteredClientId(),
 					oldAuthorization.getAuthorizationGrantType().getValue()))
@@ -58,9 +57,9 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
 
 		UserDetails userDetails = null;
 		try {
-			Object principal = Objects.requireNonNull(oldAuthorization).getAttributes().get(Principal.class.getName());
-			UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = (UsernamePasswordAuthenticationToken) principal;
-			Object tokenPrincipal = usernamePasswordAuthenticationToken.getPrincipal();
+			var principal = Objects.requireNonNull(oldAuthorization).getAttributes().get(Principal.class.getName());
+			var usernamePasswordAuthenticationToken = (UsernamePasswordAuthenticationToken) principal;
+			var tokenPrincipal = usernamePasswordAuthenticationToken.getPrincipal();
 			userDetails = optional.orElseThrow().loadUserByUser((Oauth2User) tokenPrincipal);
 		}
 		catch (UsernameNotFoundException notFoundException) {

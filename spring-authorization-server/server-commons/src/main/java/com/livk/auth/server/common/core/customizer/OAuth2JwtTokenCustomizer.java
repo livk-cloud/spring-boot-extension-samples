@@ -38,7 +38,7 @@ public class OAuth2JwtTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodi
 	 */
 	@Override
 	public void customize(JwtEncodingContext context) {
-		JwtClaimsSet.Builder claims = context.getClaims();
+		var claims = context.getClaims();
 		claims.claim(OAuth2ParameterNames.GRANT_TYPE, context.getAuthorizationGrantType().getValue());
 		claims.claim(OAuth2ParameterNames.CLIENT_ID, context.getAuthorizationGrant().getName());
 

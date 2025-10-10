@@ -55,7 +55,7 @@ class ZookeeperContainerConnectionDetailsFactory
 
 		@Override
 		public String getConnectString() {
-			return String.format("%s:%s", getContainer().getHost(), getContainer().getMappedPort(2181));
+			return "%s:%s".formatted(getContainer().getHost(), getContainer().getMappedPort(2181));
 		}
 
 	}

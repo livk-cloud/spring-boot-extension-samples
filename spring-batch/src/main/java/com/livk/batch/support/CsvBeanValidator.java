@@ -33,16 +33,16 @@ public class CsvBeanValidator<T> implements org.springframework.batch.item.valid
 	private final Validator validator;
 
 	public CsvBeanValidator() {
-		try (ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory()) {
+		try (var validatorFactory = Validation.buildDefaultValidatorFactory()) {
 			this.validator = validatorFactory.usingContext().getValidator();
 		}
 	}
 
 	@Override
 	public void validate(@NonNull T value) throws ValidationException {
-		Set<ConstraintViolation<T>> constraintViolations = validator.validate(value);
+		var constraintViolations = validator.validate(value);
 		if (!constraintViolations.isEmpty()) {
-			StringBuilder message = new StringBuilder();
+			var message = new StringBuilder();
 			constraintViolations
 				.forEach(constraintViolation -> message.append(constraintViolation.getMessage()).append("\n"));
 			throw new ValidationException(message.toString());

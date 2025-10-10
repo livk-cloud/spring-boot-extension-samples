@@ -41,12 +41,12 @@ class AuthorsMapperTest {
 
 	@Test
 	void insert() {
-		try (SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)) {
-			AuthorsMapper mapper = sqlSession.getMapper(AuthorsMapper.class);
+		try (var sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false)) {
+			var mapper = sqlSession.getMapper(AuthorsMapper.class);
 
-			List<Authors> authorsList = new ArrayList<>();
-			for (int i = 0; i < 2000000; i++) {
-				Authors authors = new Authors();
+			var authorsList = new ArrayList<Authors>();
+			for (var i = 0; i < 2000000; i++) {
+				var authors = new Authors();
 				authors.setFirstName("root" + i);
 				authors.setLastName("admin" + i);
 				authors.setEmail("1375632510@qq.com");

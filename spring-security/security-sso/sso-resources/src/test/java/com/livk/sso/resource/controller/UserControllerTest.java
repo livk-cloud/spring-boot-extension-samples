@@ -19,6 +19,7 @@ package com.livk.sso.resource.controller;
 import com.livk.commons.http.annotation.EnableHttpClient;
 import com.livk.commons.http.annotation.HttpClientType;
 import com.livk.commons.jackson.JsonMapperUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,7 @@ import org.springframework.web.client.RestClient;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -58,14 +60,15 @@ class UserControllerTest {
 
 	@BeforeEach
 	public void init() {
-		Map<String, String> body = new HashMap<>();
+		var body = new HashMap<>();
 		body.put("username", "livk");
 		body.put("password", "123456");
-		ResponseEntity<String> responseEntity = restClient.post()
+		var responseEntity = restClient.post()
 			.uri("http://localhost:9987/login")
 			.body(body)
 			.retrieve()
 			.toEntity(String.class);
+		assertThat(responseEntity.getBody()).isNotBlank();
 		token = "Bearer "
 				+ JsonMapperUtils.readValueMap(responseEntity.getBody(), String.class, String.class).get("data");
 	}

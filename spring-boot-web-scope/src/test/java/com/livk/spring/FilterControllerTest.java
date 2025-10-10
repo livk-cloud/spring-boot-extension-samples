@@ -39,14 +39,14 @@ class FilterControllerTest {
 
 	@Test
 	void uuid() throws Exception {
-		String uuid1 = mockMvc.perform(get("/uuid"))
+		var uuid1 = mockMvc.perform(get("/uuid"))
 			.andExpect(status().isOk())
 			.andDo(print())
 			.andReturn()
 			.getResponse()
 			.getContentAsString();
 
-		String uuid2 = mockMvc.perform(get("/uuid"))
+		var uuid2 = mockMvc.perform(get("/uuid"))
 			.andExpect(status().isOk())
 			.andDo(print())
 			.andReturn()

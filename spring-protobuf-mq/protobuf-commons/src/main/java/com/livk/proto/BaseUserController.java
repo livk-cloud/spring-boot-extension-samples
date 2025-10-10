@@ -34,8 +34,8 @@ public abstract class BaseUserController {
 
 	@GetMapping("send")
 	public void send() throws Exception {
-		for (int i = 0; i < 10; i++) {
-			User user = create(i);
+		for (var i = 0; i < 10; i++) {
+			var user = create(i);
 			protobufSend.send(key(), user);
 		}
 		while (!ConsumerCheck.isSuccess()) {

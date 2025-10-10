@@ -47,7 +47,7 @@ public class OrderController {
 	 */
 	@GetMapping
 	public HttpEntity<Map<String, String>> submit() {
-		String orderId = UUID.randomUUID().toString();
+		var orderId = UUID.randomUUID().toString();
 		log.info("submit order {}", orderId);
 		this.rabbitTemplate.convertAndSend(RabbitConfig.orderExchange, RabbitConfig.routingKeyOrder, orderId);
 		return ResponseEntity.ok(Map.of("orderId", orderId));

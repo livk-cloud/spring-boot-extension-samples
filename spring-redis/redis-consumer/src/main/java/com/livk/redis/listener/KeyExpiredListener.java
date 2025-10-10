@@ -35,7 +35,7 @@ public class KeyExpiredListener extends KeyspaceEventMessageListener {
 
 	@Override
 	protected void doHandleMessage(Message message) {
-		String key = new String(message.getBody(), StandardCharsets.UTF_8);
+		var key = new String(message.getBody(), StandardCharsets.UTF_8);
 		log.info("key:<{}>", key);
 	}
 

@@ -33,9 +33,9 @@ public class PulsarConsumer {
 
 	@PulsarListener(id = "pulsar", subscriptionName = "consumer", topics = PulsarConfig.TOPIC_NAME)
 	public void receive(Message<User> message) {
-		String key = message.getKey();
-		User data = message.getValue();
-		String topic = message.getTopicName();
+		var key = message.getKey();
+		var data = message.getValue();
+		var topic = message.getTopicName();
 		log.info("topic:{} key:{} data:{}", topic, key, data);
 		ConsumerCheck.success();
 	}

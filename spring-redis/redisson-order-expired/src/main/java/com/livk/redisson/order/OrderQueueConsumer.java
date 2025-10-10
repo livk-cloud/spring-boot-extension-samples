@@ -51,7 +51,7 @@ public class OrderQueueConsumer implements Runnable, InitializingBean, Disposabl
 	public void run() {
 		while (true) {
 			try {
-				Employer employer = orderQueue.take();
+				var employer = orderQueue.take();
 				log.info("订单取消时间：{} ==订单生成时间:{}", DateUtils.format(LocalDateTime.now(), DateUtils.HMS),
 						employer.getPutTime());
 			}

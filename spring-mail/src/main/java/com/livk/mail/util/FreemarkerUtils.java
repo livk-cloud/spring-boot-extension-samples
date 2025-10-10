@@ -42,8 +42,8 @@ public class FreemarkerUtils extends FreeMarkerTemplateUtils {
 	}
 
 	public String parse(String templateName, String freemarker, Map<String, Object> model) {
-		try (StringReader reader = new StringReader(freemarker)) {
-			Template template = new Template(templateName, reader, CONFIGURATION);
+		try (var reader = new StringReader(freemarker)) {
+			var template = new Template(templateName, reader, CONFIGURATION);
 			return processTemplateIntoString(template, model);
 		}
 		catch (Exception e) {

@@ -44,7 +44,7 @@ public class SecurityUtils {
 	 * 获取用户
 	 */
 	public Oauth2User getUser(Authentication authentication) {
-		Object principal = authentication.getPrincipal();
+		var principal = authentication.getPrincipal();
 		if (principal instanceof Oauth2User) {
 			return (Oauth2User) principal;
 		}
@@ -55,7 +55,7 @@ public class SecurityUtils {
 	 * 获取用户
 	 */
 	public Oauth2User getUser() {
-		Authentication authentication = getAuthentication();
+		var authentication = getAuthentication();
 		if (authentication == null) {
 			return null;
 		}

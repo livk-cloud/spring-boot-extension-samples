@@ -53,7 +53,7 @@ public class BatchConfig {
 
 	@Bean
 	public ItemReader<User> reader() {
-		FlatFileItemReader<User> reader = new FlatFileItemReader<>();
+		var reader = new FlatFileItemReader<User>();
 		reader.setLinesToSkip(1);
 		reader.setResource(new ClassPathResource("data.csv"));
 		reader.setLineMapper(
@@ -87,7 +87,7 @@ public class BatchConfig {
 
 	@Bean
 	public ItemWriter<User> writer(DataSource dataSource) {
-		JdbcBatchItemWriter<User> writer = new JdbcBatchItemWriter<>();
+		var writer = new JdbcBatchItemWriter<User>();
 		writer.setDataSource(dataSource);
 		writer.setItemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>());
 		writer.setSql("insert into sys_user(user_name, sex, age, address, status, create_time ,update_time) "
@@ -121,7 +121,7 @@ public class BatchConfig {
 
 	@Bean
 	public TaskExecutorJobLauncher taskExecutorJobLauncher(JobRepository jobRepository) {
-		TaskExecutorJobLauncher jobLauncher = new TaskExecutorJobLauncher();
+		var jobLauncher = new TaskExecutorJobLauncher();
 		// 设置jobRepository
 		jobLauncher.setJobRepository(jobRepository);
 		return jobLauncher;

@@ -53,13 +53,13 @@ public class TokenLoginFilter extends AbstractAuthenticationProcessingFilter {
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
 			throws AuthenticationException {
 		try {
-			User user = JsonMapperUtils.readValue(request.getInputStream(), User.class);
-			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-					user.getUsername(), user.getPassword(), user.getAuthorities());
+			var user = JsonMapperUtils.readValue(request.getInputStream(), User.class);
+			var authenticationToken = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword(),
+					user.getAuthorities());
 			return authenticationManager.authenticate(authenticationToken);
 		}
 		catch (IOException e) {
-			Map<String, Object> map = Map.of("code", HttpServletResponse.SC_UNAUTHORIZED, "msg", "用户名或者密码错误！");
+			var map = Map.of("code", HttpServletResponse.SC_UNAUTHORIZED, "msg", "用户名或者密码错误！");
 			HttpServletUtils.outJson(response, map);
 			throw new UsernameNotFoundException("用户名或者密码错误");
 		}

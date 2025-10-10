@@ -61,7 +61,7 @@ class MqttTest {
 
 	@Test
 	void test() {
-		for (int i = 0; i < 100; i++) {
+		for (var i = 0; i < 100; i++) {
 			mqttSender.sendToMqtt("hello" + (i + 1));
 		}
 	}

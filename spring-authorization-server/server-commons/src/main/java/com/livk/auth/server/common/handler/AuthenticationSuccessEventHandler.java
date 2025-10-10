@@ -67,13 +67,13 @@ public class AuthenticationSuccessEventHandler implements AuthenticationSuccessH
 	private void sendAccessTokenResponse(HttpServletResponse response, Authentication authentication)
 			throws IOException {
 
-		OAuth2AccessTokenAuthenticationToken accessTokenAuthentication = (OAuth2AccessTokenAuthenticationToken) authentication;
+		var accessTokenAuthentication = (OAuth2AccessTokenAuthenticationToken) authentication;
 
-		OAuth2AccessToken accessToken = accessTokenAuthentication.getAccessToken();
-		OAuth2RefreshToken refreshToken = accessTokenAuthentication.getRefreshToken();
-		Map<String, Object> additionalParameters = accessTokenAuthentication.getAdditionalParameters();
+		var accessToken = accessTokenAuthentication.getAccessToken();
+		var refreshToken = accessTokenAuthentication.getRefreshToken();
+		var additionalParameters = accessTokenAuthentication.getAdditionalParameters();
 
-		OAuth2AccessTokenResponse.Builder builder = OAuth2AccessTokenResponse.withToken(accessToken.getTokenValue())
+		var builder = OAuth2AccessTokenResponse.withToken(accessToken.getTokenValue())
 			.tokenType(accessToken.getTokenType())
 			.scopes(accessToken.getScopes());
 		if (accessToken.getIssuedAt() != null && accessToken.getExpiresAt() != null) {
@@ -85,8 +85,8 @@ public class AuthenticationSuccessEventHandler implements AuthenticationSuccessH
 		if (!CollectionUtils.isEmpty(additionalParameters)) {
 			builder.additionalParameters(additionalParameters);
 		}
-		OAuth2AccessTokenResponse accessTokenResponse = builder.build();
-		ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
+		var accessTokenResponse = builder.build();
+		var httpResponse = new ServletServerHttpResponse(response);
 
 		// 无状态 注意删除 context 上下文的信息
 		SecurityContextHolder.clearContext();

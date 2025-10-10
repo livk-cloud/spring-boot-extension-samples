@@ -49,13 +49,13 @@ public class User {
 	private LocalDate regTime;
 
 	public static User collect(Row row, RowMetadata rowMetadata) {
-		User user = new User();
-		for (ColumnMetadata columnMetadata : rowMetadata.getColumnMetadatas()) {
-			String name = columnMetadata.getName();
-			String fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
-			Field field = ReflectionUtils.findField(User.class, fieldName);
+		var user = new User();
+		for (var columnMetadata : rowMetadata.getColumnMetadatas()) {
+			var name = columnMetadata.getName();
+			var fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
+			var field = ReflectionUtils.findField(User.class, fieldName);
 			if (field != null) {
-				Method writeMethod = ReflectionUtils.getWriteMethod(User.class, field);
+				var writeMethod = ReflectionUtils.getWriteMethod(User.class, field);
 				try {
 					writeMethod.invoke(user, row.get(name, field.getType()));
 				}

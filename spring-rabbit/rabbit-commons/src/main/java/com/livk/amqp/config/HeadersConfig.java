@@ -66,7 +66,7 @@ public class HeadersConfig {
 
 	@Bean
 	public Binding bindHeadersA() {
-		Map<String, Object> map = new HashMap<>();
+		var map = new HashMap<String, Object>();
 		map.put("username", "livk");
 		map.put("password", "livk");
 		// 全匹配
@@ -75,7 +75,7 @@ public class HeadersConfig {
 
 	@Bean
 	public Binding bindHeadersB() {
-		Map<String, Object> map = new HashMap<>();
+		var map = new HashMap<String, Object>();
 		map.put("code", "livk");
 		map.put("auth", "livk");
 		// 部分匹配

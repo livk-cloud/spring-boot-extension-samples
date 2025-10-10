@@ -67,15 +67,15 @@ public class AnnoConsumer {
 
 	@RabbitListener(queuesToDeclare = @Queue(HeadersConfig.HEADERS_EXCHANGE_QUEUE_A))
 	public void consumerHeadersA(org.springframework.amqp.core.Message message) throws Exception {
-		MessageProperties messageProperties = message.getMessageProperties();
-		String contentType = messageProperties.getContentType();
+		var messageProperties = message.getMessageProperties();
+		var contentType = messageProperties.getContentType();
 		log.info("headers A anno consumer msg:{}", new String(message.getBody(), contentType));
 	}
 
 	@RabbitListener(queuesToDeclare = @Queue(HeadersConfig.HEADERS_EXCHANGE_QUEUE_B))
 	public void consumerHeadersB(org.springframework.amqp.core.Message message) throws Exception {
-		MessageProperties messageProperties = message.getMessageProperties();
-		String contentType = messageProperties.getContentType();
+		var messageProperties = message.getMessageProperties();
+		var contentType = messageProperties.getContentType();
 		log.info("headers B anno consumer msg:{}", new String(message.getBody(), contentType));
 	}
 

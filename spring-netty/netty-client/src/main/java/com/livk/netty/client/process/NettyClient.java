@@ -52,21 +52,21 @@ public class NettyClient implements AutoCloseable {
 	}
 
 	public void start() {
-		Bootstrap bootstrap = new Bootstrap();
+		var bootstrap = new Bootstrap();
 		bootstrap.group(group)
 			.channel(NioSocketChannel.class)
 			.remoteAddress(host, port)
 			.option(ChannelOption.SO_KEEPALIVE, true)
 			.option(ChannelOption.TCP_NODELAY, true)
 			.handler(new ClientHandlerInitializer(this));
-		ChannelFuture future = bootstrap.connect();
+		var future = bootstrap.connect();
 		future.addListener((ChannelFutureListener) channelFuture -> {
 			if (channelFuture.isSuccess()) {
 				log.info("连接Netty服务端成功");
 			}
 			else {
 				log.info("连接失败，进行断线重连");
-				try (EventLoop eventLoop = channelFuture.channel().eventLoop()) {
+				try (var eventLoop = channelFuture.channel().eventLoop()) {
 					eventLoop.schedule(this::start, 20, TimeUnit.SECONDS);
 				}
 			}

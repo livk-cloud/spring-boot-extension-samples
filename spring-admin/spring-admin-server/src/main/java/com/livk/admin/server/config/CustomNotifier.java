@@ -42,13 +42,10 @@ public class CustomNotifier extends AbstractEventNotifier {
 	@Override
 	protected Mono<Void> doNotify(@NonNull InstanceEvent event, @NonNull Instance instance) {
 		return Mono.fromRunnable(() -> {
-			String name = instance.getRegistration().getName();
-			InstanceId id = event.getInstance();
-
-			String detail = (event instanceof InstanceStatusChangedEvent statusChangedEvent)
+			var name = instance.getRegistration().getName();
+			var detail = (event instanceof InstanceStatusChangedEvent statusChangedEvent)
 					? "is " + statusChangedEvent.getStatusInfo().getStatus() : event.getType();
-
-			log.info("Instance {} ({}) {}", name, id, detail);
+			log.info("Instance {} ({}) {}", name, event.getInstance(), detail);
 		});
 	}
 

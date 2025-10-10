@@ -52,7 +52,7 @@ class UserControllerTests {
 	@Test
 	@Order(1)
 	void save() throws Exception {
-		User user = new User().setName("root").setAge(17);
+		var user = new User().setName("root").setAge(17);
 		mockMvc
 			.perform(post("/user").content(JsonMapperUtils.writeValueAsString(user))
 				.contentType(MediaType.APPLICATION_JSON))
@@ -66,13 +66,13 @@ class UserControllerTests {
 	@Test
 	@Order(3)
 	void update() throws Exception {
-		byte[] body = mockMvc.perform(get("/user/query?name=root"))
+		var body = mockMvc.perform(get("/user/query?name=root"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andReturn()
 			.getResponse()
 			.getContentAsByteArray();
-		User user = JsonMapperUtils.readValue(body, User.class);
+		var user = JsonMapperUtils.readValue(body, User.class);
 		user.setAge(18);
 		mockMvc
 			.perform(put("/user/{id}", user.getId()).content(JsonMapperUtils.writeValueAsString(user))
@@ -106,13 +106,13 @@ class UserControllerTests {
 
 	@Test
 	void remove() throws Exception {
-		byte[] body = mockMvc.perform(get("/user/query?name=root"))
+		var body = mockMvc.perform(get("/user/query?name=root"))
 			.andDo(print())
 			.andExpect(status().isOk())
 			.andReturn()
 			.getResponse()
 			.getContentAsByteArray();
-		User user = JsonMapperUtils.readValue(body, User.class);
+		var user = JsonMapperUtils.readValue(body, User.class);
 		mockMvc.perform(delete("/user/{id}", user.getId())).andDo(print()).andExpect(status().isOk());
 	}
 

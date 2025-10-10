@@ -50,7 +50,7 @@ class AuthServerAppTest {
 
 	@Test
 	void testPassword() throws Exception {
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		var params = new LinkedMultiValueMap<String, String>();
 		params.set("grant_type", "password");
 		params.set("username", "livk");
 		params.set("password", "123456");
@@ -71,7 +71,7 @@ class AuthServerAppTest {
 
 	@Test
 	void testSms() throws Exception {
-		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		var params = new LinkedMultiValueMap<String, String>();
 		params.set("grant_type", "sms");
 		params.set("mobile", "18664960000");
 		params.set("code", "123456");

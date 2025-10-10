@@ -44,7 +44,7 @@ class UserControllerTest {
 
 	@Test
 	void testList() throws Exception {
-		User user = new User().setUsername("livk").setPassword("123456");
+		var user = new User().setUsername("livk").setPassword("123456");
 		mockMvc.perform(get("/user/list").header(HttpHeaders.AUTHORIZATION, "Bearer " + JwtUtils.generateToken(user)))
 			.andExpect(status().isOk())
 			.andDo(print())
@@ -53,7 +53,7 @@ class UserControllerTest {
 
 	@Test
 	void testUpdate() throws Exception {
-		User user = new User().setUsername("livk").setPassword("123456");
+		var user = new User().setUsername("livk").setPassword("123456");
 		mockMvc.perform(put("/user/update").header(HttpHeaders.AUTHORIZATION, "Bearer " + JwtUtils.generateToken(user)))
 			.andExpect(status().isOk())
 			.andDo(print())

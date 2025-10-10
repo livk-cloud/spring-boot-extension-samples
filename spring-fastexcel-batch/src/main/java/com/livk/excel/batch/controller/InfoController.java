@@ -71,8 +71,8 @@ public class InfoController {
 	@PostMapping("upload")
 	public HttpEntity<Void> upload(@ExcelParam List<Info> dataExcels) throws JobInstanceAlreadyCompleteException,
 			JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
-		Step step = excelStep(dataExcels);
-		Job job = excelJob(step);
+		var step = excelStep(dataExcels);
+		var job = excelJob(step);
 		jobLauncher.run(job,
 				new JobParametersBuilder().addLocalDateTime("date", LocalDateTime.now()).toJobParameters());
 		return ResponseEntity.ok(null);
@@ -80,12 +80,11 @@ public class InfoController {
 
 	@PostMapping("excel")
 	public HttpEntity<List<Info>> up(@RequestParam("file") MultipartFile file) throws IOException {
-		FastExcelItemReader<Info> itemReader = new FastExcelItemReader<>(file.getInputStream(),
-				new TypeExcelMapReadListener<>() {
-				});
-		List<Info> list = new ArrayList<>();
+		var itemReader = new FastExcelItemReader<Info>(file.getInputStream(), new TypeExcelMapReadListener<>() {
+		});
+		var list = new ArrayList<Info>();
 		while (true) {
-			Info o = itemReader.read();
+			var o = itemReader.read();
 			if (o != null) {
 				o.setId(System.currentTimeMillis());
 				list.add(o);

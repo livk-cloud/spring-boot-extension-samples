@@ -59,8 +59,8 @@ public class OAuth2SmsAuthenticationProvider extends OAuth2BaseAuthenticationPro
 
 	@Override
 	protected UsernamePasswordAuthenticationToken assemble(Map<String, Object> reqParameters) {
-		String mobile = (String) reqParameters.get(SecurityConstants.SMS_PARAMETER_NAME);
-		String code = (String) reqParameters.get(OAuth2ParameterNames.CODE);
+		var mobile = (String) reqParameters.get(SecurityConstants.SMS_PARAMETER_NAME);
+		var code = (String) reqParameters.get(OAuth2ParameterNames.CODE);
 		return new UsernamePasswordAuthenticationToken(mobile, code);
 	}
 

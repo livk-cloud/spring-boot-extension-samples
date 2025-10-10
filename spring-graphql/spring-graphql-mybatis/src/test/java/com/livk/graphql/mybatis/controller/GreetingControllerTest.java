@@ -49,18 +49,18 @@ class GreetingControllerTest {
 
 	@BeforeEach
 	void init() {
-		WebTestClient.Builder builder = webTestClient.mutate().baseUrl(graphqlPath);
+		var builder = webTestClient.mutate().baseUrl(graphqlPath);
 		tester = HttpGraphQlTester.builder(builder).build();
 	}
 
 	@Test
 	void greetings() {
 		// language=GraphQL
-		String document = """
+		var document = """
 				subscription {
 				  greetings
 				}""";
-		Map<String, Object> result = tester.document(document)
+		var result = tester.document(document)
 			.execute()
 			.path("upstreamPublisher")
 			.entity(new ParameterizedTypeReference<Map<String, Object>>() {

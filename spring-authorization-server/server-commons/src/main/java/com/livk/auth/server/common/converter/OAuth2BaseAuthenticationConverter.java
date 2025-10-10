@@ -62,19 +62,19 @@ public interface OAuth2BaseAuthenticationConverter<T extends OAuth2BaseAuthentic
 			return null;
 		}
 
-		String scope = request.getParameter(OAuth2ParameterNames.SCOPE);
+		var scope = request.getParameter(OAuth2ParameterNames.SCOPE);
 		if (StringUtils.hasText(scope) && request.getParameterValues(OAuth2ParameterNames.SCOPE).length != 1) {
 			throw new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST,
 					OAuth2ParameterNames.SCOPE, SecurityConstants.ACCESS_TOKEN_REQUEST_ERROR_URI));
 		}
 
-		Set<String> requestedScopes = Collections.emptySet();
+		var requestedScopes = Collections.<String>emptySet();
 		if (StringUtils.hasText(scope)) {
 			requestedScopes = Sets.newHashSet(StringUtils.delimitedListToStringArray(scope, " "));
 		}
 
 		// 获取当前已经认证的客户端信息
-		Authentication clientPrincipal = SecurityContextHolder.getContext().getAuthentication();
+		var clientPrincipal = SecurityContextHolder.getContext().getAuthentication();
 		Optional.ofNullable(clientPrincipal)
 			.orElseThrow(() -> new OAuth2AuthenticationException(new OAuth2Error(OAuth2ErrorCodes.INVALID_REQUEST,
 					OAuth2ErrorCodes.INVALID_CLIENT, SecurityConstants.ACCESS_TOKEN_REQUEST_ERROR_URI)));

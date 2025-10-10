@@ -33,7 +33,7 @@ public class FastExcelItemReader<T> implements ItemReader<T> {
 	private final List<T> data;
 
 	public FastExcelItemReader(InputStream inputStream, ExcelMapReadListener<T> excelReadListener) {
-		Class<T> targetClass = ClassUtils.resolveTypeArgument(excelReadListener.getClass(), ExcelMapReadListener.class);
+		var targetClass = ClassUtils.resolveTypeArgument(excelReadListener.getClass(), ExcelMapReadListener.class);
 		FastExcel.read(inputStream, targetClass, excelReadListener).sheet().doRead();
 		data = new ArrayList<>(excelReadListener.getCollectionData());
 	}

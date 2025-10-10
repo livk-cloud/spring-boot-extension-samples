@@ -40,14 +40,14 @@ public class OrderController implements DisposableBean {
 	private final RDelayedQueue<Employer> delayedQueue;
 
 	public OrderController(RedissonClient redissonClient) {
-		RBlockingQueue<Employer> orderQueue = redissonClient.getBlockingQueue("order_queue");
+		var orderQueue = redissonClient.<Employer>getBlockingQueue("order_queue");
 		this.delayedQueue = redissonClient.getDelayedQueue(orderQueue);
 	}
 
 	@PostMapping("create")
 	public void create() throws InterruptedException {
-		for (int i = 0; i < 5; i++) {
-			Employer callCdr = new Employer();
+		for (var i = 0; i < 5; i++) {
+			var callCdr = new Employer();
 			callCdr.setSalary(345.6);
 			callCdr.setPutTime(DateUtils.format(LocalDateTime.now(), DateUtils.HMS));
 			delayedQueue.offer(callCdr, 3, TimeUnit.SECONDS);

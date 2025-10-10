@@ -33,7 +33,7 @@ public class CustomResultHandler implements ResultHandler<Authors> {
 
 	@Override
 	public void handleResult(ResultContext<? extends Authors> resultContext) {
-		Authors authors = resultContext.getResultObject();
+		var authors = resultContext.getResultObject();
 		downloadProcessor.processData(authors);
 	}
 

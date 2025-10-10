@@ -53,7 +53,7 @@ public class CacheHandlerAdapter implements CacheHandler<Object> {
 
 	@Override
 	public void clear() {
-		Set<String> keys = cache.asMap().keySet();
+		var keys = cache.asMap().keySet();
 		cache.invalidateAll();
 		redisOps.delete(keys);
 	}

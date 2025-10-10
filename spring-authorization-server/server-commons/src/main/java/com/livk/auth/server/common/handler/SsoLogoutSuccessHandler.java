@@ -44,13 +44,13 @@ public class SsoLogoutSuccessHandler implements LogoutSuccessHandler {
 		}
 
 		// 获取请求参数中是否包含 回调地址
-		String redirectUrl = request.getParameter(REDIRECT_URL);
+		var redirectUrl = request.getParameter(REDIRECT_URL);
 		if (StringUtils.hasText(redirectUrl)) {
 			response.sendRedirect(redirectUrl);
 		}
 		else if (StringUtils.hasText(request.getHeader(HttpHeaders.REFERER))) {
 			// 默认跳转referer 地址
-			String referer = request.getHeader(HttpHeaders.REFERER);
+			var referer = request.getHeader(HttpHeaders.REFERER);
 			response.sendRedirect(referer);
 		}
 	}

@@ -47,12 +47,12 @@ public class CsvLineMapper<T> implements LineMapper<T> {
 	@NonNull
 	@Override
 	public T mapLine(@NonNull String line, int lineNumber) {
-		T instance = BeanUtils.instantiateClass(targetClass);
-		String[] fieldArray = line.split(delimiter);
+		var instance = BeanUtils.instantiateClass(targetClass);
+		var fieldArray = line.split(delimiter);
 		if (fieldArray.length != fields.length) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
-		for (int i = 0; i < fields.length; i++) {
+		for (var i = 0; i < fields.length; i++) {
 			set(instance, fields[i], fieldArray[i]);
 		}
 		return instance;
@@ -61,9 +61,9 @@ public class CsvLineMapper<T> implements LineMapper<T> {
 	@SneakyThrows
 	private void set(T t, String field, String valueStr) {
 		Object value;
-		Class<?> targetClass = t.getClass();
-		Field declaredField = targetClass.getDeclaredField(field);
-		Class<?> type = declaredField.getType();
+		var targetClass = t.getClass();
+		var declaredField = targetClass.getDeclaredField(field);
+		var type = declaredField.getType();
 		if (Integer.class.equals(type)) {
 			value = Integer.parseInt(valueStr);
 		}
@@ -83,7 +83,7 @@ public class CsvLineMapper<T> implements LineMapper<T> {
 			value = valueStr;
 		}
 		field = StringUtils.capitalize(field);
-		Method method = targetClass.getMethod("set" + field, type);
+		var method = targetClass.getMethod("set" + field, type);
 		method.invoke(t, value);
 	}
 

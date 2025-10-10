@@ -41,8 +41,7 @@ public class MessageController {
 	private final MessageService messageService;
 
 	public MessageController(RSocketRequester.Builder rsocketRequesterBuilder, RSocketStrategies strategies) {
-		RSocketRequester rsocketRequester = rsocketRequesterBuilder.rsocketStrategies(strategies)
-			.tcp("localhost", 7000);
+		var rsocketRequester = rsocketRequesterBuilder.rsocketStrategies(strategies).tcp("localhost", 7000);
 		this.messageService = RSocketServiceProxyFactory.builder(rsocketRequester)
 			.build()
 			.createClient(MessageService.class);
@@ -68,10 +67,10 @@ public class MessageController {
 
 	@GetMapping("channel")
 	public Mono<String> channel() {
-		Mono<Duration> setting1 = Mono.just(Duration.ofSeconds(1));
-		Mono<Duration> setting2 = Mono.just(Duration.ofSeconds(3)).delayElement(Duration.ofSeconds(5));
-		Mono<Duration> setting3 = Mono.just(Duration.ofSeconds(5)).delayElement(Duration.ofSeconds(15));
-		Flux<Duration> settings = Flux.concat(setting1, setting2, setting3);
+		var setting1 = Mono.just(Duration.ofSeconds(1));
+		var setting2 = Mono.just(Duration.ofSeconds(3)).delayElement(Duration.ofSeconds(5));
+		var setting3 = Mono.just(Duration.ofSeconds(5)).delayElement(Duration.ofSeconds(15));
+		var settings = Flux.concat(setting1, setting2, setting3);
 		return messageService.channel(settings)
 			.collectList()
 			.map(messages -> messages.stream().map(Message::toString).collect(Collectors.toList()))

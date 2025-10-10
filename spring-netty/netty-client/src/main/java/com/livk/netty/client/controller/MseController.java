@@ -43,12 +43,12 @@ public class MseController {
 
 	@PostMapping
 	public HttpEntity<Void> send(@RequestBody JsonNode jsonNode) throws ExecutionException, InterruptedException {
-		NettyMessage.Message message = NettyMessage.Message.newBuilder()
+		var message = NettyMessage.Message.newBuilder()
 			.setType(NettyMessage.Message.MessageType.NORMAL)
 			.setContent(jsonNode.toString())
 			.setRequestId(UUID.randomUUID().toString())
 			.build();
-		ChannelFuture future = nettyClient.sendMsg(message);
+		var future = nettyClient.sendMsg(message);
 		return ResponseEntity.ok(future.get());
 	}
 

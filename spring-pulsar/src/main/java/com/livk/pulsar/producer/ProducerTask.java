@@ -40,7 +40,7 @@ public class ProducerTask {
 
 	@Scheduled(cron = "0/5 * * * * ?")
 	public void send() {
-		PulsarMessage<String> message = new PulsarMessage<>();
+		var message = new PulsarMessage<String>();
 		message.setMsgId(UUID.randomUUID().toString());
 		message.setSendTime(LocalDateTime.now());
 		message.setData(String.valueOf(generator.nextId()));

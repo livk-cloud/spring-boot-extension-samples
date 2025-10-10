@@ -39,8 +39,8 @@ public class SentTask {
 
 	@Scheduled(cron = "0/10 * * * * ?")
 	public void push() {
-		for (Map.Entry<String, SseEmitter> sseEmitterEntry : sseEmitterRepository.all().entrySet()) {
-			SseEmitter sseEmitter = sseEmitterEntry.getValue();
+		for (var sseEmitterEntry : sseEmitterRepository.all().entrySet()) {
+			var sseEmitter = sseEmitterEntry.getValue();
 			try {
 				sseEmitter.send(SseEmitter.event()
 					.data(DateUtils.format(LocalDateTime.now(), DateUtils.YMD_HMS))

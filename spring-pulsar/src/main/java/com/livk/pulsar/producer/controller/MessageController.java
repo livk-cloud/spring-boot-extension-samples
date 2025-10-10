@@ -45,12 +45,12 @@ public class MessageController {
 
 	@PostMapping
 	public HttpEntity<String> send(@RequestBody JsonNode jsonNode) throws Exception {
-		PulsarMessage<JsonNode> message = new PulsarMessage<>();
+		var message = new PulsarMessage<JsonNode>();
 		message.setMsgId(UUID.randomUUID().toString());
 		message.setSendTime(LocalDateTime.now());
 		message.setData(jsonNode);
 
-		MessageId messageId = pulsarTemplate.sendAsync(message.toJson(), Schema.STRING).get();
+		var messageId = pulsarTemplate.sendAsync(message.toJson(), Schema.STRING).get();
 		return ResponseEntity.ok(JsonMapperUtils.writeValueAsString(messageId));
 	}
 

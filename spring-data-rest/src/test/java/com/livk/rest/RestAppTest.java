@@ -65,9 +65,9 @@ class RestAppTest {
 	@Order(1)
 	@Test
 	void testSave() throws Exception {
-		ObjectMapper mapper = builder.build();
-		JacksonSupport support = new JacksonSupport(mapper);
-		User user = new User();
+		var mapper = builder.build();
+		var support = new JacksonSupport(mapper);
+		var user = new User();
 		user.setUsername("root");
 		user.setPassword("root");
 		user.setAge(18);
@@ -79,9 +79,9 @@ class RestAppTest {
 	@Order(3)
 	@Test
 	void testUpdate() throws Exception {
-		ObjectMapper mapper = builder.build();
-		JacksonSupport support = new JacksonSupport(mapper);
-		User user = new User();
+		var mapper = builder.build();
+		var support = new JacksonSupport(mapper);
+		var user = new User();
 		user.setUsername("admin");
 		user.setPassword("admin");
 		user.setAge(19);

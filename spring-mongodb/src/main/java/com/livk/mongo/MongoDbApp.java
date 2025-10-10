@@ -30,8 +30,8 @@ public class MongoDbApp {
 	@Bean
 	public MongoConverter mappingMongoConverter(MongoDatabaseFactory factory, MongoMappingContext context,
 			CustomConversions customConversions) {
-		DefaultDbRefResolver resolver = new DefaultDbRefResolver(factory);
-		MappingMongoConverter converter = new MappingMongoConverter(resolver, context);
+		var resolver = new DefaultDbRefResolver(factory);
+		var converter = new MappingMongoConverter(resolver, context);
 		converter.setCustomConversions(customConversions);
 		converter.setTypeMapper(new DefaultMongoTypeMapper());
 		return converter;

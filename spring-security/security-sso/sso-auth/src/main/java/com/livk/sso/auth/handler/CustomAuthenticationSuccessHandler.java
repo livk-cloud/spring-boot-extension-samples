@@ -36,10 +36,10 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	@Override
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
 			Authentication authentication) {
-		User user = (User) authentication.getPrincipal();
-		String token = JwtUtils.generateToken(user);
+		var user = (User) authentication.getPrincipal();
+		var token = JwtUtils.generateToken(user);
 		log.info("登录成功user:{} token:{}", user, token);
-		Map<String, Object> map = Map.of("code", HttpServletResponse.SC_OK, "data", token);
+		var map = Map.of("code", HttpServletResponse.SC_OK, "data", token);
 		HttpServletUtils.outJson(response, map);
 	}
 

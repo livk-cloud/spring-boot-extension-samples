@@ -41,7 +41,7 @@ public class NettyServer implements AutoCloseable {
 	private Integer port;
 
 	public void start() throws InterruptedException {
-		ServerBootstrap bootstrap = new ServerBootstrap();
+		var bootstrap = new ServerBootstrap();
 		bootstrap.group(boss, work)
 			// 指定Channel
 			.channel(NioServerSocketChannel.class)
@@ -58,7 +58,7 @@ public class NettyServer implements AutoCloseable {
 			.childOption(ChannelOption.TCP_NODELAY, true)
 
 			.childHandler(new NettyServerHandlerInitializer());
-		ChannelFuture future = bootstrap.bind().sync();
+		var future = bootstrap.bind().sync();
 		if (future.isSuccess()) {
 			log.info("启动 Netty Server");
 		}

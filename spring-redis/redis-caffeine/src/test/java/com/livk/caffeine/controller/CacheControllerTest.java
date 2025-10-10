@@ -72,16 +72,16 @@ class CacheControllerTest {
 
 	@Test
 	void testGet() throws Exception {
-		Set<String> result = new HashSet<>();
-		String uuid = mockMvc.perform(get("/cache"))
+		var result = new HashSet<>();
+		var uuid = mockMvc.perform(get("/cache"))
 			.andExpect(status().isOk())
 			.andDo(print())
 			.andReturn()
 			.getResponse()
 			.getContentAsString();
 		result.add(uuid);
-		for (int i = 0; i < 3; i++) {
-			String newUUID = mockMvc.perform(get("/cache"))
+		for (var i = 0; i < 3; i++) {
+			var newUUID = mockMvc.perform(get("/cache"))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andExpect(content().string(uuid))
@@ -95,16 +95,16 @@ class CacheControllerTest {
 
 	@Test
 	void testPut() throws Exception {
-		Set<String> result = new HashSet<>();
-		for (int i = 0; i < 3; i++) {
-			String uuid = mockMvc.perform(post("/cache"))
+		var result = new HashSet<>();
+		for (var i = 0; i < 3; i++) {
+			var uuid = mockMvc.perform(post("/cache"))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andReturn()
 				.getResponse()
 				.getContentAsString();
 			result.add(uuid);
-			String newUUID = mockMvc.perform(get("/cache"))
+			var newUUID = mockMvc.perform(get("/cache"))
 				.andExpect(status().isOk())
 				.andDo(print())
 				.andExpect(content().string(uuid))
@@ -123,15 +123,15 @@ class CacheControllerTest {
 
 	@Test
 	void test() {
-		ScanOptions options = ScanOptions.scanOptions().match("*").count(100).build();
-		try (Cursor<String> cursor = redisOps.scan(options)) {
+		var options = ScanOptions.scanOptions().match("*").count(100).build();
+		try (var cursor = redisOps.scan(options)) {
 			while (cursor.hasNext()) {
 				log.info("key:{} cursorId:{} position:{}", cursor.next(), cursor.getId(), cursor.getPosition());
 			}
 		}
 
-		try (Cursor<String> scan = redisOps.scan(options)) {
-			Set<String> keys = scan.stream().limit(1).collect(Collectors.toSet());
+		try (var scan = redisOps.scan(options)) {
+			var keys = scan.stream().limit(1).collect(Collectors.toSet());
 			log.info("keys:{}", keys);
 			assertThat(keys).hasSize(1);
 		}

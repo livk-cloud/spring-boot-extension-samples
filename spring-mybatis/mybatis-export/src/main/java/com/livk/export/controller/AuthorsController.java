@@ -39,11 +39,11 @@ public class AuthorsController {
 
 	@GetMapping("download")
 	public HttpEntity<Void> download(HttpServletResponse response) throws IOException {
-		String fileName = System.currentTimeMillis() + ".csv";
+		var fileName = System.currentTimeMillis() + ".csv";
 		response.addHeader(HttpHeaders.CONTENT_TYPE, "application/csv");
 		response.addHeader(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + fileName);
 		response.setCharacterEncoding("UTF-8");
-		try (PrintWriter writer = response.getWriter()) {
+		try (var writer = response.getWriter()) {
 			authorsService.download(writer);
 		}
 		return ResponseEntity.ok().build();

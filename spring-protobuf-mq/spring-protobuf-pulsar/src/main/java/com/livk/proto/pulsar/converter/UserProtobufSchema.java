@@ -33,7 +33,7 @@ public class UserProtobufSchema extends AbstractSchema<User> {
 
 	@Override
 	public User decode(ByteBuf byteBuf) {
-		byte[] bytes = ByteBufUtil.getBytes(byteBuf);
+		var bytes = ByteBufUtil.getBytes(byteBuf);
 		return decode(bytes);
 	}
 

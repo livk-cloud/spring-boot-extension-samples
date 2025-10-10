@@ -32,7 +32,7 @@ public interface UserConverter extends Converter<User, UserProto.User> {
 
 	default User convert(byte[] bytes) {
 		try {
-			UserProto.User user = UserProto.User.parseFrom(bytes);
+			var user = UserProto.User.parseFrom(bytes);
 			return getSource(user);
 		}
 		catch (InvalidProtocolBufferException e) {

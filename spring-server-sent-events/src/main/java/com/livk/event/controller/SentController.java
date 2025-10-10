@@ -45,7 +45,7 @@ public class SentController {
 
 	@GetMapping("/subscribe/{id}")
 	public HttpEntity<SseEmitter> subscribe(@PathVariable String id) {
-		SseEmitter sseEmitter = sseEmitterRepository.get(id);
+		var sseEmitter = sseEmitterRepository.get(id);
 		if (sseEmitter == null) {
 			sseEmitter = new SseEmitter(3600_000L);
 			sseEmitterRepository.put(id, sseEmitter);
@@ -58,7 +58,7 @@ public class SentController {
 	@PostMapping("/push/{id}")
 	public HttpEntity<Boolean> push(@PathVariable String id, @RequestBody JsonNode content) throws IOException {
 		log.info("{}", content);
-		SseEmitter sseEmitter = sseEmitterRepository.get(id);
+		var sseEmitter = sseEmitterRepository.get(id);
 		if (sseEmitter == null) {
 			return ResponseEntity.ok(false);
 		}
@@ -68,11 +68,11 @@ public class SentController {
 
 	@PostMapping("/push/data/{id}")
 	public HttpEntity<Boolean> pushData(@PathVariable String id) throws IOException {
-		SseEmitter sseEmitter = sseEmitterRepository.get(id);
+		var sseEmitter = sseEmitterRepository.get(id);
 		if (sseEmitter == null) {
 			return ResponseEntity.ok(false);
 		}
-		for (int i = 0; i < 10; i++) {
+		for (var i = 0; i < 10; i++) {
 			sseEmitter.send(SseEmitter.event().data(i + ":::::" + UUID.randomUUID()).id(id));
 		}
 		sseEmitter.complete();
@@ -82,7 +82,7 @@ public class SentController {
 
 	@DeleteMapping("/over/{id}")
 	public HttpEntity<Boolean> over(@PathVariable String id) {
-		SseEmitter sseEmitter = sseEmitterRepository.get(id);
+		var sseEmitter = sseEmitterRepository.get(id);
 		if (sseEmitter == null) {
 			return ResponseEntity.ok(false);
 		}

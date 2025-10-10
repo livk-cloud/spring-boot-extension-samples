@@ -52,7 +52,7 @@ public class BuyController {
 
 	@PostMapping("put")
 	public void put() {
-		ValueOperations<String, Object> value = redisOps.opsForValue();
+		var value = redisOps.opsForValue();
 		if ((Integer) value.get("livk") > 0) {
 			value.decrement("livk");
 		}

@@ -43,7 +43,7 @@ public class AutoRepeatedSubmitInterceptor implements HandlerInterceptor {
 			@NonNull Object handler) {
 		if (handler instanceof HandlerMethod handlerMethod
 				&& handlerMethod.hasMethodAnnotation(AutoRepeatedSubmit.class)) {
-			String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+			var token = request.getHeader(HttpHeaders.AUTHORIZATION);
 			if (StringUtils.hasText(token)) {
 				try {
 					if (LockSupport.tryLock(LockType.LOCK, token, 3, 3, false)) {
@@ -70,7 +70,7 @@ public class AutoRepeatedSubmitInterceptor implements HandlerInterceptor {
 	}
 
 	private boolean outJson(HttpServletResponse response, String message) {
-		Map<String, String> body = Map.of("status", "500", "message", message);
+		var body = Map.of("status", "500", "message", message);
 		HttpServletUtils.outJson(response, body);
 		return false;
 	}

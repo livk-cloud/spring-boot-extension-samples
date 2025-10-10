@@ -47,7 +47,7 @@ class JobControllerTest {
 	@Test
 	void doJobTest() throws Exception {
 		mockMvc.perform(get("/doJob")).andExpect(status().isOk());
-		List<String> names = jdbcTemplate.queryForList("select * from sys_user")
+		var names = jdbcTemplate.queryForList("select * from sys_user")
 			.stream()
 			.map(map -> map.get("user_name").toString())
 			.toList();

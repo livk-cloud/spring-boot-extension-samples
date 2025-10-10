@@ -73,7 +73,7 @@ public class RedisEventStore extends InstanceEventPublisher implements InstanceE
 		if (events.isEmpty()) {
 			return Mono.empty();
 		}
-		InstanceId id = events.getFirst().getInstance();
+		var id = events.getFirst().getInstance();
 		if (!events.stream().map(InstanceEvent::getInstance).allMatch(id::equals)) {
 			throw new IllegalArgumentException("events must only refer to the same instance.");
 		}

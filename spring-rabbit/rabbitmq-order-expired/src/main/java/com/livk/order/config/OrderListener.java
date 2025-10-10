@@ -44,7 +44,7 @@ public class OrderListener {
 		log.info("【订单号】 - [{}]", order);
 		TimeUnit.SECONDS.sleep(1);
 		// 是否支付
-		int i = ThreadLocalRandom.current().nextInt(1, 100);
+		var i = ThreadLocalRandom.current().nextInt(1, 100);
 		if (i == 6) {
 			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
 			log.info("支付成功！");

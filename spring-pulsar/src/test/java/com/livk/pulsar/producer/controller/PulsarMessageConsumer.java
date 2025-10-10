@@ -30,9 +30,9 @@ public class PulsarMessageConsumer {
 
 	@PulsarListener
 	public void receive(Message<String> message) {
-		String key = message.getKey();
-		String data = message.getValue();
-		String topic = message.getTopicName();
+		var key = message.getKey();
+		var data = message.getValue();
+		var topic = message.getTopicName();
 		log.info("topic:{} key:{} data:{}", topic, key, data);
 	}
 

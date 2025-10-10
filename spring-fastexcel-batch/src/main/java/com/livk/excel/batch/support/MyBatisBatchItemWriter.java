@@ -36,9 +36,9 @@ public class MyBatisBatchItemWriter<T> implements ItemWriter<T> {
 
 	@Override
 	public void write(@NonNull Chunk<? extends T> chunk) {
-		SqlSession sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
+		var sqlSession = sqlSessionFactory.openSession(ExecutorType.BATCH, false);
 		try {
-			for (T item : chunk.getItems()) {
+			for (var item : chunk.getItems()) {
 				sqlSession.update(statementId, item);
 			}
 			sqlSession.commit();

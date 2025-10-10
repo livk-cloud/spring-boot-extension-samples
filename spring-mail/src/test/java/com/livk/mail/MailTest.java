@@ -58,23 +58,23 @@ class MailTest {
 	@DisplayName("测试freemarker")
 	void test() throws Exception {
 		// 定义个数据根节点
-		Map<String, Object> root = new HashMap<>();
+		var root = new HashMap<>();
 		// 往里面塞第一层节点
 		root.put("UserName", "Livk-Cloud");
 
-		String[] temp = new String[] { "dog", "cat", "tiger" };
-		List<String> pets = new ArrayList<>();
+		var temp = new String[] { "dog", "cat", "tiger" };
+		var pets = new ArrayList<>();
 		Collections.addAll(pets, temp);
 		// 往里面塞个List对象
 		root.put("pets", pets);
 
-		Template template = configuration.getTemplate("hello.ftl");
-		String text = FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
+		var template = configuration.getTemplate("hello.ftl");
+		var text = FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
 
-		MimeMessage mimeMessage = sender.createMimeMessage();
+		var mimeMessage = sender.createMimeMessage();
 		/* 设置邮件重要性级别 */
 		mimeMessage.setHeader("Importance", "High");
-		MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+		var helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 		helper.setFrom("1375632510@qq.com", "I am Livk");
 		helper.setTo("1375632510@qq.com");
 		helper.setSubject("This is subject 主题");
@@ -84,43 +84,42 @@ class MailTest {
 
 	@Test
 	void testTemplate() throws Exception {
-		Map<String, Object> root = Map.of("bucketName", "Livk-Bucket");
+		var root = Map.of("bucketName", "Livk-Bucket");
 
-		Template template = configuration.getTemplate("ac.ftl");
-		String text = FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
+		var template = configuration.getTemplate("ac.ftl");
+		var text = FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
 		System.out.println(text);
 		assertThat(text).isNotBlank();
 	}
 
 	@Test
 	void test1() throws IOException, TemplateException {
-		String txt = "${logo} -> ${code}";
-		Map<String, Object> map = Map.of("logo", "www.baidu.com", "code", "123456");
-		Template template = new Template("template", new StringReader(txt), configuration);
-		String result = "www.baidu.com -> 123456";
-		String s1 = FreemarkerUtils.processTemplateIntoString(template, map);
+		var txt = "${logo} -> ${code}";
+		var map = Map.<String, Object>of("logo", "www.baidu.com", "code", "123456");
+		var template = new Template("template", new StringReader(txt), configuration);
+		var result = "www.baidu.com -> 123456";
+		var s1 = FreemarkerUtils.processTemplateIntoString(template, map);
 		assertThat(s1).isNotBlank().isEqualTo(result);
-		String s2 = FreemarkerUtils.parse(txt, map);
+		var s2 = FreemarkerUtils.parse(txt, map);
 		assertThat(s2).isNotBlank().isEqualTo(result);
 	}
 
 	@Test
 	void testSql() {
-		String sql = "INSERT INTO ${tableName}(${columns}) VALUES <#list valuesArray as values>(${values})<#if values_has_next>,</#if></#list>";
-		String columns = String.join(",", "user_name", "sex", "age", "address", "status", "create_time", "update_time");
-		String format = DateUtils.format(LocalDateTime.now(), DateUtils.YMD_HMS);
-		String values = String.join(",", "livk", "1", "26", "shenzhen", "1", format, format);
-		String values2 = String.join(",", "livk", "1", "26", "shenzhen", "1", format, format);
-		Map<String, Object> map = Map.of("tableName", "sys_user", "columns", columns, "valuesArray",
-				List.of(values, values2));
-		String resultSql = "INSERT INTO sys_user(user_name,sex,age,address,status,create_time,update_time) VALUES (livk,1,26,shenzhen,1,"
+		var sql = "INSERT INTO ${tableName}(${columns}) VALUES <#list valuesArray as values>(${values})<#if values_has_next>,</#if></#list>";
+		var columns = String.join(",", "user_name", "sex", "age", "address", "status", "create_time", "update_time");
+		var format = DateUtils.format(LocalDateTime.now(), DateUtils.YMD_HMS);
+		var values = String.join(",", "livk", "1", "26", "shenzhen", "1", format, format);
+		var values2 = String.join(",", "livk", "1", "26", "shenzhen", "1", format, format);
+		var map = Map.of("tableName", "sys_user", "columns", columns, "valuesArray", List.of(values, values2));
+		var resultSql = "INSERT INTO sys_user(user_name,sex,age,address,status,create_time,update_time) VALUES (livk,1,26,shenzhen,1,"
 				+ format + "," + format + "),(livk,1,26,shenzhen,1," + format + "," + format + ")";
-		String parse = parse(sql, map);
+		var parse = parse(sql, map);
 		assertThat(parse).isNotBlank().isEqualTo(resultSql);
 	}
 
 	private String parse(String freemarker, Map<String, Object> model) {
-		try (StringWriter out = new StringWriter()) {
+		try (var out = new StringWriter()) {
 			new Template("template", new StringReader(freemarker), configuration).process(model, out);
 			return out.toString();
 		}
@@ -131,14 +130,14 @@ class MailTest {
 
 	private String parseFtlContent(String content, Map<String, Object> model) {
 		// 获取配置
-		StringWriter out = new StringWriter();
+		var out = new StringWriter();
 		try {
 			new Template("template", new StringReader(content), configuration).process(model, out);
 		}
 		catch (TemplateException | IOException e) {
 			return "";
 		}
-		String htmlContent = out.toString();
+		var htmlContent = out.toString();
 
 		try {
 			out.close();

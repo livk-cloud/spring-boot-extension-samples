@@ -35,7 +35,7 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManagerBuilder.class).build();
+		var authenticationManager = http.getSharedObject(AuthenticationManagerBuilder.class).build();
 		return http.csrf(AbstractHttpConfigurer::disable)
 			.authenticationManager(authenticationManager)
 			.authorizeHttpRequests(registry -> registry.requestMatchers("/user/query")

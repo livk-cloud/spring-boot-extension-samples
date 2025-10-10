@@ -92,7 +92,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
 			UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
 
-		String grantType = HttpServletUtils.request().getParameter(OAuth2ParameterNames.GRANT_TYPE);
+		var grantType = HttpServletUtils.request().getParameter(OAuth2ParameterNames.GRANT_TYPE);
 
 		if (authentication.getCredentials() == null) {
 			this.logger.debug("Failed to authenticate since no credentials provided");
@@ -101,7 +101,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 		}
 		// 校验验证码
 		if (Objects.equals(SecurityConstants.SMS, grantType)) {
-			String code = authentication.getCredentials().toString();
+			var code = authentication.getCredentials().toString();
 			if (!Objects.equals(code, "123456")) {
 				this.logger.debug("Failed to authenticate since code does not match stored value");
 				throw new BadCaptchaException(this.messages
@@ -110,8 +110,8 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 		}
 		// 校验密码
 		if (Objects.equals(SecurityConstants.PASSWORD, grantType)) {
-			String presentedPassword = authentication.getCredentials().toString();
-			String encodedPassword = extractEncodedPassword(userDetails.getPassword());
+			var presentedPassword = authentication.getCredentials().toString();
+			var encodedPassword = extractEncodedPassword(userDetails.getPassword());
 			if (!this.passwordEncoder.matches(presentedPassword, encodedPassword)) {
 				this.logger.debug("Failed to authenticate since password does not match stored value");
 				throw new BadCredentialsException(this.messages
@@ -126,24 +126,24 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 	protected final UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) {
 		prepareTimingAttackProtection();
 
-		MultiValueMap<String, String> paramMap = HttpServletUtils.params(HttpServletUtils.request());
-		String grantType = paramMap.getFirst(OAuth2ParameterNames.GRANT_TYPE);
-		String clientId = paramMap.getFirst(OAuth2ParameterNames.CLIENT_ID);
+		var paramMap = HttpServletUtils.params(HttpServletUtils.request());
+		var grantType = paramMap.getFirst(OAuth2ParameterNames.GRANT_TYPE);
+		var clientId = paramMap.getFirst(OAuth2ParameterNames.CLIENT_ID);
 
 		if (ObjectUtils.isEmpty(clientId)) {
 			clientId = basicConvert.convert(HttpServletUtils.request()).getName();
 		}
 
-		String finalClientId = clientId;
-		Optional<Oauth2UserDetailsService> optional = oauth2UserDetailsServices.stream()
+		var finalClientId = clientId;
+		var optional = oauth2UserDetailsServices.stream()
 			.filter(service -> service.support(finalClientId, grantType))
 			.max(Comparator.comparingInt(Ordered::getOrder));
 
-		Oauth2UserDetailsService oauth2UserDetailsService = optional
+		var oauth2UserDetailsService = optional
 			.orElseThrow((() -> new InternalAuthenticationServiceException("UserDetailsService error , not register")));
 
 		try {
-			UserDetails loadedUser = oauth2UserDetailsService.loadUserByUsername(username);
+			var loadedUser = oauth2UserDetailsService.loadUserByUsername(username);
 			Optional.ofNullable(loadedUser)
 				.orElseThrow(() -> new InternalAuthenticationServiceException(
 						"UserDetailsService returned null, which is an interface contract violation"));
@@ -164,7 +164,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 	@Override
 	protected Authentication createSuccessAuthentication(Object principal, Authentication authentication,
 			UserDetails user) {
-		boolean upgradeEncoding = this.userDetailsPasswordService != null
+		var upgradeEncoding = this.userDetailsPasswordService != null
 				&& this.passwordEncoder.upgradeEncoding(user.getPassword());
 		if (upgradeEncoding) {
 			String presentedPassword = authentication.getCredentials().toString();
@@ -182,7 +182,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 
 	private void mitigateAgainstTimingAttack(UsernamePasswordAuthenticationToken authentication) {
 		if (authentication.getCredentials() != null) {
-			String presentedPassword = authentication.getCredentials().toString();
+			var presentedPassword = authentication.getCredentials().toString();
 			this.passwordEncoder.matches(presentedPassword, this.userNotFoundEncodedPassword);
 		}
 	}
@@ -201,7 +201,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 	}
 
 	private String extractEncodedPassword(String prefixEncodedPassword) {
-		int start = prefixEncodedPassword.indexOf('}');
+		var start = prefixEncodedPassword.indexOf('}');
 		return prefixEncodedPassword.substring(start + SecurityConstants.DEFAULT_ID_SUFFIX.length());
 	}
 

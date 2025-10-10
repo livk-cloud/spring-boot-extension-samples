@@ -55,7 +55,7 @@ public class MailTemplate {
 	 */
 	public void send(Pair<String, String> from, String subject, String text, boolean isHtml, File file, String... to) {
 		try {
-			MimeMessage mimeMessage = MailMessageBuilder.builder(javaMailSender)
+			var mimeMessage = MailMessageBuilder.builder(javaMailSender)
 				.from(from)
 				.to(to)
 				.subject(subject)
@@ -125,8 +125,8 @@ public class MailTemplate {
 	public void send(Pair<String, String> from, String subject, String template, Map<String, Object> data, File file,
 			String... to) {
 		try {
-			Template tem = configuration.getTemplate(template);
-			String templateStr = FreeMarkerTemplateUtils.processTemplateIntoString(tem, data);
+			var tem = configuration.getTemplate(template);
+			var templateStr = FreeMarkerTemplateUtils.processTemplateIntoString(tem, data);
 			send(from, subject, templateStr, true, file, to);
 		}
 		catch (Exception e) {

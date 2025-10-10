@@ -60,7 +60,7 @@ public class LivkStreamListener
 	@Override
 	public void afterPropertiesSet() {
 		if (redisOps.hasKey("livk-streamKey")) {
-			StreamInfo.XInfoGroups groups = redisOps.opsForStream().groups("livk-streamKey");
+			var groups = redisOps.opsForStream().groups("livk-streamKey");
 			if (groups.isEmpty()) {
 				redisOps.opsForStream().createGroup("livk-streamKey", "livk-group");
 			}
@@ -69,8 +69,7 @@ public class LivkStreamListener
 			redisOps.opsForStream().createGroup("livk-streamKey", "livk-group");
 		}
 
-		StreamMessageListenerContainer.StreamMessageListenerContainerOptions<String, ObjectRecord<String, String>> options = StreamMessageListenerContainer.StreamMessageListenerContainerOptions
-			.builder()
+		var options = StreamMessageListenerContainer.StreamMessageListenerContainerOptions.builder()
 			.batchSize(10)
 			.executor(new ThreadPoolExecutor(4, 10, 0, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10)))
 			.errorHandler(t -> log.error("ERROR:{}", t.getMessage()))

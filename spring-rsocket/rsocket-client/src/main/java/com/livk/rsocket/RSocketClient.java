@@ -44,7 +44,7 @@ public class RSocketClient {
 
 	@PreDestroy
 	void shutdown() {
-		RSocket rsocket = rsocketRequester.rsocket();
+		var rsocket = rsocketRequester.rsocket();
 		if (rsocket != null) {
 			rsocket.dispose();
 		}
@@ -73,10 +73,10 @@ public class RSocketClient {
 
 	@GetMapping("channel")
 	public Mono<String> channel() {
-		Mono<Duration> setting1 = Mono.just(Duration.ofSeconds(1));
-		Mono<Duration> setting2 = Mono.just(Duration.ofSeconds(3)).delayElement(Duration.ofSeconds(5));
-		Mono<Duration> setting3 = Mono.just(Duration.ofSeconds(5)).delayElement(Duration.ofSeconds(15));
-		Flux<Duration> settings = Flux.concat(setting1, setting2, setting3)
+		var setting1 = Mono.just(Duration.ofSeconds(1));
+		var setting2 = Mono.just(Duration.ofSeconds(3)).delayElement(Duration.ofSeconds(5));
+		var setting3 = Mono.just(Duration.ofSeconds(5)).delayElement(Duration.ofSeconds(15));
+		var settings = Flux.concat(setting1, setting2, setting3)
 			.doOnNext(d -> log.info("客户端channel发送消息 {}", d.getSeconds()));
 		return settings.collectList().flatMap(durations -> Mono.just("channel"));
 	}

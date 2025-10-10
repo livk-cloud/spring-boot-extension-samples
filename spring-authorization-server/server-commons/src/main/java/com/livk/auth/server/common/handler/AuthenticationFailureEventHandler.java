@@ -54,9 +54,9 @@ public class AuthenticationFailureEventHandler implements AuthenticationFailureH
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) {
 
-		String grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
+		var grantType = request.getParameter(OAuth2ParameterNames.GRANT_TYPE);
 
-		String username = request.getParameter(SecurityConstants.SMS_PARAMETER_NAME);
+		var username = request.getParameter(SecurityConstants.SMS_PARAMETER_NAME);
 
 		if (SecurityConstants.PASSWORD.equals(grantType)) {
 			username = request.getParameter(OAuth2ParameterNames.USERNAME);
@@ -70,9 +70,9 @@ public class AuthenticationFailureEventHandler implements AuthenticationFailureH
 
 	private void sendErrorResponse(HttpServletResponse response, AuthenticationException exception) throws IOException {
 
-		OAuth2Error error = ((OAuth2AuthenticationException) exception).getError();
+		var error = ((OAuth2AuthenticationException) exception).getError();
 
-		ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
+		var httpResponse = new ServletServerHttpResponse(response);
 
 		httpResponse.setStatusCode(HttpStatus.BAD_REQUEST);
 

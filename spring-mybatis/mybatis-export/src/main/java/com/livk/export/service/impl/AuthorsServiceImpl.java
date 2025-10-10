@@ -36,7 +36,7 @@ public class AuthorsServiceImpl implements AuthorsService {
 
 	@Override
 	public void download(PrintWriter writer) {
-		CustomResultHandler customResultHandler = new CustomResultHandler(new DownloadProcessor(writer));
+		var customResultHandler = new CustomResultHandler(new DownloadProcessor(writer));
 		sqlSessionTemplate.select("com.livk.export.mapper.AuthorsMapper.select", customResultHandler);
 		writer.flush();
 	}

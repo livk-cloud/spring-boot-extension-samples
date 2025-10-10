@@ -48,9 +48,9 @@ public class RedisConfig {
 	@Bean
 	public ReactiveRedisMessageListenerContainer reactiveRedisMessageListenerContainer(
 			ReactiveRedisConnectionFactory connectionFactory) {
-		ReactiveRedisMessageListenerContainer container = new ReactiveRedisMessageListenerContainer(connectionFactory);
-		JavaType javaType = TypeFactoryUtils.javaType(LivkMessage.class, Object.class);
-		RedisSerializer<LivkMessage<Object>> serializer = JacksonSerializerUtils.json(javaType);
+		var container = new ReactiveRedisMessageListenerContainer(connectionFactory);
+		var javaType = TypeFactoryUtils.javaType(LivkMessage.class, Object.class);
+		var serializer = JacksonSerializerUtils.json(javaType);
 		container
 			.receive(List.of(PatternTopic.of(LivkMessage.CHANNEL)),
 					RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()),
@@ -62,7 +62,7 @@ public class RedisConfig {
 
 	@Bean
 	public RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory factory) {
-		RedisMessageListenerContainer listenerContainer = new RedisMessageListenerContainer();
+		var listenerContainer = new RedisMessageListenerContainer();
 		listenerContainer.setConnectionFactory(factory);
 		return listenerContainer;
 	}

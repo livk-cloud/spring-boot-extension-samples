@@ -45,19 +45,19 @@ public class CacheInterceptor extends AnnotationAbstractPointcutTypeAdvisor<Doub
 	@Override
 	protected Object invoke(MethodInvocation invocation, DoubleCache doubleCache) throws Throwable {
 		Assert.notNull(doubleCache, "doubleCache is null");
-		String spELResult = resolver.evaluate(doubleCache.key(), invocation.getMethod(), invocation.getArguments());
-		String realKey = doubleCache.cacheName() + ":" + spELResult;
+		var spELResult = resolver.evaluate(doubleCache.key(), invocation.getMethod(), invocation.getArguments());
+		var realKey = doubleCache.cacheName() + ":" + spELResult;
 		switch (doubleCache.type()) {
 			case FULL -> {
 				return cache.get(realKey, call(invocation.proceed()));
 			}
 			case PUT -> {
-				Object proceed = invocation.proceed();
+				var proceed = invocation.proceed();
 				cache.put(realKey, proceed);
 				return proceed;
 			}
 			case DELETE -> {
-				Object proceed = invocation.proceed();
+				var proceed = invocation.proceed();
 				cache.evict(realKey);
 				return proceed;
 			}

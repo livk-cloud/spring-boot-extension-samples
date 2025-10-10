@@ -38,7 +38,7 @@ public class Role implements GrantedAuthority {
 
 	@JsonCreator
 	public static Role create(@JsonProperty("authority") String authority) {
-		Role role = new Role();
+		var role = new Role();
 		role.setRoleName(authority);
 		return role;
 	}

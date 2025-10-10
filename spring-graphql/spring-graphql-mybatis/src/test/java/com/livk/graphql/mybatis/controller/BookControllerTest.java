@@ -62,7 +62,7 @@ class BookControllerTest {
 
 	@BeforeEach
 	void init() {
-		WebTestClient.Builder builder = webTestClient.mutate().baseUrl(graphqlPath);
+		var builder = webTestClient.mutate().baseUrl(graphqlPath);
 		tester = HttpGraphQlTester.builder(builder).build();
 	}
 
@@ -70,7 +70,7 @@ class BookControllerTest {
 	@Test
 	void list() {
 		// language=GraphQL
-		String document = """
+		var document = """
 				query{
 				    bookList {
 				        title
@@ -79,7 +79,7 @@ class BookControllerTest {
 				        }
 				    }
 				}""";
-		List<Map<String, Object>> result = tester.document(document)
+		var result = tester.document(document)
 			.execute()
 			.path("bookList")
 			.entityList(new ParameterizedTypeReference<Map<String, Object>>() {
@@ -99,7 +99,7 @@ class BookControllerTest {
 				    }
 				  }
 				}""";
-		List<Map<String, Object>> r1 = tester.document(d1)
+		var r1 = tester.document(d1)
 			.execute()
 			.path("bookList")
 			.entityList(new ParameterizedTypeReference<Map<String, Object>>() {
@@ -112,7 +112,7 @@ class BookControllerTest {
 	@Test
 	void bookByIsbn() {
 		// language=GraphQL
-		String document = """
+		var document = """
 				query{
 				    bookByIsbn(isbn: "9787121377921"){
 				        isbn
@@ -123,7 +123,7 @@ class BookControllerTest {
 				        }
 				    }
 				}""";
-		Map<String, Object> result = tester.document(document)
+		var result = tester.document(document)
 			.execute()
 			.path("bookByIsbn")
 			.entity(new ParameterizedTypeReference<Map<String, Object>>() {
@@ -137,7 +137,7 @@ class BookControllerTest {
 	void createBook() {
 		bookMapper.clear();
 		// language=GraphQL
-		String d1 = """
+		var d1 = """
 				mutation{
 				    createBook(dto: {
 				        isbn: "9787121282089",
@@ -147,7 +147,7 @@ class BookControllerTest {
 				    } )
 				}""";
 		// language=GraphQL
-		String d2 = """
+		var d2 = """
 				mutation{
 				    createBook(dto: {
 				        isbn: "9787121377921",
@@ -157,7 +157,7 @@ class BookControllerTest {
 				    } )
 				}""";
 		// language=GraphQL
-		String d3 = """
+		var d3 = """
 				mutation{
 				    createBook(dto: {
 				        isbn: "9787121347962",
@@ -167,13 +167,13 @@ class BookControllerTest {
 				    } )
 				}""";
 
-		Boolean r1 = tester.document(d1).execute().path("createBook").entity(Boolean.class).get();
+		var r1 = tester.document(d1).execute().path("createBook").entity(Boolean.class).get();
 		assertThat(r1).isTrue();
 
-		Boolean r2 = tester.document(d2).execute().path("createBook").entity(Boolean.class).get();
+		var r2 = tester.document(d2).execute().path("createBook").entity(Boolean.class).get();
 		assertThat(r2).isTrue();
 
-		Boolean r3 = tester.document(d3).execute().path("createBook").entity(Boolean.class).get();
+		var r3 = tester.document(d3).execute().path("createBook").entity(Boolean.class).get();
 		assertThat(r3).isTrue();
 	}
 
@@ -182,7 +182,7 @@ class BookControllerTest {
 	void createAuthor() {
 		authorMapper.clear();
 		// language=GraphQL
-		String document = """
+		var document = """
 				mutation{
 				    createAuthor(dto: {
 				        idCardNo: "341234567891234567",
@@ -190,10 +190,10 @@ class BookControllerTest {
 				        age: 38
 				    })
 				}""";
-		Boolean result = tester.document(document).execute().path("createAuthor").entity(Boolean.class).get();
+		var result = tester.document(document).execute().path("createAuthor").entity(Boolean.class).get();
 		assertThat(result).isTrue();
 		// language=GraphQL
-		String d2 = """
+		var d2 = """
 				mutation{
 				    createAuthor(dto: {
 				        idCardNo: "341234567891234568",
@@ -201,7 +201,7 @@ class BookControllerTest {
 				        age: 70 }
 				    )
 				}""";
-		Boolean result2 = tester.document(d2).execute().path("createAuthor").entity(Boolean.class).get();
+		var result2 = tester.document(d2).execute().path("createAuthor").entity(Boolean.class).get();
 		assertThat(result2).isTrue();
 	}
 

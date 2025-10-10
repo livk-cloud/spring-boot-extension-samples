@@ -26,11 +26,11 @@ public class RequestParamValidFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain)
 			throws IOException, ServletException {
-		HttpServletRequest request = WebUtils.getNativeRequest(servletRequest, HttpServletRequest.class);
+		var request = WebUtils.getNativeRequest(servletRequest, HttpServletRequest.class);
 		Assert.notNull(request, "request must not be null");
-		MultiValueMap<String, String> params = HttpServletUtils.params(request);
+		var params = HttpServletUtils.params(request);
 		if (params.containsKey("name")) {
-			String name = params.getFirst("name");
+			var name = params.getFirst("name");
 			Assert.isTrue(ObjectUtils.isEmpty(name) || "Air Pod 3".equals(name), "name must be Air Pod 3");
 		}
 		chain.doFilter(servletRequest, servletResponse);

@@ -61,7 +61,7 @@ public class RabbitConfig {
 
 	@Bean
 	public Queue orderQueue() {
-		Map<String, Object> args = Maps.newHashMapWithExpectedSize(2);
+		var args = Maps.<String, Object>newHashMapWithExpectedSize(2);
 		args.put(MESSAGE_TTL, 30 * 1000);
 		args.put(DEAD_LETTER_QUEUE_KEY, dealExchangeOrder);
 		args.put(DEAD_LETTER_ROUTING_KEY, deadRoutingKeyOrder);

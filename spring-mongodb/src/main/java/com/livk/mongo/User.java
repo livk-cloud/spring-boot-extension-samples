@@ -48,7 +48,7 @@ public class User {
 		@Override
 		public ObjectId deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
 				throws IOException {
-			String hex = jsonParser.getValueAsString();
+			var hex = jsonParser.getValueAsString();
 			return hex == null ? null : new ObjectId(hex);
 		}
 

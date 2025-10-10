@@ -8,9 +8,6 @@ import com.livk.grpc.proto.entity.ProtoDevice.DeviceQuery;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import lombok.val;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 /**
@@ -28,7 +25,7 @@ public class DeviceGrpc extends DeviceServiceImplBase {
 	@Override
 	public void query(DeviceQuery request, StreamObserver<ProtoDevice.Device> responseObserver) {
 		log.info("request name:{}", request.getName());
-		Device device = deviceRepository.getByName(request.getName());
+		var device = deviceRepository.getByName(request.getName());
 		if (device != null) {
 			ProtoDevice.Device response = mapstructService.convert(device, ProtoDevice.Device.class);
 			responseObserver.onNext(response);
@@ -47,7 +44,7 @@ public class DeviceGrpc extends DeviceServiceImplBase {
 			responseObserver.onNext(BoolValue.of(false));
 		}
 		else {
-			val device = mapstructService.convert(request, Device.class);
+			var device = mapstructService.convert(request, Device.class);
 			deviceRepository.save(device);
 			responseObserver.onNext(BoolValue.of(true));
 		}

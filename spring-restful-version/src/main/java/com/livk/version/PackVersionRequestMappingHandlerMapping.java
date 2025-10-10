@@ -14,12 +14,11 @@ public class PackVersionRequestMappingHandlerMapping extends RequestMappingHandl
 
 	@Override
 	protected RequestMappingInfo getMappingForMethod(@NonNull Method method, @NonNull Class<?> handlerType) {
-		Optional<RequestMappingInfo> mapping = Optional.ofNullable(super.getMappingForMethod(method, handlerType));
-		Optional<ApiVersionCondition> typeOptional = Optional.ofNullable(handlerType.getAnnotation(ApiVersion.class))
+		var mapping = Optional.ofNullable(super.getMappingForMethod(method, handlerType));
+		var typeOptional = Optional.ofNullable(handlerType.getAnnotation(ApiVersion.class))
 			.map(ApiVersionCondition::new);
 
-		Optional<ApiVersionCondition> methodOptional = Optional.ofNullable(method.getAnnotation(ApiVersion.class))
-			.map(ApiVersionCondition::new);
+		var methodOptional = Optional.ofNullable(method.getAnnotation(ApiVersion.class)).map(ApiVersionCondition::new);
 
 		return typeOptional
 			.map(typeApiVersion -> methodOptional.map(methodApiVersion -> methodApiVersion.combine(typeApiVersion))

@@ -44,10 +44,10 @@ public class RsaKeyProperties {
 		if (ObjectUtils.isEmpty(location)) {
 			location = DEFAULT_LOCATION;
 		}
-		Resource jksResource = ResourceUtils.getResource(location);
+		var jksResource = ResourceUtils.getResource(location);
 		if (!jksResource.exists()) {
 			try {
-				Resource[] resources = ResourceUtils.getResources(location);
+				var resources = ResourceUtils.getResources(location);
 				if (resources != null) {
 					jksResource = resources[0];
 				}

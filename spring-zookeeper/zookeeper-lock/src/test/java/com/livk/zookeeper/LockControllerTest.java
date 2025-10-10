@@ -50,7 +50,7 @@ class LockControllerTest {
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
 		registry.add("spring.zookeeper.curator.connect-string",
-				() -> String.format("%s:%s", zookeeper.getHost(), zookeeper.getFirstMappedPort()));
+				() -> "%s:%s".formatted(zookeeper.getHost(), zookeeper.getFirstMappedPort()));
 	}
 
 	@Autowired
@@ -58,10 +58,10 @@ class LockControllerTest {
 
 	@Test
 	void lock() throws InterruptedException {
-		try (ExecutorService service = Executors.newFixedThreadPool(10, Thread.ofVirtual().factory())) {
-			CountDownLatch countDownLatch = new CountDownLatch(10);
-			for (int i = 0; i < 10; i++) {
-				String param = String.valueOf(i);
+		try (var service = Executors.newFixedThreadPool(10, Thread.ofVirtual().factory())) {
+			var countDownLatch = new CountDownLatch(10);
+			for (var i = 0; i < 10; i++) {
+				var param = String.valueOf(i);
 				service.execute(() -> {
 					try {
 						mockMvc.perform(get("/lock").queryParam("id", param)).andExpect(status().isOk());

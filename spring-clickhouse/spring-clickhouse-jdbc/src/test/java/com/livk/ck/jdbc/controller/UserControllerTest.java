@@ -86,7 +86,7 @@ class UserControllerTest {
 	@Order(3)
 	@Test
 	void testRemove() throws Exception {
-		String format = DateUtils.format(LocalDateTime.now(), "yyyy-MM-dd");
+		var format = DateUtils.format(LocalDateTime.now(), "yyyy-MM-dd");
 		mockMvc.perform(delete("/user/" + format)).andDo(print()).andExpect(status().isOk());
 
 		mockMvc.perform(get("/user"))
@@ -99,7 +99,7 @@ class UserControllerTest {
 	@Order(1)
 	@Test
 	void testSave() throws Exception {
-		User user = new User().setId(Integer.MAX_VALUE)
+		var user = new User().setId(Integer.MAX_VALUE)
 			.setAppId("appId")
 			.setVersion("version")
 			.setRegTime(LocalDate.now());

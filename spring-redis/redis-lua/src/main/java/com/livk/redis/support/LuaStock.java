@@ -35,8 +35,8 @@ public class LuaStock {
 	private final RedisOps redisOps;
 
 	public String buy(Integer num) {
-		RedisScript<Long> redisScript = RedisScript.of(new ClassPathResource("good.lua"), Long.class);
-		Long result = redisOps.execute(redisScript, List.of("stock"), num);
+		var redisScript = RedisScript.of(new ClassPathResource("good.lua"), Long.class);
+		var result = redisOps.execute(redisScript, List.of("stock"), num);
 		Assert.notNull(result, "RedisScript Result is Null!");
 		if (0 == result) {
 			return "没了";

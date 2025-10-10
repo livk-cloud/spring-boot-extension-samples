@@ -29,7 +29,7 @@ import java.util.Locale;
 public class MessageSourceUtils {
 
 	public MessageSource get() {
-		ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+		var messageSource = new ReloadableResourceBundleMessageSource();
 		messageSource.addBasenames("classpath:i18n/errors/messages");
 		messageSource.setDefaultLocale(Locale.CHINA);
 		return messageSource;

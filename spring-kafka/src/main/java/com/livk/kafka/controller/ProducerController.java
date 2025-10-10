@@ -52,10 +52,9 @@ public class ProducerController {
 			}
 		});
 		// 同步获取结果
-		CompletableFuture<SendResult<Object, Object>> future = kafkaTemplate.send(KafkaConstant.TOPIC,
-				UUID.randomUUID().toString());
+		var future = kafkaTemplate.send(KafkaConstant.TOPIC, UUID.randomUUID().toString());
 		try {
-			SendResult<Object, Object> result = future.get();
+			var result = future.get();
 			log.info("result:{}", result);
 		}
 		catch (Exception e) {

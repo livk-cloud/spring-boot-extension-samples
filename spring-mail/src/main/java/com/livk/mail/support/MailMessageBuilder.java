@@ -37,7 +37,7 @@ public class MailMessageBuilder {
 
 	public static MailMessageBuilder builder(JavaMailSender javaMailSender) {
 		try {
-			MailMessageBuilder builder = new MailMessageBuilder();
+			var builder = new MailMessageBuilder();
 			builder.mimeMessageHelper = new MimeMessageHelper(javaMailSender.createMimeMessage(), true);
 			return builder;
 		}

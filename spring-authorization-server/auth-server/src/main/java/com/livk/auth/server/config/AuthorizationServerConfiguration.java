@@ -68,15 +68,15 @@ public class AuthorizationServerConfiguration {
 	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http,
 			OAuth2AuthorizationService authorizationService, OAuth2TokenGenerator<OAuth2Token> oAuth2TokenGenerator,
 			UserDetailsAuthenticationProvider userDetailsAuthenticationProvider) throws Exception {
-		OAuth2AuthorizationServerConfigurer authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
+		var authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 
-		AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManagerBuilder.class).build();
+		var authenticationManager = http.getSharedObject(AuthenticationManagerBuilder.class).build();
 
-		OAuth2PasswordAuthenticationProvider passwordAuthenticationProvider = new OAuth2PasswordAuthenticationProvider(
-				authenticationManager, authorizationService, oAuth2TokenGenerator);
+		var passwordAuthenticationProvider = new OAuth2PasswordAuthenticationProvider(authenticationManager,
+				authorizationService, oAuth2TokenGenerator);
 
-		OAuth2SmsAuthenticationProvider smsAuthenticationProvider = new OAuth2SmsAuthenticationProvider(
-				authenticationManager, authorizationService, oAuth2TokenGenerator);
+		var smsAuthenticationProvider = new OAuth2SmsAuthenticationProvider(authenticationManager, authorizationService,
+				oAuth2TokenGenerator);
 
 		http.with(authorizationServerConfigurer, configurer -> configurer
 			.tokenEndpoint((tokenEndpoint) -> tokenEndpoint.accessTokenRequestConverter(accessTokenRequestConverter())
@@ -89,8 +89,8 @@ public class AuthorizationServerConfiguration {
 			.authorizationService(authorizationService))
 			.with(new FormIdentityLoginConfigurer(), Customizer.withDefaults());
 
-		RequestMatcher endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
-		HttpSessionSecurityContextRepository httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
+		var endpointsMatcher = authorizationServerConfigurer.getEndpointsMatcher();
+		var httpSessionSecurityContextRepository = new HttpSessionSecurityContextRepository();
 
 		return http.securityMatcher(endpointsMatcher)
 			.authenticationManager(authenticationManager)
@@ -108,15 +108,15 @@ public class AuthorizationServerConfiguration {
 	@Bean
 	public DaoAuthenticationProvider daoAuthenticationProvider(PasswordEncoder passwordEncoder,
 			UserDetailsService userDetailsService) {
-		DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
+		var provider = new DaoAuthenticationProvider(userDetailsService);
 		provider.setPasswordEncoder(passwordEncoder);
 		return provider;
 	}
 
 	@Bean
 	public OAuth2TokenGenerator<OAuth2Token> oAuth2TokenGenerator(JWKSource<SecurityContext> jwkSource) {
-		JwtEncoder jwtEncoder = new NimbusJwtEncoder(jwkSource);
-		JwtGenerator generator = new JwtGenerator(jwtEncoder);
+		var jwtEncoder = new NimbusJwtEncoder(jwkSource);
+		var generator = new JwtGenerator(jwtEncoder);
 		generator.setJwtCustomizer(new OAuth2JwtTokenCustomizer());
 		return new DelegatingOAuth2TokenGenerator(generator, new OAuth2RefreshTokenGenerator());
 	}

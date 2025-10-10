@@ -39,7 +39,7 @@ public class LockController {
 
 	@GetMapping
 	public void lock(@RequestParam Integer id) {
-		Lock lock = lockRegistry.obtain("zookeeper");
+		var lock = lockRegistry.obtain("zookeeper");
 		try {
 			while (!lock.tryLock()) {
 				// 获取不到锁直接空转

@@ -33,7 +33,7 @@ public class RegistrationHttpMessageConverters extends HttpMessageConverters {
 	}
 
 	private static HttpMessageConverter<?> jacksonHttpMessageConverter(AdminServerModule adminJacksonModule) {
-		MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
+		var converter = new MappingJackson2HttpMessageConverter();
 		converter.getObjectMapper().registerModule(adminJacksonModule);
 		return converter;
 	}

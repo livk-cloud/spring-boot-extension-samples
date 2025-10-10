@@ -54,7 +54,7 @@ public class KeyStoreKeyFactory {
 	}
 
 	private static String type(Resource resource) {
-		String ext = StringUtils.getFilenameExtension(resource.getFilename());
+		var ext = StringUtils.getFilenameExtension(resource.getFilename());
 		return ext == null ? "jks" : ext;
 	}
 
@@ -68,20 +68,20 @@ public class KeyStoreKeyFactory {
 				if (store == null) {
 					synchronized (lock) {
 						store = KeyStore.getInstance(type);
-						try (InputStream stream = resource.getInputStream()) {
+						try (var stream = resource.getInputStream()) {
 							store.load(stream, this.password);
 						}
 					}
 				}
 			}
-			RSAPrivateCrtKey key = (RSAPrivateCrtKey) store.getKey(alias, password);
-			Certificate certificate = store.getCertificate(alias);
+			var key = (RSAPrivateCrtKey) store.getKey(alias, password);
+			var certificate = store.getCertificate(alias);
 			PublicKey publicKey = null;
 			if (certificate != null) {
 				publicKey = certificate.getPublicKey();
 			}
 			else if (key != null) {
-				RSAPublicKeySpec spec = new RSAPublicKeySpec(key.getModulus(), key.getPublicExponent());
+				var spec = new RSAPublicKeySpec(key.getModulus(), key.getPublicExponent());
 				publicKey = KeyFactory.getInstance("RSA").generatePublic(spec);
 			}
 			return new KeyPair(publicKey, key);

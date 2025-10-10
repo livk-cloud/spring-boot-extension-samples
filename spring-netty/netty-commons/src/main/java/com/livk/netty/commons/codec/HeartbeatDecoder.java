@@ -30,9 +30,9 @@ public class HeartbeatDecoder extends ByteToMessageDecoder {
 
 	@Override
 	protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) {
-		byte version = in.readByte();
-		byte type = in.readByte();
-		ClientPackage clientPackage = new ClientPackage();
+		var version = in.readByte();
+		var type = in.readByte();
+		var clientPackage = new ClientPackage();
 		clientPackage.setVersion(version);
 		out.add(clientPackage);
 	}

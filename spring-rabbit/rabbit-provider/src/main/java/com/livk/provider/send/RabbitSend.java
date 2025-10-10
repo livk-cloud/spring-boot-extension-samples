@@ -61,12 +61,11 @@ public class RabbitSend {
 	public <T> void sendMsgHeaders(Message<T> message, Map<String, Object> map) {
 		message.setMsgId(UUID.randomUUID().toString());
 		message.setSendTime(LocalDateTime.now());
-		MessageProperties messageProperties = new MessageProperties();
+		var messageProperties = new MessageProperties();
 		messageProperties.setDeliveryMode(MessageDeliveryMode.PERSISTENT);
 		messageProperties.setContentType("UTF-8");
 		messageProperties.getHeaders().putAll(map);
-		org.springframework.amqp.core.Message msg = new org.springframework.amqp.core.Message(
-				message.toString().getBytes(), messageProperties);
+		var msg = new org.springframework.amqp.core.Message(message.toString().getBytes(), messageProperties);
 		rabbitTemplate.convertAndSend(HeadersConfig.HEADERS_EXCHANGE_NAME, null, msg);
 	}
 

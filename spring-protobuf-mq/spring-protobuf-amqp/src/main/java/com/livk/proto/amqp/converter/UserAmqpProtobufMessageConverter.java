@@ -40,7 +40,7 @@ public class UserAmqpProtobufMessageConverter extends AbstractMessageConverter {
 	@Override
 	protected Message createMessage(@NonNull Object object, @NonNull MessageProperties messageProperties) {
 		if (object instanceof User user) {
-			byte[] byteArray = userConverter.convert(user);
+			var byteArray = userConverter.convert(user);
 			return new Message(byteArray, messageProperties);
 		}
 		return defaultMessageConverter.toMessage(object, messageProperties);

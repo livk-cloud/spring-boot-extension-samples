@@ -45,7 +45,7 @@ public class JdbcConfig {
 
 	@Bean
 	public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
-		RegisteredClient client = RegisteredClient.withId("livk")
+		var client = RegisteredClient.withId("livk")
 			.clientId("livk-client")
 			.clientSecret(new BCryptPasswordEncoder().encode("secret"))
 			.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
@@ -70,7 +70,7 @@ public class JdbcConfig {
 				.build())
 			.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
 			.build();
-		JdbcRegisteredClientRepository repository = new JdbcRegisteredClientRepository(jdbcTemplate);
+		var repository = new JdbcRegisteredClientRepository(jdbcTemplate);
 		repository.save(client);
 		return repository;
 	}

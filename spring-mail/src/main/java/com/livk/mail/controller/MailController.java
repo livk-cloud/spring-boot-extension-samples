@@ -48,18 +48,18 @@ public class MailController {
 	@PostMapping("send")
 	public HttpEntity<Void> send() throws IOException, TemplateException {
 		// 定义个数据根节点
-		Map<String, Object> root = new HashMap<>();
+		var root = new HashMap<String, Object>();
 		// 往里面塞第一层节点
 		root.put("UserName", "Livk-Cloud");
 
-		String[] temp = new String[] { "dog", "cat", "tiger" };
-		List<String> pets = new ArrayList<>();
+		var temp = new String[] { "dog", "cat", "tiger" };
+		var pets = new ArrayList<String>();
 		Collections.addAll(pets, temp);
 		// 往里面塞个List对象
 		root.put("pets", pets);
 
-		Template template = mailTemplate.getConfiguration().getTemplate("hello.ftl");
-		String text = FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
+		var template = mailTemplate.getConfiguration().getTemplate("hello.ftl");
+		var text = FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
 
 		mailTemplate.send(Pair.of("1375632510@qq.com", "I am Livk"), "This is subject 主题", text, root,
 				"1375632510@qq.com");

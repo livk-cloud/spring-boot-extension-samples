@@ -47,21 +47,21 @@ public class JwtUtils {
 
 	@SneakyThrows
 	public String generateToken(User userInfo) {
-		JWSHeader jwsHeader = new JWSHeader.Builder(JWSAlgorithm.RS256).type(JOSEObjectType.JWT).build();
-		Payload payload = new Payload(UUID.randomUUID().toString(), userInfo);
-		JWSObject jwsObject = new JWSObject(jwsHeader,
+		var jwsHeader = new JWSHeader.Builder(JWSAlgorithm.RS256).type(JOSEObjectType.JWT).build();
+		var payload = new Payload(UUID.randomUUID().toString(), userInfo);
+		var jwsObject = new JWSObject(jwsHeader,
 				new com.nimbusds.jose.Payload(JsonMapperUtils.writeValueAsString(payload)));
-		RSASSASigner signer = new RSASSASigner(RSA_KEY);
+		var signer = new RSASSASigner(RSA_KEY);
 		jwsObject.sign(signer);
 		return jwsObject.serialize();
 	}
 
 	@SneakyThrows
 	public Payload parse(String token) {
-		JWSObject jwsObject = JWSObject.parse(token);
-		RSASSAVerifier verifier = new RSASSAVerifier(RSA_KEY);
+		var jwsObject = JWSObject.parse(token);
+		var verifier = new RSASSAVerifier(RSA_KEY);
 		if (jwsObject.verify(verifier)) {
-			String json = jwsObject.getPayload().toString();
+			var json = jwsObject.getPayload().toString();
 			return JsonMapperUtils.readValue(json, Payload.class);
 		}
 		throw new RuntimeException("500");

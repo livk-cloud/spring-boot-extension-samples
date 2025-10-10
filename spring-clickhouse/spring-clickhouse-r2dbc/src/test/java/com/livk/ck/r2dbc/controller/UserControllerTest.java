@@ -78,7 +78,7 @@ class UserControllerTest {
 	@Order(1)
 	@Test
 	void testSave() {
-		User user = new User();
+		var user = new User();
 		user.setId(Integer.MAX_VALUE);
 		user.setAppId("appId");
 		user.setVersion("version");

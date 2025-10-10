@@ -32,7 +32,7 @@ public class SecurityContextUtils {
 	}
 
 	public User getUser() {
-		Object principal = getAuthentication().getPrincipal();
+		var principal = getAuthentication().getPrincipal();
 		return principal instanceof User user ? user : null;
 	}
 

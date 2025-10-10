@@ -43,7 +43,7 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
 	public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
 		if (evt instanceof IdleStateEvent idleStateEvent) {
 			if (idleStateEvent.state() == IdleState.WRITER_IDLE) {
-				NettyMessage.Message heartbeat = NettyMessage.Message.newBuilder()
+				var heartbeat = NettyMessage.Message.newBuilder()
 					.setType(NettyMessage.Message.MessageType.HEARTBEAT_CLIENT)
 					.setRequestId(UUID.randomUUID().toString())
 					.setContent("heartbeat")
@@ -58,7 +58,7 @@ public class HeartbeatHandler extends ChannelInboundHandlerAdapter {
 
 	@Override
 	public void channelInactive(@NonNull ChannelHandlerContext ctx) throws Exception {
-		try (EventLoop eventLoop = ctx.channel().eventLoop()) {
+		try (var eventLoop = ctx.channel().eventLoop()) {
 			eventLoop.schedule(nettyClient::start, 10L, TimeUnit.SECONDS);
 			super.channelInactive(ctx);
 		}

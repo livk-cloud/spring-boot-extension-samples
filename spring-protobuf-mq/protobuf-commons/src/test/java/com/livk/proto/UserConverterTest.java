@@ -29,9 +29,9 @@ class UserConverterTest {
 
 	@Test
 	void convert() {
-		User user = new User(1L, "root", "123456@gmail.com", 0);
+		var user = new User(1L, "root", "123456@gmail.com", 0);
 
-		byte[] bytes = converter.convert(user);
+		var bytes = converter.convert(user);
 
 		assertThat(bytes).isNotNull().isNotEmpty();
 		assertThat(converter.convert(bytes)).isEqualTo(user);

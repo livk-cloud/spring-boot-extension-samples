@@ -45,24 +45,23 @@ public class TokenVerifyFilter extends BasicAuthenticationFilter {
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
-		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+		var authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (authorization != null && authorization.startsWith("Bearer ")) {
-			String token = authorization.replaceFirst("Bearer ", "");
-			Payload payload = JwtUtils.parse(token);
-			User user = payload.getUserInfo();
+			var token = authorization.replaceFirst("Bearer ", "");
+			var payload = JwtUtils.parse(token);
+			var user = payload.getUserInfo();
 			if (user != null) {
-				UsernamePasswordAuthenticationToken authenticated = UsernamePasswordAuthenticationToken
-					.authenticated(user, "", user.getAuthorities());
+				var authenticated = UsernamePasswordAuthenticationToken.authenticated(user, "", user.getAuthorities());
 				SecurityContextHolder.getContext().setAuthentication(authenticated);
 				chain.doFilter(request, response);
 			}
 			else {
-				Map<String, Object> map = Map.of("code", HttpServletResponse.SC_FORBIDDEN, "msg", "缺少用户信息");
+				var map = Map.of("code", HttpServletResponse.SC_FORBIDDEN, "msg", "缺少用户信息");
 				HttpServletUtils.outJson(response, map);
 			}
 		}
 		else {
-			Map<String, Object> map = Map.of("code", HttpServletResponse.SC_FORBIDDEN, "msg", "请登录！");
+			var map = Map.of("code", HttpServletResponse.SC_FORBIDDEN, "msg", "请登录！");
 			HttpServletUtils.outJson(response, map);
 		}
 	}

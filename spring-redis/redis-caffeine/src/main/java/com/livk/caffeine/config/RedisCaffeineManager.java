@@ -39,7 +39,7 @@ public class RedisCaffeineManager implements CacheManager {
 
 	@Override
 	public Cache getCache(@NonNull String name) {
-		Cache cache = this.cacheMap.get(name);
+		var cache = this.cacheMap.get(name);
 		return (cache != null) ? cache : this.cacheMap.computeIfAbsent(name, this::createCache);
 	}
 

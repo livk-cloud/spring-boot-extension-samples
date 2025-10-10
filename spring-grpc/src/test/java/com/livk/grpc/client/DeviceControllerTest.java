@@ -43,7 +43,7 @@ class DeviceControllerTest {
 
 	@Test
 	void add() {
-		DeviceDTO dto = new DeviceDTO();
+		var dto = new DeviceDTO();
 		dto.setName("Air Pod Pro 2");
 		dto.setMac("11:22:33:44");
 

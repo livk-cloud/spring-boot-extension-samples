@@ -32,7 +32,7 @@ public class MqttConfig {
 
 	@Bean
 	public MqttConnectOptions mqttConnectOptions(MqttProperties properties) {
-		MqttConnectOptions options = new MqttConnectOptions();
+		var options = new MqttConnectOptions();
 		options.setUserName(properties.getUsername());
 		options.setPassword(properties.getPassword().toCharArray());
 		options.setServerURIs(properties.getUrl().split(";"));
@@ -43,7 +43,7 @@ public class MqttConfig {
 
 	@Bean
 	public MqttPahoClientFactory mqttPahoClientFactory(MqttConnectOptions mqttConnectOptions) {
-		DefaultMqttPahoClientFactory factory = new DefaultMqttPahoClientFactory();
+		var factory = new DefaultMqttPahoClientFactory();
 		factory.setConnectionOptions(mqttConnectOptions);
 		return factory;
 	}
