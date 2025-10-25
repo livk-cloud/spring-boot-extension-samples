@@ -21,7 +21,6 @@ import com.livk.context.fastexcel.annotation.ExcelParam;
 import com.livk.context.fastexcel.annotation.RequestExcel;
 import com.livk.context.fastexcel.listener.TypeExcelMapReadListener;
 import com.livk.excel.batch.entity.Info;
-import com.livk.excel.batch.listener.InfoExcelListener;
 import com.livk.excel.batch.listener.JobListener;
 import com.livk.excel.batch.support.FastExcelItemReader;
 import lombok.RequiredArgsConstructor;
@@ -67,7 +66,7 @@ public class InfoController {
 
 	private final JobLauncher jobLauncher;
 
-	@RequestExcel(parse = InfoExcelListener.class)
+	@RequestExcel
 	@PostMapping("upload")
 	public HttpEntity<Void> upload(@ExcelParam List<Info> dataExcels) throws JobInstanceAlreadyCompleteException,
 			JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
@@ -80,8 +79,7 @@ public class InfoController {
 
 	@PostMapping("excel")
 	public HttpEntity<List<Info>> up(@RequestParam("file") MultipartFile file) throws IOException {
-		var itemReader = new FastExcelItemReader<Info>(file.getInputStream(), new TypeExcelMapReadListener<>() {
-		});
+		var itemReader = new FastExcelItemReader<>(file.getInputStream(), Info.class);
 		var list = new ArrayList<Info>();
 		while (true) {
 			var o = itemReader.read();

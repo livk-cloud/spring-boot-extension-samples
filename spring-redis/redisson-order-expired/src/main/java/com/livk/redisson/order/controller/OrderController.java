@@ -16,9 +16,8 @@
 
 package com.livk.redisson.order.controller;
 
-import com.livk.commons.util.DateUtils;
+import com.livk.commons.util.Jsr310Utils;
 import com.livk.redisson.order.entity.Employer;
-import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
 import org.redisson.api.RedissonClient;
 import org.springframework.beans.factory.DisposableBean;
@@ -49,7 +48,7 @@ public class OrderController implements DisposableBean {
 		for (var i = 0; i < 5; i++) {
 			var callCdr = new Employer();
 			callCdr.setSalary(345.6);
-			callCdr.setPutTime(DateUtils.format(LocalDateTime.now(), DateUtils.HMS));
+			callCdr.setPutTime(Jsr310Utils.formatTime(LocalDateTime.now()));
 			delayedQueue.offer(callCdr, 3, TimeUnit.SECONDS);
 		}
 		TimeUnit.SECONDS.sleep(5L);

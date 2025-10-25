@@ -16,7 +16,7 @@
 
 package com.livk.redisson.order;
 
-import com.livk.commons.util.DateUtils;
+import com.livk.commons.util.Jsr310Utils;
 import com.livk.redisson.order.entity.Employer;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingQueue;
@@ -30,6 +30,7 @@ import java.time.LocalDateTime;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @author livk
@@ -37,6 +38,8 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Component
 public class OrderQueueConsumer implements Runnable, InitializingBean, DisposableBean {
+
+	private final AtomicBoolean runStatus = new AtomicBoolean(true);
 
 	private final RBlockingQueue<Employer> orderQueue;
 
@@ -49,11 +52,10 @@ public class OrderQueueConsumer implements Runnable, InitializingBean, Disposabl
 
 	@Override
 	public void run() {
-		while (true) {
+		while (runStatus.get()) {
 			try {
 				var employer = orderQueue.take();
-				log.info("订单取消时间：{} ==订单生成时间:{}", DateUtils.format(LocalDateTime.now(), DateUtils.HMS),
-						employer.getPutTime());
+				log.info("订单取消时间：{} ==订单生成时间:{}", Jsr310Utils.formatTime(LocalDateTime.now()), employer.getPutTime());
 			}
 			catch (InterruptedException e) {
 				log.warn("interrupted", e);
@@ -70,6 +72,7 @@ public class OrderQueueConsumer implements Runnable, InitializingBean, Disposabl
 
 	@Override
 	public void destroy() {
+		runStatus.compareAndSet(true, false);
 		executor.shutdown();
 	}
 

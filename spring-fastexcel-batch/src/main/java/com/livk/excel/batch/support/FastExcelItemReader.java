@@ -19,6 +19,7 @@ package com.livk.excel.batch.support;
 import cn.idev.excel.FastExcel;
 import com.livk.commons.util.ClassUtils;
 import com.livk.context.fastexcel.listener.ExcelMapReadListener;
+import com.livk.context.fastexcel.listener.TypeExcelMapReadListener;
 import org.springframework.batch.item.ItemReader;
 
 import java.io.InputStream;
@@ -32,9 +33,9 @@ public class FastExcelItemReader<T> implements ItemReader<T> {
 
 	private final List<T> data;
 
-	public FastExcelItemReader(InputStream inputStream, ExcelMapReadListener<T> excelReadListener) {
-		var targetClass = ClassUtils.resolveTypeArgument(excelReadListener.getClass(), ExcelMapReadListener.class);
-		FastExcel.read(inputStream, targetClass, excelReadListener).sheet().doRead();
+	public FastExcelItemReader(InputStream inputStream, Class<T> type) {
+		ExcelMapReadListener<T> excelReadListener = new TypeExcelMapReadListener<>();
+		FastExcel.read(inputStream, type, excelReadListener).sheet().doRead();
 		data = new ArrayList<>(excelReadListener.getCollectionData());
 	}
 

@@ -16,7 +16,7 @@
 
 package com.livk.event;
 
-import com.livk.commons.util.DateUtils;
+import com.livk.commons.util.Jsr310Utils;
 import com.livk.event.context.SseEmitterRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 /**
  * @author livk
@@ -43,7 +42,7 @@ public class SentTask {
 			var sseEmitter = sseEmitterEntry.getValue();
 			try {
 				sseEmitter.send(SseEmitter.event()
-					.data(DateUtils.format(LocalDateTime.now(), DateUtils.YMD_HMS))
+					.data(Jsr310Utils.formatDateTime(LocalDateTime.now()))
 					.id(sseEmitterEntry.getKey()));
 			}
 			catch (Exception e) {

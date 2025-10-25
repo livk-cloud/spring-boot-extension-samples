@@ -16,12 +16,11 @@
 
 package com.livk.mail;
 
-import com.livk.commons.util.DateUtils;
+import com.livk.commons.util.Jsr310Utils;
 import com.livk.mail.util.FreemarkerUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import jakarta.mail.internet.MimeMessage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +107,7 @@ class MailTest {
 	void testSql() {
 		var sql = "INSERT INTO ${tableName}(${columns}) VALUES <#list valuesArray as values>(${values})<#if values_has_next>,</#if></#list>";
 		var columns = String.join(",", "user_name", "sex", "age", "address", "status", "create_time", "update_time");
-		var format = DateUtils.format(LocalDateTime.now(), DateUtils.YMD_HMS);
+		var format = Jsr310Utils.formatDateTime(LocalDateTime.now());
 		var values = String.join(",", "livk", "1", "26", "shenzhen", "1", format, format);
 		var values2 = String.join(",", "livk", "1", "26", "shenzhen", "1", format, format);
 		var map = Map.of("tableName", "sys_user", "columns", columns, "valuesArray", List.of(values, values2));

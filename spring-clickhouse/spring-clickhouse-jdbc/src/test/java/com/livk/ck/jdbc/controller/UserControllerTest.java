@@ -18,7 +18,7 @@ package com.livk.ck.jdbc.controller;
 
 import com.livk.ck.jdbc.entity.User;
 import com.livk.commons.jackson.JsonMapperUtils;
-import com.livk.commons.util.DateUtils;
+import com.livk.commons.util.Jsr310Utils;
 import com.livk.testcontainers.DockerImageNames;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -86,7 +86,7 @@ class UserControllerTest {
 	@Order(3)
 	@Test
 	void testRemove() throws Exception {
-		var format = DateUtils.format(LocalDateTime.now(), "yyyy-MM-dd");
+		var format = Jsr310Utils.formatDate(LocalDateTime.now());
 		mockMvc.perform(delete("/user/" + format)).andDo(print()).andExpect(status().isOk());
 
 		mockMvc.perform(get("/user"))
