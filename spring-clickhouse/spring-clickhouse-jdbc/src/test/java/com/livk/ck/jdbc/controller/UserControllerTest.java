@@ -89,12 +89,12 @@ class UserControllerTest {
 		var format = Jsr310Utils.formatDate(LocalDateTime.now());
 		mockMvc.perform(delete("/user/" + format)).andDo(print()).andExpect(status().isOk());
 
-        mockMvc.perform(get("/user"))
-                .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$", hasSize(0)));
-    }
+		mockMvc.perform(get("/user"))
+			.andDo(print())
+			.andExpect(status().isOk())
+			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
+			.andExpect(jsonPath("$", hasSize(0)));
+	}
 
 	@Order(1)
 	@Test
