@@ -25,7 +25,7 @@
         <dependency>
             <groupId>com.clickhouse</groupId>
             <artifactId>clickhouse-r2dbc</artifactId>
-            <classifier>http</classifier>
+            <classifier>all</classifier>
         </dependency>
 
         <dependency>
