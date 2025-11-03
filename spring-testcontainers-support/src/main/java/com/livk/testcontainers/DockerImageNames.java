@@ -87,8 +87,12 @@ public class DockerImageNames {
 		return DockerImageName.parse(REDIS_STACK_IMAGE).withTag(tag);
 	}
 
+	/**
+	 * <a href="https://github.com/ClickHouse/clickhouse-java/issues/2636">github
+	 * issue</a>
+	 */
 	public static DockerImageName clickhouse() {
-		return clickhouse(LATEST_TAG);
+		return clickhouse("25.9");
 	}
 
 	public static DockerImageName clickhouse(String tag) {
