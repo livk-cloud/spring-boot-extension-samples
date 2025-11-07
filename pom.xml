@@ -99,7 +99,7 @@
             <dependency>
                 <groupId>com.clickhouse</groupId>
                 <artifactId>clickhouse-jdbc</artifactId>
-                <version>0.9.3</version>
+                <version>0.9.4</version>
                 <classifier>all</classifier>
             </dependency>
 
