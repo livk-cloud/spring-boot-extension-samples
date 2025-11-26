@@ -41,4 +41,9 @@ public class ResourceServerAutoConfiguration {
 		return new CustomOpaqueTokenIntrospector(authorizationService);
 	}
 
+	@Bean
+	public BearerTokenExtractor bearerTokenExtractor() {
+		return new BearerTokenExtractor();
+	}
+
 }

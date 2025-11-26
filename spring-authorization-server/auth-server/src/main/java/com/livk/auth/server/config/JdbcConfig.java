@@ -63,7 +63,7 @@ public class JdbcConfig {
 			.scope("livk.read")
 			.scope("livk.write")
 			.tokenSettings(TokenSettings.builder()
-				.accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+				.accessTokenFormat(OAuth2TokenFormat.REFERENCE)
 				.accessTokenTimeToLive(Duration.ofHours(24L))
 				.refreshTokenTimeToLive(Duration.ofHours(12L))
 				.reuseRefreshTokens(true)

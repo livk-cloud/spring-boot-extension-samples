@@ -16,6 +16,9 @@
 
 package com.livk.auth.server.common;
 
+import com.livk.auth.server.common.core.DetailsAuthentication;
+import com.livk.auth.server.common.core.PasswordDetailsAuthentication;
+import com.livk.auth.server.common.core.SmsDetailsAuthentication;
 import com.livk.auth.server.common.core.UserDetailsAuthenticationProvider;
 import com.livk.auth.server.common.service.Oauth2UserDetailsService;
 import com.livk.auto.service.annotation.SpringAutoService;
@@ -32,9 +35,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AuthorizationServerAutoConfiguration {
 
 	@Bean
+	public SmsDetailsAuthentication smsDetailsAuthentication() {
+		return new SmsDetailsAuthentication();
+	}
+
+	@Bean
+	public PasswordDetailsAuthentication passwordDetailsAuthentication(PasswordEncoder passwordEncoder) {
+		return new PasswordDetailsAuthentication(passwordEncoder);
+	}
+
+	@Bean
 	public UserDetailsAuthenticationProvider userDetailsAuthenticationProvider(PasswordEncoder passwordEncoder,
-			ObjectProvider<Oauth2UserDetailsService> oauth2UserDetailsServices) {
-		return new UserDetailsAuthenticationProvider(passwordEncoder, oauth2UserDetailsServices);
+			ObjectProvider<Oauth2UserDetailsService> oauth2UserDetailsServices,
+			ObjectProvider<DetailsAuthentication> detailsAuthentications) {
+		return new UserDetailsAuthenticationProvider(passwordEncoder, oauth2UserDetailsServices,
+				detailsAuthentications);
 	}
 
 }

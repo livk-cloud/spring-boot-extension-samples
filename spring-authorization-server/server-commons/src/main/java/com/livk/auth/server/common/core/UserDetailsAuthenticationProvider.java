@@ -16,17 +16,13 @@
 
 package com.livk.auth.server.common.core;
 
-import com.livk.auth.server.common.constant.SecurityConstants;
-import com.livk.auth.server.common.core.exception.BadCaptchaException;
 import com.livk.auth.server.common.service.Oauth2UserDetailsService;
 import com.livk.auth.server.common.util.MessageSourceUtils;
-import com.livk.commons.util.ObjectUtils;
 import com.livk.commons.util.HttpServletUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.ObjectProvider;
-import org.springframework.core.Ordered;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -35,17 +31,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsPasswordService;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;
 import org.springframework.util.Assert;
-import org.springframework.util.MultiValueMap;
 
-import java.util.Comparator;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -63,6 +55,8 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 
 	private final ObjectProvider<Oauth2UserDetailsService> oauth2UserDetailsServices;
 
+	private final ObjectProvider<DetailsAuthentication> detailsAuthentications;
+
 	@Getter
 	private PasswordEncoder passwordEncoder;
 
@@ -74,18 +68,16 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 	 */
 	private volatile String userNotFoundEncodedPassword;
 
-	@Getter
-	@Setter
-	private UserDetailsService userDetailsService;
-
 	@Setter
 	private UserDetailsPasswordService userDetailsPasswordService;
 
 	public UserDetailsAuthenticationProvider(PasswordEncoder passwordEncoder,
-			ObjectProvider<Oauth2UserDetailsService> oauth2UserDetailsServices) {
+			ObjectProvider<Oauth2UserDetailsService> oauth2UserDetailsServices,
+			ObjectProvider<DetailsAuthentication> detailsAuthentications) {
 		setMessageSource(MessageSourceUtils.get());
 		setPasswordEncoder(passwordEncoder);
 		this.oauth2UserDetailsServices = oauth2UserDetailsServices;
+		this.detailsAuthentications = detailsAuthentications;
 	}
 
 	@Override
@@ -99,26 +91,17 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 			throw new BadCredentialsException(this.messages
 				.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
 		}
-		// 校验验证码
-		if (Objects.equals(SecurityConstants.SMS, grantType)) {
-			var code = authentication.getCredentials().toString();
-			if (!Objects.equals(code, "123456")) {
-				this.logger.debug("Failed to authenticate since code does not match stored value");
-				throw new BadCaptchaException(this.messages
-					.getMessage("AbstractUserDetailsAuthenticationProvider.badCaptcha", "Bad captcha"));
+		for (DetailsAuthentication detailsAuthentication : detailsAuthentications) {
+			if (detailsAuthentication.support(grantType)) {
+				if (!detailsAuthentication.verify(userDetails, authentication)) {
+					throw detailsAuthentication.error(this.messages);
+				}
+				else {
+					logger.debug("Certification successful grantType:" + grantType + " authentication:"
+							+ authentication.getPrincipal());
+				}
 			}
 		}
-		// 校验密码
-		if (Objects.equals(SecurityConstants.PASSWORD, grantType)) {
-			var presentedPassword = authentication.getCredentials().toString();
-			var encodedPassword = extractEncodedPassword(userDetails.getPassword());
-			if (!this.passwordEncoder.matches(presentedPassword, encodedPassword)) {
-				this.logger.debug("Failed to authenticate since password does not match stored value");
-				throw new BadCredentialsException(this.messages
-					.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
-			}
-		}
-
 	}
 
 	@SneakyThrows
@@ -128,16 +111,8 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 
 		var paramMap = HttpServletUtils.params(HttpServletUtils.request());
 		var grantType = paramMap.getFirst(OAuth2ParameterNames.GRANT_TYPE);
-		var clientId = paramMap.getFirst(OAuth2ParameterNames.CLIENT_ID);
 
-		if (ObjectUtils.isEmpty(clientId)) {
-			clientId = basicConvert.convert(HttpServletUtils.request()).getName();
-		}
-
-		var finalClientId = clientId;
-		var optional = oauth2UserDetailsServices.stream()
-			.filter(service -> service.support(finalClientId, grantType))
-			.max(Comparator.comparingInt(Ordered::getOrder));
+		var optional = oauth2UserDetailsServices.stream().filter(service -> service.support(grantType)).findFirst();
 
 		var oauth2UserDetailsService = optional
 			.orElseThrow((() -> new InternalAuthenticationServiceException("UserDetailsService error , not register")));
@@ -198,11 +173,6 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 		Assert.notNull(passwordEncoder, "passwordEncoder cannot be null");
 		this.passwordEncoder = passwordEncoder;
 		this.userNotFoundEncodedPassword = null;
-	}
-
-	private String extractEncodedPassword(String prefixEncodedPassword) {
-		var start = prefixEncodedPassword.indexOf('}');
-		return prefixEncodedPassword.substring(start + SecurityConstants.DEFAULT_ID_SUFFIX.length());
 	}
 
 }

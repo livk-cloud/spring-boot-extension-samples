@@ -19,8 +19,7 @@ package com.livk.auth.server.common.core.customizer;
 import com.livk.auth.server.common.constant.SecurityConstants;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
-import org.springframework.security.oauth2.jwt.JwtClaimsSet;
-import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 
 /**
@@ -30,14 +29,14 @@ import org.springframework.security.oauth2.server.authorization.token.OAuth2Toke
  *
  * @author livk
  */
-public class OAuth2JwtTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
+public class OAuth2JwtTokenCustomizer implements OAuth2TokenCustomizer<OAuth2TokenClaimsContext> {
 
 	/**
 	 * Customize the OAuth 2.0 Token attributes.
 	 * @param context the context containing the OAuth 2.0 Token attributes
 	 */
 	@Override
-	public void customize(JwtEncodingContext context) {
+	public void customize(OAuth2TokenClaimsContext context) {
 		var claims = context.getClaims();
 		claims.claim(OAuth2ParameterNames.GRANT_TYPE, context.getAuthorizationGrantType().getValue());
 		claims.claim(OAuth2ParameterNames.CLIENT_ID, context.getAuthorizationGrant().getName());

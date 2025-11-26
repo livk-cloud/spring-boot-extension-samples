@@ -27,7 +27,10 @@ import org.apache.ibatis.annotations.Select;
 @Mapper
 public interface UsersMapper {
 
-	@Select("select * from users")
-	User getOne(@Param("username") String username);
+	@Select("select * from users where username = #{username}")
+	User getByUsername(@Param("username") String username);
+
+	@Select("select * from users where mobile = #{mobile}")
+	User getByMobile(@Param("mobile") String mobile);
 
 }

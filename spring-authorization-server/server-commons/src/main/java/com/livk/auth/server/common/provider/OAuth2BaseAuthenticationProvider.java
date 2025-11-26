@@ -49,20 +49,18 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.authorization.authentication.OAuth2AccessTokenAuthenticationToken;
-import org.springframework.security.oauth2.server.authorization.authentication.OAuth2ClientAuthenticationToken;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.context.AuthorizationServerContextHolder;
 import org.springframework.security.oauth2.server.authorization.token.DefaultOAuth2TokenContext;
-import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.security.Principal;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.Set;
 
 /**
  * <p>
@@ -190,9 +188,11 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 					generatedAccessToken.getExpiresAt(), tokenContext.getAuthorizedScopes());
 
 			if (generatedAccessToken instanceof ClaimAccessor) {
-				authorizationBuilder.token(accessToken,
-						metadata -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME,
-								((ClaimAccessor) generatedAccessToken).getClaims()));
+				authorizationBuilder
+					.token(accessToken,
+							metadata -> metadata.put(OAuth2Authorization.Token.CLAIMS_METADATA_NAME,
+									((ClaimAccessor) generatedAccessToken).getClaims()))
+					.attribute(Principal.class.getName(), principal);
 			}
 			else {
 				authorizationBuilder.accessToken(accessToken);

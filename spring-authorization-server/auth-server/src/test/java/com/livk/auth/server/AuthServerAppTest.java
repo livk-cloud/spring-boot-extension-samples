@@ -23,14 +23,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -55,7 +56,7 @@ class AuthServerAppTest {
 		params.set("username", "livk");
 		params.set("password", "123456");
 		params.set("scope", "livk.read");
-		mockMvc
+		byte[] body = mockMvc
 			.perform(post("/oauth2/token")
 				.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -66,7 +67,24 @@ class AuthServerAppTest {
 			.andExpect(jsonPath("iss").value("http://localhost"))
 			.andExpect(jsonPath("token_type").value("Bearer"))
 			.andExpect(jsonPath("client_id").value("livk-client"))
-			.andExpect(jsonPath("access_token").isNotEmpty());
+			.andExpect(jsonPath("access_token").isNotEmpty())
+			.andReturn()
+			.getResponse()
+			.getContentAsByteArray();
+
+		String accessToken = JsonMapperUtils.readTree(body).get("access_token").asText();
+		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+			.andExpect(status().isOk())
+			.andDo(print())
+			.andExpect(content().string("hello"));
+
+		mockMvc.perform(post("/api/logout").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+			.andExpect(status().isOk())
+			.andDo(print());
+
+		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+			.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()))
+			.andDo(print());
 	}
 
 	@Test
@@ -76,7 +94,7 @@ class AuthServerAppTest {
 		params.set("mobile", "18664960000");
 		params.set("code", "123456");
 		params.set("scope", "livk.read");
-		mockMvc
+		byte[] body = mockMvc
 			.perform(post("/oauth2/token")
 				.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
 				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -87,7 +105,24 @@ class AuthServerAppTest {
 			.andExpect(jsonPath("iss").value("http://localhost"))
 			.andExpect(jsonPath("token_type").value("Bearer"))
 			.andExpect(jsonPath("client_id").value("livk-client"))
-			.andExpect(jsonPath("access_token").isNotEmpty());
+			.andExpect(jsonPath("access_token").isNotEmpty())
+			.andReturn()
+			.getResponse()
+			.getContentAsByteArray();
+
+		String accessToken = JsonMapperUtils.readTree(body).get("access_token").asText();
+		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+			.andExpect(status().isOk())
+			.andDo(print())
+			.andExpect(content().string("hello"));
+
+		mockMvc.perform(post("/api/logout").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+			.andExpect(status().isOk())
+			.andDo(print());
+
+		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
+			.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()))
+			.andDo(print());
 	}
 
 }
