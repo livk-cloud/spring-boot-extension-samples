@@ -14,30 +14,20 @@
  * limitations under the License.
  */
 
-package com.livk.auth.server.domain;
+package com.livk.auth.server.common;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.livk.auth.server.common.principal.Oauth2User;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-/**
- * @author livk
- */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
-public class User {
+public interface Oauth2UserDetailsService extends UserDetailsService {
 
-	private static final long serialVersionUID = 1L;
+	/**
+	 * 是否支持此客户端校验
+	 * @return true/false
+	 */
+	boolean support(String grantType);
 
-	private Long id;
-
-	private String username;
-
-	private String password;
-
-	private String mobile;
+	Oauth2User loadUserByUsername(String username) throws UsernameNotFoundException;
 
 }

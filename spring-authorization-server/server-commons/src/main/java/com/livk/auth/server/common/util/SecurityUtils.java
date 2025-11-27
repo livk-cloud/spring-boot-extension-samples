@@ -17,7 +17,7 @@
 package com.livk.auth.server.common.util;
 
 import com.livk.auth.server.common.constant.SecurityConstants;
-import com.livk.auth.server.common.core.principal.Oauth2User;
+import com.livk.auth.server.common.principal.Oauth2User;
 import lombok.experimental.UtilityClass;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

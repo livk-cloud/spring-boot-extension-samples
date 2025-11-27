@@ -16,7 +16,7 @@
 
 package com.livk.auth.server.service;
 
-import com.livk.auth.server.common.service.Oauth2UserDetailsService;
+import com.livk.auth.server.common.Oauth2UserDetailsService;
 
 /**
  * @author livk

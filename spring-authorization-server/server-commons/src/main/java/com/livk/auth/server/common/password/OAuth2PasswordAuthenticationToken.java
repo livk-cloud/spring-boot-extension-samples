@@ -14,30 +14,27 @@
  * limitations under the License.
  */
 
-package com.livk.auth.server.domain;
+package com.livk.auth.server.common.password;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.livk.auth.server.common.constant.SecurityConstants;
+import com.livk.auth.server.common.OAuth2BaseAuthenticationToken;
+import org.springframework.security.core.Authentication;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
+ * <p>
+ * 密码授权token信息
+ * </p>
+ *
  * @author livk
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME)
-public class User {
+public class OAuth2PasswordAuthenticationToken extends OAuth2BaseAuthenticationToken {
 
-	private static final long serialVersionUID = 1L;
-
-	private Long id;
-
-	private String username;
-
-	private String password;
-
-	private String mobile;
+	public OAuth2PasswordAuthenticationToken(Authentication clientPrincipal, Set<String> scopes,
+			Map<String, Object> additionalParameters) {
+		super(SecurityConstants.GRANT_TYPE_PASSWORD, clientPrincipal, scopes, additionalParameters);
+	}
 
 }

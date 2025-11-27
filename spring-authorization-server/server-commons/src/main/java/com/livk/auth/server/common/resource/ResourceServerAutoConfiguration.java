@@ -14,27 +14,36 @@
  * limitations under the License.
  */
 
-package com.livk.auth.server.common;
+package com.livk.auth.server.common.resource;
 
 import com.livk.auto.service.annotation.SpringAutoService;
-import org.springframework.beans.factory.ObjectProvider;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
 
 /**
  * @author livk
  */
 @SpringAutoService
 @AutoConfiguration
-public class AuthorizationServerAutoConfiguration {
+@RequiredArgsConstructor
+public class ResourceServerAutoConfiguration {
+
+	/**
+	 * 资源服务器toke内省处理器
+	 * @param authorizationService token 存储实现
+	 * @return TokenIntrospector
+	 */
+	@Bean
+	public OpaqueTokenIntrospector opaqueTokenIntrospector(OAuth2AuthorizationService authorizationService) {
+		return new CustomOpaqueTokenIntrospector(authorizationService);
+	}
 
 	@Bean
-	public UserDetailsAuthenticationProvider userDetailsAuthenticationProvider(PasswordEncoder passwordEncoder,
-			ObjectProvider<Oauth2UserDetailsService> oauth2UserDetailsServices,
-			ObjectProvider<DetailsAuthentication> detailsAuthentications) {
-		return new UserDetailsAuthenticationProvider(passwordEncoder, oauth2UserDetailsServices,
-				detailsAuthentications);
+	public BearerTokenExtractor bearerTokenExtractor() {
+		return new BearerTokenExtractor();
 	}
 
 }
