@@ -16,6 +16,7 @@
 
 package com.livk.auth.server.common;
 
+import com.livk.auth.server.common.principal.Oauth2User;
 import com.livk.auth.server.common.util.MessageSourceUtils;
 import com.livk.commons.util.HttpServletUtils;
 import lombok.Getter;
@@ -34,10 +35,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
-import org.springframework.security.web.authentication.www.BasicAuthenticationConverter;
 import org.springframework.util.Assert;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * @author livk
@@ -50,11 +53,9 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 	 */
 	private static final String USER_NOT_FOUND_PASSWORD = "userNotFoundPassword";
 
-	private final static BasicAuthenticationConverter basicConvert = new BasicAuthenticationConverter();
-
 	private final ObjectProvider<Oauth2UserDetailsService> oauth2UserDetailsServices;
 
-	private final ObjectProvider<DetailsAuthentication> detailsAuthentications;
+	private final Map<String, DetailsAuthentication> detailsAuthenticationMap;
 
 	@Getter
 	private PasswordEncoder passwordEncoder;
@@ -76,13 +77,15 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 		setMessageSource(MessageSourceUtils.get());
 		setPasswordEncoder(passwordEncoder);
 		this.oauth2UserDetailsServices = oauth2UserDetailsServices;
-		this.detailsAuthentications = detailsAuthentications;
+		this.detailsAuthenticationMap = detailsAuthentications.stream()
+			.collect(Collectors.toMap(DetailsAuthentication::type, Function.identity()));
 	}
 
 	@Override
 	protected void additionalAuthenticationChecks(UserDetails userDetails,
 			UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
 
+		Oauth2User oauth2User = (Oauth2User) userDetails;
 		var grantType = HttpServletUtils.request().getParameter(OAuth2ParameterNames.GRANT_TYPE);
 
 		if (authentication.getCredentials() == null) {
@@ -90,16 +93,20 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 			throw new BadCredentialsException(this.messages
 				.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
 		}
-		for (DetailsAuthentication detailsAuthentication : detailsAuthentications) {
-			if (detailsAuthentication.support(grantType)) {
-				if (!detailsAuthentication.verify(userDetails, authentication)) {
-					throw detailsAuthentication.error(this.messages);
-				}
-				else {
-					logger.debug("Certification successful grantType:" + grantType + " authentication:"
-							+ authentication.getPrincipal());
-				}
+		if (detailsAuthenticationMap.containsKey(grantType)) {
+			DetailsAuthentication detailsAuthentication = detailsAuthenticationMap.get(grantType);
+			if (!detailsAuthentication.verify(oauth2User, authentication)) {
+				throw detailsAuthentication.error(this.messages);
 			}
+			else {
+				logger.debug("Certification successful grantType:" + grantType + " authentication:"
+						+ authentication.getPrincipal());
+			}
+		}
+		else {
+			logger.debug("GrantType not found");
+			throw new BadCredentialsException(this.messages
+				.getMessage("AbstractUserDetailsAuthenticationProvider.badCredentials", "Bad credentials"));
 		}
 	}
 

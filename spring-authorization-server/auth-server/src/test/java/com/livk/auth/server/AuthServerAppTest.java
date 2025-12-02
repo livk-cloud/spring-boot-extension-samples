@@ -17,6 +17,7 @@
 package com.livk.auth.server;
 
 import com.livk.commons.jackson.JsonMapperUtils;
+import com.livk.commons.web.HttpParameters;
 import com.nimbusds.jose.util.Base64;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.util.LinkedMultiValueMap;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -51,7 +51,7 @@ class AuthServerAppTest {
 
 	@Test
 	void testPassword() throws Exception {
-		var params = new LinkedMultiValueMap<String, String>();
+		var params = new HttpParameters();
 		params.set("grant_type", "password");
 		params.set("username", "livk");
 		params.set("password", "123456");
@@ -73,11 +73,31 @@ class AuthServerAppTest {
 			.getContentAsByteArray();
 
 		String accessToken = JsonMapperUtils.readTree(body).get("access_token").asText();
+		String refreshToken = JsonMapperUtils.readTree(body).get("refresh_token").asText();
 		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
 			.andExpect(status().isOk())
 			.andDo(print())
 			.andExpect(content().string("hello"));
 
+		var refreshTokenParams = new HttpParameters();
+		refreshTokenParams.set("grant_type", "refresh_token");
+		refreshTokenParams.set("refresh_token", refreshToken);
+
+		body = mockMvc
+			.perform(post("/oauth2/token")
+				.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+				.params(refreshTokenParams))
+			.andExpect(status().isOk())
+			.andDo(print())
+			.andExpect(jsonPath("scope").value("livk.read"))
+			.andExpect(jsonPath("token_type").value("Bearer"))
+			.andExpect(jsonPath("refresh_token").isNotEmpty())
+			.andExpect(jsonPath("access_token").isNotEmpty())
+			.andReturn()
+			.getResponse()
+			.getContentAsByteArray();
+		accessToken = JsonMapperUtils.readTree(body).get("access_token").asText();
 		mockMvc.perform(post("/api/logout").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
 			.andExpect(status().isOk())
 			.andDo(print());
@@ -89,7 +109,7 @@ class AuthServerAppTest {
 
 	@Test
 	void testSms() throws Exception {
-		var params = new LinkedMultiValueMap<String, String>();
+		var params = new HttpParameters();
 		params.set("grant_type", "sms");
 		params.set("mobile", "18664960000");
 		params.set("code", "123456");

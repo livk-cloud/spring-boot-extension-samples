@@ -66,7 +66,7 @@ public class JdbcConfig {
 				.accessTokenFormat(OAuth2TokenFormat.REFERENCE)
 				.accessTokenTimeToLive(Duration.ofHours(24L))
 				.refreshTokenTimeToLive(Duration.ofHours(12L))
-				.reuseRefreshTokens(true)
+				.reuseRefreshTokens(false)
 				.build())
 			.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
 			.build();

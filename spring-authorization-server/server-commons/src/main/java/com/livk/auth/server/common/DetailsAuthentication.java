@@ -1,10 +1,9 @@
 package com.livk.auth.server.common;
 
+import com.livk.auth.server.common.principal.Oauth2User;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 
 /**
  * <p>
@@ -16,13 +15,9 @@ import org.springframework.security.oauth2.core.AuthorizationGrantType;
  */
 public interface DetailsAuthentication {
 
-	AuthorizationGrantType supportType();
+	String type();
 
-	default boolean support(String grantType) {
-		return supportType().getValue().equals(grantType);
-	}
-
-	boolean verify(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication);
+	boolean verify(Oauth2User user, UsernamePasswordAuthenticationToken authentication);
 
 	AuthenticationException error(MessageSourceAccessor messages);
 

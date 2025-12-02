@@ -49,7 +49,6 @@ import org.springframework.security.oauth2.server.authorization.web.authenticati
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.authentication.DelegatingAuthenticationConverter;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -90,8 +89,6 @@ public class AuthorizationServerConfig {
 		http.with(new FormIdentityLoginConfigurer(), Customizer.withDefaults());
 		http.authenticationManager(authenticationManager);
 		http.formLogin(AbstractHttpConfigurer::disable);
-		http.securityContext(contextConfigurer -> contextConfigurer
-			.securityContextRepository(new HttpSessionSecurityContextRepository()));
 		http.csrf(csrfConfigurer -> csrfConfigurer
 			.ignoringRequestMatchers(authorizationServerConfigurer.getEndpointsMatcher()));
 		http.authenticationProvider(userDetailsAuthenticationProvider);

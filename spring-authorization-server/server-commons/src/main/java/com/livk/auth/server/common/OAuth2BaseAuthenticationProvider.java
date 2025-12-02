@@ -22,7 +22,6 @@ import com.livk.auth.server.common.util.MessageSourceUtils;
 import com.livk.auth.server.common.constant.OAuth2ErrorCodesExpand;
 import com.livk.commons.util.ClassUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
