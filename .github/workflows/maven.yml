@@ -36,7 +36,7 @@ jobs:
 
       # 缓存 mvnd 仅限解压后的版本目录（避免日志和临时文件）
       - name: Cache mvnd binaries
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.mvnd/maven-mvnd-${{ steps.mvnd_release.outputs.version }}-linux-amd64
           key: mvnd-${{ runner.os }}-${{ steps.mvnd_release.outputs.version }}
@@ -61,7 +61,7 @@ jobs:
 
       # 缓存 Maven 仓库
       - name: Cache Maven repository
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ~/.m2/repository
           key: maven-${{ hashFiles('**/pom.xml') }}
