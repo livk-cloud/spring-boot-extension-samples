@@ -16,16 +16,15 @@
 
 package com.livk.caffeine.controller;
 
-import com.livk.context.redis.RedisOps;
 import com.livk.testcontainers.DockerImageNames;
 import com.redis.testcontainers.RedisContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.springframework.data.redis.core.Cursor;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -34,7 +33,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.HashSet;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,7 +66,7 @@ class CacheControllerTest {
 	MockMvc mockMvc;
 
 	@Autowired
-	RedisOps redisOps;
+	RedisTemplate<String, Object> redisTemplate;
 
 	@Test
 	void testGet() throws Exception {
@@ -124,13 +122,13 @@ class CacheControllerTest {
 	@Test
 	void test() {
 		var options = ScanOptions.scanOptions().match("*").count(100).build();
-		try (var cursor = redisOps.scan(options)) {
+		try (var cursor = redisTemplate.scan(options)) {
 			while (cursor.hasNext()) {
 				log.info("key:{} cursorId:{} position:{}", cursor.next(), cursor.getId(), cursor.getPosition());
 			}
 		}
 
-		try (var scan = redisOps.scan(options)) {
+		try (var scan = redisTemplate.scan(options)) {
 			var keys = scan.stream().limit(1).collect(Collectors.toSet());
 			log.info("keys:{}", keys);
 			assertThat(keys).hasSize(1);

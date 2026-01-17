@@ -21,8 +21,8 @@ import com.livk.commons.web.HttpParameters;
 import com.nimbusds.jose.util.Base64;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -72,8 +72,8 @@ class AuthServerAppTest {
 			.getResponse()
 			.getContentAsByteArray();
 
-		String accessToken = JsonMapperUtils.readTree(body).get("access_token").asText();
-		String refreshToken = JsonMapperUtils.readTree(body).get("refresh_token").asText();
+		String accessToken = JsonMapperUtils.readTree(body).get("access_token").asString();
+		String refreshToken = JsonMapperUtils.readTree(body).get("refresh_token").asString();
 		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
 			.andExpect(status().isOk())
 			.andDo(print())
@@ -97,7 +97,7 @@ class AuthServerAppTest {
 			.andReturn()
 			.getResponse()
 			.getContentAsByteArray();
-		accessToken = JsonMapperUtils.readTree(body).get("access_token").asText();
+		accessToken = JsonMapperUtils.readTree(body).get("access_token").asString();
 		mockMvc.perform(post("/api/logout").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
 			.andExpect(status().isOk())
 			.andDo(print());
@@ -121,7 +121,7 @@ class AuthServerAppTest {
 				.params(params))
 			.andExpect(status().isOk())
 			.andDo(print())
-			.andExpect(jsonPath("sub").value("livk"))
+			.andExpect(jsonPath("sub").value("18664960000"))
 			.andExpect(jsonPath("iss").value("http://localhost"))
 			.andExpect(jsonPath("token_type").value("Bearer"))
 			.andExpect(jsonPath("client_id").value("livk-client"))
@@ -130,7 +130,7 @@ class AuthServerAppTest {
 			.getResponse()
 			.getContentAsByteArray();
 
-		String accessToken = JsonMapperUtils.readTree(body).get("access_token").asText();
+		String accessToken = JsonMapperUtils.readTree(body).get("access_token").asString();
 		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
 			.andExpect(status().isOk())
 			.andDo(print())

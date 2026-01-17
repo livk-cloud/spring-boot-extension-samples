@@ -16,7 +16,6 @@
 
 package com.livk.rest;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.livk.commons.jackson.support.JacksonSupport;
 import com.livk.rest.entity.User;
 import org.junit.jupiter.api.MethodOrderer;
@@ -24,10 +23,10 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.json.JsonMapper;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -48,9 +47,6 @@ class RestAppTest {
 	@Autowired
 	MockMvc mockMvc;
 
-	@Autowired
-	Jackson2ObjectMapperBuilder builder;
-
 	@Order(2)
 	@Test
 	void testGetById() throws Exception {
@@ -65,7 +61,7 @@ class RestAppTest {
 	@Order(1)
 	@Test
 	void testSave() throws Exception {
-		var mapper = builder.build();
+		var mapper = JsonMapper.builder().build();
 		var support = new JacksonSupport(mapper);
 		var user = new User();
 		user.setUsername("root");
@@ -79,7 +75,7 @@ class RestAppTest {
 	@Order(3)
 	@Test
 	void testUpdate() throws Exception {
-		var mapper = builder.build();
+		var mapper = JsonMapper.builder().build();
 		var support = new JacksonSupport(mapper);
 		var user = new User();
 		user.setUsername("admin");

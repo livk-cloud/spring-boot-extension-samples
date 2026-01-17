@@ -7,7 +7,7 @@ create table sys_user
     age         int          null,
     address     varchar(255) null,
     status      tinyint      null,
-    create_time datetime     null,
-    update_time datetime     null
+    create_time timestamp     null,
+    update_time timestamp     null
 );
 

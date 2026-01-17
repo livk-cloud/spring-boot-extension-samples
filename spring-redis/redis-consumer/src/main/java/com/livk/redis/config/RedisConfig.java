@@ -16,10 +16,8 @@
 
 package com.livk.redis.config;
 
-import com.fasterxml.jackson.databind.JavaType;
 import com.livk.common.redis.domain.LivkMessage;
 import com.livk.commons.jackson.TypeFactoryUtils;
-import com.livk.context.redis.JacksonSerializerUtils;
 import com.livk.redis.listener.KeyExpiredListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -29,9 +27,11 @@ import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.ReactiveSubscription;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.ReactiveRedisMessageListenerContainer;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
@@ -46,11 +46,22 @@ import java.util.List;
 public class RedisConfig {
 
 	@Bean
+	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+		var template = new RedisTemplate<String, Object>();
+		template.setConnectionFactory(factory);
+		template.setKeySerializer(RedisSerializer.string());
+		template.setValueSerializer(new JacksonJsonRedisSerializer<>(Object.class));
+		template.setHashKeySerializer(RedisSerializer.string());
+		template.setHashValueSerializer(new JacksonJsonRedisSerializer<>(Object.class));
+		return template;
+	}
+
+	@Bean
 	public ReactiveRedisMessageListenerContainer reactiveRedisMessageListenerContainer(
 			ReactiveRedisConnectionFactory connectionFactory) {
 		var container = new ReactiveRedisMessageListenerContainer(connectionFactory);
 		var javaType = TypeFactoryUtils.javaType(LivkMessage.class, Object.class);
-		var serializer = JacksonSerializerUtils.json(javaType);
+		var serializer = new JacksonJsonRedisSerializer<>(javaType);
 		container
 			.receive(List.of(PatternTopic.of(LivkMessage.CHANNEL)),
 					RedisSerializationContext.SerializationPair.fromSerializer(RedisSerializer.string()),

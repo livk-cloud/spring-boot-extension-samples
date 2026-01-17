@@ -17,8 +17,8 @@
 package com.livk.redis.submit.support;
 
 import com.livk.commons.SpringContextHolder;
-import com.livk.context.redis.RedisOps;
 import lombok.experimental.UtilityClass;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.util.concurrent.TimeUnit;
@@ -33,11 +33,11 @@ public class RedisSupport {
 
 	private static final ValueOperations<String, Object> OPERATIONS;
 
-	private static final RedisOps REDIS_OPS;
+	private static final RedisTemplate<String, Object> TEMPLATE;
 
 	static {
-		REDIS_OPS = SpringContextHolder.getBean(RedisOps.class);
-		OPERATIONS = REDIS_OPS.opsForValue();
+		TEMPLATE = SpringContextHolder.getBean("redisTemplate");
+		OPERATIONS = TEMPLATE.opsForValue();
 	}
 
 	/**
@@ -56,7 +56,7 @@ public class RedisSupport {
 	 * @return boolean boolean
 	 */
 	public boolean exists(String key) {
-		return REDIS_OPS.hasKey(key);
+		return TEMPLATE.hasKey(key);
 	}
 
 }

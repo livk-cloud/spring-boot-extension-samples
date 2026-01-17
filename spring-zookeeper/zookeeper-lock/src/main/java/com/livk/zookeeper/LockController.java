@@ -35,7 +35,7 @@ import java.util.concurrent.locks.Lock;
 @RequiredArgsConstructor
 public class LockController {
 
-	private final LockRegistry lockRegistry;
+	private final LockRegistry<Lock> lockRegistry;
 
 	@GetMapping
 	public void lock(@RequestParam Integer id) {

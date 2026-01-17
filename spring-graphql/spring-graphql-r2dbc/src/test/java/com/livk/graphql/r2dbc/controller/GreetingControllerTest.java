@@ -16,14 +16,14 @@
 
 package com.livk.graphql.r2dbc.controller;
 
-import com.livk.testcontainers.containers.PostgresqlContainer;
+import com.livk.testcontainers.DockerImageNames;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.graphql.test.tester.HttpGraphQlTester;
 import org.springframework.graphql.test.tester.WebGraphQlTester;
@@ -32,6 +32,7 @@ import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 import java.util.Map;
 
@@ -47,7 +48,8 @@ class GreetingControllerTest {
 
 	@Container
 	@ServiceConnection
-	static final PostgresqlContainer postgresql = new PostgresqlContainer().withEnv("POSTGRES_PASSWORD", "123456")
+	static final PostgreSQLContainer postgresql = new PostgreSQLContainer(DockerImageNames.postgres())
+		.withEnv("POSTGRES_PASSWORD", "123456")
 		.withDatabaseName("graphql");
 
 	@DynamicPropertySource

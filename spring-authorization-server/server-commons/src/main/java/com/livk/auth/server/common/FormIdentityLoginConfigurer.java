@@ -32,7 +32,7 @@ public final class FormIdentityLoginConfigurer
 		extends AbstractHttpConfigurer<FormIdentityLoginConfigurer, HttpSecurity> {
 
 	@Override
-	public void init(HttpSecurity http) throws Exception {
+	public void init(HttpSecurity http) {
 		http.formLogin(configurer -> configurer.loginPage("/token/login")
 			.loginProcessingUrl("/token/form")
 			.failureHandler(new FormAuthenticationFailureHandler()))

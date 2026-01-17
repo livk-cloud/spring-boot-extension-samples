@@ -20,7 +20,7 @@ import com.livk.excel.batch.entity.Info;
 import com.livk.excel.batch.support.MyBatisBatchItemWriter;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.infrastructure.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

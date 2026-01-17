@@ -23,7 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.http.converter.json.JacksonJsonHttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -38,7 +38,7 @@ import java.io.IOException;
 @Slf4j
 public class AuthenticationFailureEventHandler implements AuthenticationFailureHandler {
 
-	private final MappingJackson2HttpMessageConverter errorHttpResponseConverter = new MappingJackson2HttpMessageConverter();
+	private final JacksonJsonHttpMessageConverter errorHttpResponseConverter = new JacksonJsonHttpMessageConverter();
 
 	/**
 	 * Called when an authentication attempt fails.
@@ -56,7 +56,7 @@ public class AuthenticationFailureEventHandler implements AuthenticationFailureH
 		var username = request.getParameter(SecurityConstants.SMS_PARAMETER_NAME);
 
 		if (SecurityConstants.PASSWORD.equals(grantType)) {
-			username = request.getParameter(OAuth2ParameterNames.USERNAME);
+			username = request.getParameter(SecurityConstants.USERNAME);
 		}
 
 		log.info("用户：{} 登录失败，异常：{}", username, exception.getLocalizedMessage());

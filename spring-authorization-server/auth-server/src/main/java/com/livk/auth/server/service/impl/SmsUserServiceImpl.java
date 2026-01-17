@@ -32,10 +32,7 @@ public class SmsUserServiceImpl implements UserService {
 	public Oauth2User loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = usersMapper.getByMobile(username);
 		if (user != null) {
-			return new Oauth2User().setId(user.getId())
-				.setUsername(user.getUsername())
-				.setPassword(user.getPassword())
-				.setMobile(user.getMobile());
+			return new Oauth2User(user.getId(), user.getMobile(), user.getPassword());
 		}
 		return null;
 	}

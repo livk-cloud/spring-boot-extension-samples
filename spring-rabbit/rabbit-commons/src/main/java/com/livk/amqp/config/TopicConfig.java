@@ -16,16 +16,16 @@
 
 package com.livk.amqp.config;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.livk.auto.service.annotation.SpringAutoService;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.JacksonJsonMessageConverter;
 import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * @author livk
@@ -94,8 +94,8 @@ public class TopicConfig {
 	}
 
 	@Bean
-	public MessageConverter messageConverter(ObjectMapper objectMapper) {
-		return new Jackson2JsonMessageConverter(objectMapper, "com.livk.amqp.entity");
+	public MessageConverter messageConverter(JsonMapper mapper) {
+		return new JacksonJsonMessageConverter(mapper, "com.livk.amqp.entity");
 	}
 
 }

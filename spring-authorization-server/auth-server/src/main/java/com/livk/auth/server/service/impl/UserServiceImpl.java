@@ -43,10 +43,7 @@ public class UserServiceImpl implements UserService {
 	public Oauth2User loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = usersMapper.getByUsername(username);
 		if (user != null) {
-			return new Oauth2User().setId(user.getId())
-				.setUsername(user.getUsername())
-				.setPassword(user.getPassword())
-				.setMobile(user.getMobile());
+			return new Oauth2User(user.getId(), user.getUsername(), user.getPassword());
 		}
 		return null;
 	}

@@ -16,11 +16,9 @@
 
 package com.livk.pulsar.producer.controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.livk.commons.jackson.JsonMapperUtils;
 import com.livk.pulsar.producer.entity.PulsarMessage;
 import lombok.RequiredArgsConstructor;
-import org.apache.pulsar.client.api.MessageId;
 import org.apache.pulsar.client.api.Schema;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
