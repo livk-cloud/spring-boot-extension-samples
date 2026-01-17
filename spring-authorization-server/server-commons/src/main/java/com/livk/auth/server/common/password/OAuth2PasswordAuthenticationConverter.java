@@ -39,8 +39,8 @@ public class OAuth2PasswordAuthenticationConverter
 	@Override
 	public RequestMatcher support() {
 		return request -> SecurityConstants.PASSWORD.equals(request.getParameter(OAuth2ParameterNames.GRANT_TYPE))
-				&& StringUtils.hasText(request.getParameter(OAuth2ParameterNames.USERNAME))
-				&& StringUtils.hasText(request.getParameter(OAuth2ParameterNames.PASSWORD));
+				&& StringUtils.hasText(request.getParameter(SecurityConstants.USERNAME))
+				&& StringUtils.hasText(request.getParameter(SecurityConstants.PASSWORD));
 	}
 
 	@Override

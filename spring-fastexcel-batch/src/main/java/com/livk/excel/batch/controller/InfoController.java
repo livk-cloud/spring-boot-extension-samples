@@ -19,25 +19,24 @@ package com.livk.excel.batch.controller;
 import com.google.common.collect.Lists;
 import com.livk.context.fastexcel.annotation.ExcelParam;
 import com.livk.context.fastexcel.annotation.RequestExcel;
-import com.livk.context.fastexcel.listener.TypeExcelMapReadListener;
 import com.livk.excel.batch.entity.Info;
 import com.livk.excel.batch.listener.JobListener;
 import com.livk.excel.batch.support.FastExcelItemReader;
 import lombok.RequiredArgsConstructor;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParametersBuilder;
-import org.springframework.batch.core.JobParametersInvalidException;
-import org.springframework.batch.core.Step;
+import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.batch.core.repository.JobExecutionAlreadyRunningException;
-import org.springframework.batch.core.repository.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.job.parameters.InvalidJobParametersException;
+import org.springframework.batch.core.job.parameters.JobParametersBuilder;
+import org.springframework.batch.core.launch.JobExecutionAlreadyRunningException;
+import org.springframework.batch.core.launch.JobInstanceAlreadyCompleteException;
+import org.springframework.batch.core.launch.JobOperator;
+import org.springframework.batch.core.launch.JobRestartException;
 import org.springframework.batch.core.repository.JobRepository;
-import org.springframework.batch.core.repository.JobRestartException;
+import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.support.ListItemReader;
-import org.springframework.batch.repeat.policy.SimpleCompletionPolicy;
+import org.springframework.batch.infrastructure.item.ItemWriter;
+import org.springframework.batch.infrastructure.item.support.ListItemReader;
+import org.springframework.batch.infrastructure.repeat.policy.SimpleCompletionPolicy;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
@@ -64,15 +63,15 @@ public class InfoController {
 
 	private final DataSourceTransactionManager dataSourceTransactionManager;
 
-	private final JobLauncher jobLauncher;
+	private final JobOperator jobOperator;
 
 	@RequestExcel
 	@PostMapping("upload")
 	public HttpEntity<Void> upload(@ExcelParam List<Info> dataExcels) throws JobInstanceAlreadyCompleteException,
-			JobExecutionAlreadyRunningException, JobParametersInvalidException, JobRestartException {
+			JobExecutionAlreadyRunningException, JobRestartException, InvalidJobParametersException {
 		var step = excelStep(dataExcels);
 		var job = excelJob(step);
-		jobLauncher.run(job,
+		jobOperator.start(job,
 				new JobParametersBuilder().addLocalDateTime("date", LocalDateTime.now()).toJobParameters());
 		return ResponseEntity.ok(null);
 	}
@@ -96,11 +95,11 @@ public class InfoController {
 
 	private Step excelStep(List<Info> dataExcels) {
 		return new StepBuilder("excelStep", jobRepository)
-			.<List<Info>, List<Info>>chunk(new SimpleCompletionPolicy(), dataSourceTransactionManager)
+			.<List<Info>, List<Info>>chunk(new SimpleCompletionPolicy().getChunkSize())
+			.transactionManager(dataSourceTransactionManager)
 			.reader(new ListItemReader<>(Lists.partition(dataExcels, 1000)))
 			.writer(writer)
 			.faultTolerant()
-			.skipLimit(0)
 			.build();
 	}
 

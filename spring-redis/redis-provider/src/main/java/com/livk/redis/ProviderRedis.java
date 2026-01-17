@@ -16,9 +16,18 @@
 
 package com.livk.redis;
 
+import lombok.val;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
+import org.springframework.data.redis.serializer.RedisSerializationContext;
+import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -31,6 +40,30 @@ public class ProviderRedis {
 
 	void main(String[] args) {
 		SpringApplication.run(ProviderRedis.class, args);
+	}
+
+	@Bean
+	public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
+		var redisTemplate = new RedisTemplate<String, Object>();
+		redisTemplate.setKeySerializer(RedisSerializer.string());
+		redisTemplate.setValueSerializer(RedisSerializer.json());
+		redisTemplate.setHashKeySerializer(RedisSerializer.string());
+		redisTemplate.setHashValueSerializer(RedisSerializer.json());
+		redisTemplate.setConnectionFactory(connectionFactory);
+		return redisTemplate;
+	}
+
+	@Bean
+	public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(
+			ReactiveRedisConnectionFactory connectionFactory) {
+		var serializer = new JacksonJsonRedisSerializer<>(Object.class);
+		val context = RedisSerializationContext.<String, Object>newSerializationContext()
+			.key(RedisSerializer.string())
+			.value(serializer)
+			.hashKey(RedisSerializer.string())
+			.hashValue(serializer)
+			.build();
+		return new ReactiveRedisTemplate<>(connectionFactory, context);
 	}
 
 }

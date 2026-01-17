@@ -19,8 +19,8 @@ package com.livk.proto.kafka.config;
 import com.livk.proto.kafka.converter.ProtobufDeserializer;
 import com.livk.proto.kafka.converter.ProtobufSerializer;
 import org.apache.kafka.clients.admin.NewTopic;
-import org.springframework.boot.autoconfigure.kafka.DefaultKafkaConsumerFactoryCustomizer;
-import org.springframework.boot.autoconfigure.kafka.DefaultKafkaProducerFactoryCustomizer;
+import org.springframework.boot.kafka.autoconfigure.DefaultKafkaConsumerFactoryCustomizer;
+import org.springframework.boot.kafka.autoconfigure.DefaultKafkaProducerFactoryCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

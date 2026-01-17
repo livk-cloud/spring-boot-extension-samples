@@ -21,14 +21,14 @@ import io.r2dbc.spi.ConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.data.r2dbc.R2dbcDataAutoConfiguration;
-import org.springframework.boot.autoconfigure.r2dbc.R2dbcAutoConfiguration;
+import org.springframework.boot.data.r2dbc.autoconfigure.DataR2dbcAutoConfiguration;
+import org.springframework.boot.r2dbc.autoconfigure.R2dbcAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 
 /**
  * @author livk
  */
-@SpringBootApplication(exclude = { R2dbcAutoConfiguration.class, R2dbcDataAutoConfiguration.class })
+@SpringBootApplication(exclude = { R2dbcAutoConfiguration.class, DataR2dbcAutoConfiguration.class })
 public class ClickHouseR2dbcApp {
 
 	void main(String[] args) {

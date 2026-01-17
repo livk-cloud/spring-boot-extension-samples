@@ -17,11 +17,9 @@
 package com.livk.caffeine.handler;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import com.livk.context.redis.RedisOps;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 /**
  * @author livk
@@ -30,32 +28,32 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class CacheHandlerAdapter implements CacheHandler<Object> {
 
-	private final RedisOps redisOps;
+	private final RedisTemplate<String, Object> redisTemplate;
 
 	private final Cache<String, Object> cache;
 
 	@Override
 	public void put(String key, Object proceed) {
-		redisOps.opsForValue().set(key, proceed);
+		redisTemplate.opsForValue().set(key, proceed);
 		cache.put(key, proceed);
 	}
 
 	@Override
 	public void delete(String key) {
 		cache.invalidate(key);
-		redisOps.delete(key);
+		redisTemplate.delete(key);
 	}
 
 	@Override
 	public Object read(String key) {
-		return cache.get(key, s -> redisOps.opsForValue().get(s));
+		return cache.get(key, s -> redisTemplate.opsForValue().get(s));
 	}
 
 	@Override
 	public void clear() {
 		var keys = cache.asMap().keySet();
 		cache.invalidateAll();
-		redisOps.delete(keys);
+		redisTemplate.delete(keys);
 	}
 
 }

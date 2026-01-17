@@ -34,11 +34,11 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.authorization.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.OAuth2Token;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.oauth2.server.authorization.token.DelegatingOAuth2TokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2AccessTokenGenerator;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2RefreshTokenGenerator;
@@ -67,8 +67,8 @@ public class AuthorizationServerConfig {
 	@Order(Ordered.HIGHEST_PRECEDENCE)
 	public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http,
 			OAuth2AuthorizationService authorizationService, OAuth2TokenGenerator<OAuth2Token> oAuth2TokenGenerator,
-			UserDetailsAuthenticationProvider userDetailsAuthenticationProvider) throws Exception {
-		var authorizationServerConfigurer = OAuth2AuthorizationServerConfigurer.authorizationServer();
+			UserDetailsAuthenticationProvider userDetailsAuthenticationProvider) {
+		var authorizationServerConfigurer = new OAuth2AuthorizationServerConfigurer();
 		http.securityMatcher(authorizationServerConfigurer.getEndpointsMatcher());
 		http.with(authorizationServerConfigurer, withDefaults());
 		var authenticationManager = http.getSharedObject(AuthenticationManagerBuilder.class).build();

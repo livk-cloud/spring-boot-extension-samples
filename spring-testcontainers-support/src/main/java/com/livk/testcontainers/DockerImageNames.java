@@ -45,8 +45,6 @@ public class DockerImageNames {
 
 	public static final String PULSAR_IMAGE = "apachepulsar/pulsar";
 
-	public static final String MINIO_IMAGE = "minio/minio";
-
 	public static DockerImageName mysql() {
 		return mysql(LATEST_TAG);
 	}
@@ -117,14 +115,6 @@ public class DockerImageNames {
 
 	public static DockerImageName pulsar(String tag) {
 		return DockerImageName.parse(PULSAR_IMAGE).withTag(tag);
-	}
-
-	public static DockerImageName minio() {
-		return minio(LATEST_TAG);
-	}
-
-	public static DockerImageName minio(String tag) {
-		return DockerImageName.parse(MINIO_IMAGE).withTag(tag);
 	}
 
 }

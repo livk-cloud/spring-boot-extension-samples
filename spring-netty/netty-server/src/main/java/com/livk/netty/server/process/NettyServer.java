@@ -17,10 +17,10 @@
 package com.livk.netty.server.process;
 
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,9 +33,9 @@ import java.net.InetSocketAddress;
 @Slf4j
 public class NettyServer implements AutoCloseable {
 
-	private final EventLoopGroup boss = new NioEventLoopGroup();
+	private final EventLoopGroup boss = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 
-	private final EventLoopGroup work = new NioEventLoopGroup();
+	private final EventLoopGroup work = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 
 	@Value("${spring.netty.server.port}")
 	private Integer port;

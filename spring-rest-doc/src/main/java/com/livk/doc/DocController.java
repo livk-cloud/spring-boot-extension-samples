@@ -16,9 +16,6 @@
 
 package com.livk.doc;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
@@ -28,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
@@ -47,7 +47,7 @@ public class DocController {
 	}
 
 	@PostMapping
-	public HttpEntity<JsonNode> post(@RequestBody Map<String, Object> data) throws JsonProcessingException {
+	public HttpEntity<JsonNode> post(@RequestBody Map<String, Object> data) throws JacksonException {
 		return ResponseEntity.ok(objectMapper.readTree(objectMapper.writeValueAsString(data)));
 	}
 

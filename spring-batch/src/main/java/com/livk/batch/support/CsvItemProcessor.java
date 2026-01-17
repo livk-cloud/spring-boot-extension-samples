@@ -19,9 +19,9 @@ package com.livk.batch.support;
 import com.livk.batch.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.NonNull;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.validator.ValidationException;
-import org.springframework.batch.item.validator.Validator;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
+import org.springframework.batch.infrastructure.item.validator.ValidationException;
+import org.springframework.batch.infrastructure.item.validator.Validator;
 
 import java.time.LocalDateTime;
 

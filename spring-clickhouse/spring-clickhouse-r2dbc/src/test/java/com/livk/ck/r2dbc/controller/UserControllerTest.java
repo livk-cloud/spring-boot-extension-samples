@@ -18,15 +18,14 @@ package com.livk.ck.r2dbc.controller;
 
 import com.livk.ck.r2dbc.entity.User;
 import com.livk.testcontainers.DockerImageNames;
-import org.hamcrest.core.IsNot;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -36,7 +35,8 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
-import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author livk
@@ -72,7 +72,7 @@ class UserControllerTest {
 			.expectStatus()
 			.isOk()
 			.expectBodyList(User.class)
-			.value(List::size, IsNot.not(0));
+			.value(users -> assertThat(users).hasSize(1));
 	}
 
 	@Order(1)

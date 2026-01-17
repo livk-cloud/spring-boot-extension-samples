@@ -16,19 +16,15 @@
 
 package com.livk.batch.support;
 
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
-import jakarta.validation.ValidatorFactory;
-import org.springframework.batch.item.validator.ValidationException;
 import org.jspecify.annotations.NonNull;
-
-import java.util.Set;
+import org.springframework.batch.infrastructure.item.validator.ValidationException;
 
 /**
  * @author livk
  */
-public class CsvBeanValidator<T> implements org.springframework.batch.item.validator.Validator<T> {
+public class CsvBeanValidator<T> implements org.springframework.batch.infrastructure.item.validator.Validator<T> {
 
 	private final Validator validator;
 

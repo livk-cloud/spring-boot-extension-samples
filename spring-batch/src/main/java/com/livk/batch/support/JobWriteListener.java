@@ -18,9 +18,9 @@ package com.livk.batch.support;
 
 import com.livk.batch.domain.User;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.batch.core.ItemWriteListener;
-import org.springframework.batch.item.Chunk;
 import org.jspecify.annotations.Nullable;
+import org.springframework.batch.core.listener.ItemWriteListener;
+import org.springframework.batch.infrastructure.item.Chunk;
 import org.springframework.util.Assert;
 
 /**

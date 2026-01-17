@@ -16,11 +16,10 @@
 
 package com.livk.redis.controller;
 
-import com.livk.context.redis.RedisOps;
 import com.livk.redis.support.LuaStock;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,14 +34,14 @@ public class BuyController {
 
 	private final LuaStock luaStock;
 
-	private final RedisOps redisOps;
+	private final RedisTemplate<String, Integer> redisTemplate;
 
 	@PostConstruct
 	public void init() {
-		if (redisOps.hasKey("livk")) {
-			redisOps.delete("livk");
+		if (redisTemplate.hasKey("livk")) {
+			redisTemplate.delete("livk");
 		}
-		redisOps.opsForValue().set("livk", 1);
+		redisTemplate.opsForValue().set("livk", 1);
 	}
 
 	@PostMapping("buy")
@@ -52,8 +51,8 @@ public class BuyController {
 
 	@PostMapping("put")
 	public void put() {
-		var value = redisOps.opsForValue();
-		if ((Integer) value.get("livk") > 0) {
+		var value = redisTemplate.opsForValue();
+		if (value.get("livk") > 0) {
 			value.decrement("livk");
 		}
 	}

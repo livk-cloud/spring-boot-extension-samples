@@ -23,4 +23,8 @@ import com.livk.commons.util.TreeNode;
  */
 public class Menu extends TreeNode<Integer, String> {
 
+	public Menu(Integer id) {
+		super(id);
+	}
+
 }

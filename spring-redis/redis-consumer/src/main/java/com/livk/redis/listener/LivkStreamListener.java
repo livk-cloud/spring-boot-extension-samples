@@ -16,7 +16,6 @@
 
 package com.livk.redis.listener;
 
-import com.livk.context.redis.RedisOps;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.DisposableBean;
@@ -24,8 +23,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.data.redis.connection.stream.Consumer;
 import org.springframework.data.redis.connection.stream.ObjectRecord;
 import org.springframework.data.redis.connection.stream.ReadOffset;
-import org.springframework.data.redis.connection.stream.StreamInfo;
 import org.springframework.data.redis.connection.stream.StreamOffset;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
@@ -46,7 +45,7 @@ import java.util.concurrent.TimeUnit;
 public class LivkStreamListener
 		implements StreamListener<String, ObjectRecord<String, String>>, InitializingBean, DisposableBean {
 
-	private final RedisOps redisOps;
+	private final RedisTemplate<String, String> redisTemplate;
 
 	private StreamMessageListenerContainer<String, ObjectRecord<String, String>> listenerContainer;
 
@@ -59,14 +58,14 @@ public class LivkStreamListener
 
 	@Override
 	public void afterPropertiesSet() {
-		if (redisOps.hasKey("livk-streamKey")) {
-			var groups = redisOps.opsForStream().groups("livk-streamKey");
+		if (redisTemplate.hasKey("livk-streamKey")) {
+			var groups = redisTemplate.opsForStream().groups("livk-streamKey");
 			if (groups.isEmpty()) {
-				redisOps.opsForStream().createGroup("livk-streamKey", "livk-group");
+				redisTemplate.opsForStream().createGroup("livk-streamKey", "livk-group");
 			}
 		}
 		else {
-			redisOps.opsForStream().createGroup("livk-streamKey", "livk-group");
+			redisTemplate.opsForStream().createGroup("livk-streamKey", "livk-group");
 		}
 
 		var options = StreamMessageListenerContainer.StreamMessageListenerContainerOptions.builder()
@@ -78,7 +77,7 @@ public class LivkStreamListener
 			.targetType(String.class)
 			.build();
 		this.listenerContainer = StreamMessageListenerContainer
-			.create(Objects.requireNonNull(redisOps.getConnectionFactory()), options);
+			.create(Objects.requireNonNull(redisTemplate.getConnectionFactory()), options);
 
 		this.listenerContainer.receive(Consumer.from("livk-group", "livk"),
 				StreamOffset.create("livk-streamKey", ReadOffset.lastConsumed()), this);

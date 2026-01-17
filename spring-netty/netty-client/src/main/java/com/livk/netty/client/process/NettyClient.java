@@ -21,9 +21,9 @@ import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.ChannelOption;
-import io.netty.channel.EventLoop;
 import io.netty.channel.EventLoopGroup;
-import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.MultiThreadIoEventLoopGroup;
+import io.netty.channel.nio.NioIoHandler;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.slf4j.Slf4j;
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class NettyClient implements AutoCloseable {
 
-	private final EventLoopGroup group = new NioEventLoopGroup();
+	private final EventLoopGroup group = new MultiThreadIoEventLoopGroup(NioIoHandler.newFactory());
 
 	@Value("${spring.netty.port}")
 	private int port;

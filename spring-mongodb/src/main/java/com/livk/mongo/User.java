@@ -1,20 +1,19 @@
 package com.livk.mongo;
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.io.IOException;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.JsonGenerator;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.SerializationContext;
+import tools.jackson.databind.ValueDeserializer;
+import tools.jackson.databind.ValueSerializer;
+import tools.jackson.databind.annotation.JsonDeserialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 
 /**
  * @author livk
@@ -33,21 +32,20 @@ public class User {
 
 	private Integer age;
 
-	private static class ObjectIdJsonSerializer extends JsonSerializer<ObjectId> {
+	private static class ObjectIdJsonSerializer extends ValueSerializer<ObjectId> {
 
 		@Override
-		public void serialize(ObjectId objectId, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
-				throws IOException {
+		public void serialize(ObjectId objectId, JsonGenerator jsonGenerator, SerializationContext ctxt)
+				throws JacksonException {
 			jsonGenerator.writeString(objectId.toHexString());
 		}
 
 	}
 
-	private static class ObjectIdJsonDeserializer extends JsonDeserializer<ObjectId> {
+	private static class ObjectIdJsonDeserializer extends ValueDeserializer<ObjectId> {
 
 		@Override
-		public ObjectId deserialize(JsonParser jsonParser, DeserializationContext deserializationContext)
-				throws IOException {
+		public ObjectId deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) {
 			var hex = jsonParser.getValueAsString();
 			return hex == null ? null : new ObjectId(hex);
 		}

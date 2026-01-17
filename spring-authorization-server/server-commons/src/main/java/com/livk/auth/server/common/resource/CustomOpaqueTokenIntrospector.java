@@ -16,18 +16,19 @@
 
 package com.livk.auth.server.common.resource;
 
-import com.livk.auth.server.common.constant.SecurityConstants;
 import com.livk.auth.server.common.principal.Oauth2User;
 import com.livk.auth.server.common.Oauth2UserDetailsService;
 import com.livk.commons.SpringContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
+import org.springframework.util.Assert;
 
 import java.security.Principal;
 import java.util.Objects;
@@ -46,7 +47,7 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
 		var oldAuthorization = authorizationService.findByToken(token, OAuth2TokenType.ACCESS_TOKEN);
 		if (oldAuthorization == null) {
 			UsernameNotFoundException notFoundException = new UsernameNotFoundException("token 错误");
-			log.warn("用户不不存在 {}", notFoundException.getLocalizedMessage());
+			log.warn("用户不存在 {}", notFoundException.getLocalizedMessage());
 			throw notFoundException;
 		}
 
@@ -61,25 +62,18 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
 			var principal = Objects.requireNonNull(oldAuthorization).getAttributes().get(Principal.class.getName());
 			var usernamePasswordAuthenticationToken = (UsernamePasswordAuthenticationToken) principal;
 			var tokenPrincipal = usernamePasswordAuthenticationToken.getPrincipal();
-			String userPrincipal = getPrincipal((Oauth2User) tokenPrincipal, grantType);
+			Assert.notNull(tokenPrincipal, "tokenPrincipal must not be null");
+			String userPrincipal = ((User) tokenPrincipal).getUsername();
 			userDetails = optional.orElseThrow().loadUserByUsername(userPrincipal);
 		}
 		catch (UsernameNotFoundException notFoundException) {
-			log.warn("用户不不存在 {}", notFoundException.getLocalizedMessage());
+			log.warn("用户不存在 {}", notFoundException.getLocalizedMessage());
 			throw notFoundException;
 		}
 		catch (Exception ex) {
 			log.error("资源服务器 introspect Token error {}", ex.getLocalizedMessage());
 		}
 		return userDetails;
-	}
-
-	private String getPrincipal(Oauth2User user, String grantType) {
-		return switch (grantType) {
-			case SecurityConstants.PASSWORD -> user.getUsername();
-			case SecurityConstants.SMS -> user.getMobile();
-			default -> throw new IllegalArgumentException("Unsupported grant type: " + grantType);
-		};
 	}
 
 }

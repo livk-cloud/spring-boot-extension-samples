@@ -18,6 +18,10 @@ package com.livk.redis;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 /**
  * @author livk
@@ -27,6 +31,17 @@ public class LuaApp {
 
 	void main(String[] args) {
 		SpringApplication.run(LuaApp.class, args);
+	}
+
+	@Bean
+	public RedisTemplate<String, Integer> redisTemplate(RedisConnectionFactory connectionFactory) {
+		var redisTemplate = new RedisTemplate<String, Integer>();
+		redisTemplate.setKeySerializer(RedisSerializer.string());
+		redisTemplate.setValueSerializer(RedisSerializer.json());
+		redisTemplate.setHashKeySerializer(RedisSerializer.string());
+		redisTemplate.setHashValueSerializer(RedisSerializer.json());
+		redisTemplate.setConnectionFactory(connectionFactory);
+		return redisTemplate;
 	}
 
 }

@@ -56,8 +56,8 @@ public class OAuth2PasswordAuthenticationProvider
 
 	@Override
 	protected UsernamePasswordAuthenticationToken assemble(Map<String, Object> reqParameters) {
-		var username = (String) reqParameters.get(OAuth2ParameterNames.USERNAME);
-		var password = (String) reqParameters.get(OAuth2ParameterNames.PASSWORD);
+		var username = (String) reqParameters.get(SecurityConstants.USERNAME);
+		var password = (String) reqParameters.get(SecurityConstants.PASSWORD);
 		return new UsernamePasswordAuthenticationToken(username, password);
 	}
 

@@ -37,6 +37,8 @@ public class SecurityConstants {
 
 	public static final AuthorizationGrantType GRANT_TYPE_SMS = new AuthorizationGrantType(SMS);
 
+	public static final String USERNAME = "username";
+
 	public static final String PASSWORD = "password";
 
 	public static final AuthorizationGrantType GRANT_TYPE_PASSWORD = new AuthorizationGrantType(PASSWORD);

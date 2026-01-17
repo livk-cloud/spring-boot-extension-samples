@@ -23,19 +23,21 @@ import com.livk.batch.support.CsvLineMapper;
 import com.livk.batch.support.JobCompletionListener;
 import com.livk.batch.support.JobReadListener;
 import com.livk.batch.support.JobWriteListener;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
+import org.springframework.batch.core.configuration.support.MapJobRegistry;
+import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
-import org.springframework.batch.core.launch.support.TaskExecutorJobLauncher;
+import org.springframework.batch.core.launch.support.TaskExecutorJobOperator;
 import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
 import org.springframework.batch.core.step.builder.StepBuilder;
-import org.springframework.batch.item.ItemProcessor;
-import org.springframework.batch.item.ItemReader;
-import org.springframework.batch.item.ItemWriter;
-import org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider;
-import org.springframework.batch.item.database.JdbcBatchItemWriter;
-import org.springframework.batch.item.file.FlatFileItemReader;
+import org.springframework.batch.core.step.skip.LimitCheckingExceptionHierarchySkipPolicy;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
+import org.springframework.batch.infrastructure.item.ItemReader;
+import org.springframework.batch.infrastructure.item.ItemWriter;
+import org.springframework.batch.infrastructure.item.database.BeanPropertyItemSqlParameterSourceProvider;
+import org.springframework.batch.infrastructure.item.database.JdbcBatchItemWriter;
+import org.springframework.batch.infrastructure.item.file.FlatFileItemReader;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
@@ -43,6 +45,7 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
 import javax.sql.DataSource;
 import java.io.FileNotFoundException;
+import java.util.Set;
 
 /**
  * @author livk
@@ -53,30 +56,13 @@ public class BatchConfig {
 
 	@Bean
 	public ItemReader<User> reader() {
-		var reader = new FlatFileItemReader<User>();
+		CsvLineMapper<User> lineMapper = CsvLineMapper.builder(User.class)
+			.delimiter("\t")
+			.fields("userName", "sex", "age", "address")
+			.build();
+		var reader = new FlatFileItemReader<>(lineMapper);
 		reader.setLinesToSkip(1);
 		reader.setResource(new ClassPathResource("data.csv"));
-		reader.setLineMapper(
-				CsvLineMapper.builder(User.class).delimiter("\t").fields("userName", "sex", "age", "address").build());
-		// reader.setLineMapper(new DefaultLineMapper<>() {
-		// {
-		// setLineTokenizer(new DelimitedLineTokenizer() {
-		// {
-		// // 配置了四行文件
-		// setNames("userName", "sex", "age", "address");
-		// // 配置列于列之间的间隔符,会通过间隔符对每一行进行切分
-		// setDelimiter("\t");
-		// }
-		// });
-		//
-		// // 设置要映射的实体类属性
-		// setFieldSetMapper(new BeanWrapperFieldSetMapper<>() {
-		// {
-		// setTargetType(User.class);
-		// }
-		// });
-		// }
-		// });
 		return reader;
 	}
 
@@ -98,7 +84,8 @@ public class BatchConfig {
 	@Bean
 	public Step csvStep(JobRepository jobRepository, DataSource dataSource,
 			DataSourceTransactionManager dataSourceTransactionManager) {
-		return new StepBuilder("csvStep", jobRepository).<User, User>chunk(5, dataSourceTransactionManager)
+		return new StepBuilder("csvStep", jobRepository).<User, User>chunk(5)
+			.transactionManager(dataSourceTransactionManager)
 			.reader(reader())
 			.listener(new JobReadListener())
 			.processor(processor())
@@ -110,7 +97,7 @@ public class BatchConfig {
 			// 指定我们可以跳过的异常，因为有些异常的出现，我们是可以忽略的
 			.skip(Exception.class)
 			// 出现这个异常我们不想跳过，因此这种异常出现一次时，计数器就会加一，直到达到上限
-			.noSkip(FileNotFoundException.class)
+			.skipPolicy(new LimitCheckingExceptionHierarchySkipPolicy(Set.of(FileNotFoundException.class), 3))
 			.build();
 	}
 
@@ -120,11 +107,17 @@ public class BatchConfig {
 	}
 
 	@Bean
-	public TaskExecutorJobLauncher taskExecutorJobLauncher(JobRepository jobRepository) {
-		var jobLauncher = new TaskExecutorJobLauncher();
+	public MapJobRegistry mapJobRegistry() {
+		return new MapJobRegistry();
+	}
+
+	@Bean
+	public TaskExecutorJobOperator taskExecutorJobOperator(JobRepository jobRepository, MapJobRegistry mapJobRegistry) {
+		var jobOperator = new TaskExecutorJobOperator();
 		// 设置jobRepository
-		jobLauncher.setJobRepository(jobRepository);
-		return jobLauncher;
+		jobOperator.setJobRepository(jobRepository);
+		jobOperator.setJobRegistry(mapJobRegistry);
+		return jobOperator;
 	}
 
 }

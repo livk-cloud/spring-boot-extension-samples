@@ -29,7 +29,7 @@ import java.io.Serializable;
  * @author livk
  */
 @Data
-@Entity(name = "`user`")
+@Entity(name = "sys_user")
 public class User implements Serializable {
 
 	@Id

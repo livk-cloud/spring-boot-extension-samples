@@ -17,11 +17,11 @@
 package com.livk.redis.controller;
 
 import com.livk.common.redis.domain.LivkMessage;
-import com.livk.context.redis.ReactiveRedisOps;
 import com.livk.redis.entity.Person;
 import com.livk.redis.repository.PersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.stream.StreamRecords;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,33 +39,33 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class MessageController {
 
-	private final ReactiveRedisOps reactiveRedisOps;
+	private final ReactiveRedisTemplate<String, Object> reactiveRedisTemplate;
 
 	private final PersonRepository personRepository;
 
 	@PostMapping("/redis/{id}")
-	public Mono<Void> send(@PathVariable("id") Long id, @RequestParam("msg") String msg,
+	public Mono<Void> send(@PathVariable Long id, @RequestParam("msg") String msg,
 			@RequestBody Map<String, Object> data) {
-		return reactiveRedisOps
+		return reactiveRedisTemplate
 			.convertAndSend(LivkMessage.CHANNEL, LivkMessage.of().setId(id).setMsg(msg).setData(data))
 			.flatMap(n -> Mono.empty());
 	}
 
 	@PostMapping("/redis/stream")
 	public Mono<Void> stream() {
-		return reactiveRedisOps.opsForStream()
+		return reactiveRedisTemplate.opsForStream()
 			.add(StreamRecords.newRecord().ofObject("livk-object").withStreamKey("livk-streamKey"))
 			.flatMap(n -> Mono.empty());
 	}
 
 	@PostMapping("/redis/hyper-log-log")
 	public Mono<Void> add(@RequestParam Object data) {
-		return reactiveRedisOps.opsForHyperLogLog().add("log", data).flatMap(n -> Mono.empty());
+		return reactiveRedisTemplate.opsForHyperLogLog().add("log", data).flatMap(n -> Mono.empty());
 	}
 
 	@GetMapping("/redis/hyper-log-log")
 	public Mono<Long> get() {
-		return reactiveRedisOps.opsForHyperLogLog().size("log");
+		return reactiveRedisTemplate.opsForHyperLogLog().size("log");
 	}
 
 	@PostMapping("person")
