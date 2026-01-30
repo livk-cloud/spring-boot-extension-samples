@@ -46,9 +46,10 @@ public class MicrometerTraceApp {
 	@GetMapping("home")
 	public String home() {
 		log.info("home() has been called");
-		var wrap = ContextSnapshots.wrap(Executors.newFixedThreadPool(2, Thread.ofVirtual().factory()));
+		var wrap = ContextSnapshots
+			.wrap(Executors.newFixedThreadPool(2, Thread.ofVirtual().name("log-virtual-", 1).factory()));
 		for (var i = 0; i < 3; i++) {
-			wrap.execute(() -> log.info("home"));
+			wrap.execute(() -> log.info("home of virtual thread {}", Thread.currentThread().getName()));
 		}
 		wrap.shutdown();
 		return "Hello World!";

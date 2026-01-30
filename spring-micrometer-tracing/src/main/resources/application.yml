@@ -4,3 +4,11 @@ server:
 spring:
   application:
     name: spring-micrometer
+management:
+  otlp:
+    metrics:
+      export:
+        enabled: false
+  tracing:
+    export:
+      enabled: true

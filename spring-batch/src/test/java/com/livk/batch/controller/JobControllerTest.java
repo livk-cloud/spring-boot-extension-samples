@@ -47,7 +47,7 @@ class JobControllerTest {
 		mockMvc.perform(get("/doJob")).andExpect(status().isOk());
 		var names = jdbcTemplate.queryForList("select * from sys_user")
 			.stream()
-			.map(map -> map.get("user_name").toString())
+			.map(map -> map.get("user_name"))
 			.toList();
 		assertThat(names).containsExactly("张三", "李四", "王雪", "孙云", "赵柳", "孙雪");
 	}
