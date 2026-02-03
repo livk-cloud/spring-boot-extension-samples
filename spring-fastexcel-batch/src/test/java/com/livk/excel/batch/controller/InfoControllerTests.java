@@ -23,21 +23,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.mysql.MySQLContainer;
 
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -63,16 +58,14 @@ class InfoControllerTests {
 	}
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Test
 	void upload() throws Exception {
 		var resource = new ClassPathResource("mobile-test.xlsx");
-
 		var file = new MockMultipartFile("file", "mobile-test.xlsx", MediaType.MULTIPART_FORM_DATA_VALUE,
 				resource.getInputStream());
-
-		mockMvc.perform(multipart(HttpMethod.POST, "/upload").file(file)).andDo(print()).andExpect(status().isOk());
+		tester.post().uri("/upload").multipart().file(file).assertThat().debug().hasStatusOk();
 	}
 
 	@Test
@@ -82,11 +75,15 @@ class InfoControllerTests {
 		var file = new MockMultipartFile("file", "mobile-test.xlsx", MediaType.MULTIPART_FORM_DATA_VALUE,
 				resource.getInputStream());
 
-		mockMvc.perform(multipart(POST, "/excel").file(file))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.length()").value(100000))
-			.andExpect(jsonPath("$[99999]").exists());
+		tester.post()
+			.uri("/excel")
+			.multipart()
+			.file(file)
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(jsonPath("$.length()").value(100000))
+			.matches(jsonPath("$[99999]").exists());
 	}
 
 }

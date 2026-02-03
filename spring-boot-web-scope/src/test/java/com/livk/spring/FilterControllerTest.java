@@ -20,12 +20,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -35,23 +32,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class FilterControllerTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Test
-	void uuid() throws Exception {
-		var uuid1 = mockMvc.perform(get("/uuid"))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andReturn()
-			.getResponse()
-			.getContentAsString();
+	void uuid() {
+		var uuid1 = tester.get().uri("/uuid").assertThat().debug().hasStatusOk().bodyText().actual();
 
-		var uuid2 = mockMvc.perform(get("/uuid"))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andReturn()
-			.getResponse()
-			.getContentAsString();
+		var uuid2 = tester.get().uri("/uuid").assertThat().debug().hasStatusOk().bodyText().actual();
 
 		assertThat(uuid1).isNotEqualTo(uuid2);
 	}

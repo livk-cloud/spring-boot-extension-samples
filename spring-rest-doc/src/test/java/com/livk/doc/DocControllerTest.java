@@ -26,16 +26,12 @@ import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.web.context.WebApplicationContext;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -47,34 +43,41 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @ExtendWith({ SpringExtension.class, RestDocumentationExtension.class })
 class DocControllerTest {
 
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Autowired
 	ObjectMapper mapper;
 
 	@BeforeEach
 	public void setMockMvc(WebApplicationContext webApplicationContext, RestDocumentationContextProvider provider) {
-		this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
-			.apply(MockMvcRestDocumentation.documentationConfiguration(provider))
-			.build();
+		this.tester = MockMvcTester.from(webApplicationContext,
+				builder -> builder.apply(MockMvcRestDocumentation.documentationConfiguration(provider)).build());
 	}
 
 	@Test
-	void testGet() throws Exception {
-		mockMvc.perform(get("/doc").param("name", "world"))
-			.andExpect(status().isOk())
-			.andExpect(content().string("hello world"))
-			.andDo(document("get"));
+	void testGet() {
+		tester.get()
+			.uri("/doc")
+			.param("name", "world")
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(status().isOk())
+			.matches(content().string("hello world"));
 	}
 
 	@Test
-	void testPost() throws Exception {
+	void testPost() {
 		var map = Map.of("username", "livk", "password", "123456");
-		mockMvc.perform(post("/doc").contentType(MediaType.APPLICATION_JSON).content(mapper.writeValueAsString(map)))
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("$.username").value("livk"))
-			.andExpect(jsonPath("$.password").value("123456"))
-			.andDo(document("post"));
+		tester.post()
+			.uri("/doc")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(mapper.writeValueAsString(map))
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(jsonPath("$.username").value("livk"))
+			.matches(jsonPath("$.password").value("123456"));
 	}
 
 }

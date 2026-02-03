@@ -16,7 +16,7 @@
 
 package com.livk.rest;
 
-import com.livk.commons.jackson.support.JacksonSupport;
+import com.livk.commons.jackson.JsonMapperUtils;
 import com.livk.rest.entity.User;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -25,16 +25,11 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
-import tools.jackson.databind.json.JsonMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -45,77 +40,89 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class RestAppTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Order(2)
 	@Test
-	void testGetById() throws Exception {
-		mockMvc.perform(get("/rest/api/user/{id}", 1))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful())
-			.andExpect(jsonPath("username").value("root"))
-			.andExpect(jsonPath("password").value("root"))
-			.andExpect(jsonPath("age").value(18));
+	void testGetById() {
+		tester.get()
+			.uri("/rest/api/user/{id}", 1)
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(jsonPath("username").value("root"))
+			.matches(jsonPath("password").value("root"))
+			.matches(jsonPath("age").value(18));
 	}
 
 	@Order(1)
 	@Test
-	void testSave() throws Exception {
-		var mapper = JsonMapper.builder().build();
-		var support = new JacksonSupport(mapper);
+	void testSave() {
 		var user = new User();
 		user.setUsername("root");
 		user.setPassword("root");
 		user.setAge(18);
-		mockMvc.perform(post("/rest/api/user").content(support.writeValueAsBytes(user)))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		tester.post()
+			.uri("/rest/api/user")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(JsonMapperUtils.writeValueAsString(user))
+			.assertThat()
+			.debug()
+			.hasStatus(HttpStatus.CREATED);
 	}
 
 	@Order(3)
 	@Test
-	void testUpdate() throws Exception {
-		var mapper = JsonMapper.builder().build();
-		var support = new JacksonSupport(mapper);
+	void testUpdate() {
 		var user = new User();
 		user.setUsername("admin");
 		user.setPassword("admin");
 		user.setAge(19);
-		mockMvc.perform(put("/rest/api/user/{id}", 1).content(support.writeValueAsBytes(user)))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful());
+		tester.put()
+			.uri("/rest/api/user/{id}", 1)
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(JsonMapperUtils.writeValueAsString(user))
+			.assertThat()
+			.debug()
+			.hasStatus(HttpStatus.NO_CONTENT);
 	}
 
 	@Order(6)
 	@Test
-	void testDelete() throws Exception {
-		mockMvc.perform(delete("/rest/api/user/{id}", 1)).andDo(print()).andExpect(status().is2xxSuccessful());
+	void testDelete() {
+		tester.delete().uri("/rest/api/user/{id}", 1).assertThat().debug().hasStatus(HttpStatus.NO_CONTENT);
 	}
 
 	@Order(4)
 	@Test
-	void testAuth() throws Exception {
-		mockMvc.perform(get("/rest/api/user/search/auth").param("name", "admin").param("pwd", "admin"))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful())
-			.andExpect(jsonPath("username").value("admin"))
-			.andExpect(jsonPath("password").value("admin"))
-			.andExpect(jsonPath("age").value(19));
+	void testAuth() {
+		tester.get()
+			.uri("/rest/api/user/search/auth")
+			.param("name", "admin")
+			.param("pwd", "admin")
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(jsonPath("$.username").value("admin"))
+			.matches(jsonPath("$.password").value("admin"))
+			.matches(jsonPath("$.age").value(19));
 	}
 
 	@Order(5)
 	@Test
-	void testList() throws Exception {
-		mockMvc.perform(get("/rest/api/user"))
-			.andDo(print())
-			.andExpect(status().is2xxSuccessful())
-			.andExpect(jsonPath("_embedded.users[0].username").value("admin"))
-			.andExpect(jsonPath("_embedded.users[0].password").value("admin"))
-			.andExpect(jsonPath("_embedded.users[0].age").value(19))
-			.andExpect(jsonPath("page.size").value(20))
-			.andExpect(jsonPath("page.totalElements").value(1))
-			.andExpect(jsonPath("page.totalPages").value(1))
-			.andExpect(jsonPath("page.number").value(0));
+	void testList() {
+		tester.get()
+			.uri("/rest/api/user")
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(jsonPath("_embedded.users[0].username").value("admin"))
+			.matches(jsonPath("_embedded.users[0].password").value("admin"))
+			.matches(jsonPath("_embedded.users[0].age").value(19))
+			.matches(jsonPath("page.size").value(20))
+			.matches(jsonPath("page.totalElements").value(1))
+			.matches(jsonPath("page.totalPages").value(1))
+			.matches(jsonPath("page.number").value(0));
 	}
 
 }

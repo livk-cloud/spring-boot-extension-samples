@@ -26,17 +26,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.web.client.RestClient;
 
 import java.util.HashMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -48,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Autowired
 	RestClient restClient;
@@ -76,19 +71,27 @@ class UserControllerTest {
 	}
 
 	@Test
-	void testList() throws Exception {
-		mockMvc.perform(get("/user/list").header(HttpHeaders.AUTHORIZATION, token))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(content().string("list"));
+	void testList() {
+		tester.get()
+			.uri("/user/list")
+			.header(HttpHeaders.AUTHORIZATION, token)
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.bodyText()
+			.isEqualTo("list");
 	}
 
 	@Test
-	void testUpdate() throws Exception {
-		mockMvc.perform(put("/user/update").header(HttpHeaders.AUTHORIZATION, token))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(content().string("update"));
+	void testUpdate() {
+		tester.put()
+			.uri("/user/update")
+			.header(HttpHeaders.AUTHORIZATION, token)
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.bodyText()
+			.isEqualTo("update");
 	}
 
 }

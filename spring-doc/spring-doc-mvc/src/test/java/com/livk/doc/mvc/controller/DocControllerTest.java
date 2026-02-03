@@ -20,11 +20,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 /**
@@ -35,14 +32,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class DocControllerTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Test
-	void test() throws Exception {
-		mockMvc.perform(get("/v3/api-docs"))
-			.andDo(print())
-			.andExpect(MockMvcResultMatchers.status().isOk())
-			.andExpect(jsonPath("openapi").value("3.1.0"));
+	void test() {
+		tester.get().uri("/v3/api-docs").assertThat().debug().hasStatusOk().matches(jsonPath("openapi").value("3.1.0"));
+
 	}
 
 }

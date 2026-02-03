@@ -21,11 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -37,14 +35,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class JobControllerTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Autowired
 	JdbcTemplate jdbcTemplate;
 
 	@Test
-	void doJobTest() throws Exception {
-		mockMvc.perform(get("/doJob")).andExpect(status().isOk());
+	void doJobTest() {
+		tester.get().uri("/doJob").assertThat().debug().hasStatusOk();
 		var names = jdbcTemplate.queryForList("select * from sys_user")
 			.stream()
 			.map(map -> map.get("user_name"))

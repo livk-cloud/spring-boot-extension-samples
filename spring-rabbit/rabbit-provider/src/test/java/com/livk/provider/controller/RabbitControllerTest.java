@@ -26,17 +26,13 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.rabbitmq.RabbitMQContainer;
 
 import java.time.Duration;
 import java.util.Map;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -60,52 +56,68 @@ class RabbitControllerTest {
 	static final String body = JsonMapperUtils.writeValueAsString(Map.of("msg", "hello", "data", "By Livk"));
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Test
-	void sendMsgDirect() throws Exception {
-		mockMvc.perform(post("/provider/sendMsgDirect").contentType(MediaType.APPLICATION_JSON).content(body))
-			.andDo(print())
-			.andExpect(status().isOk());
+	void sendMsgDirect() {
+		tester.post()
+			.uri("/provider/sendMsgDirect")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(body)
+			.assertThat()
+			.debug()
+			.hasStatusOk();
 	}
 
 	@Test
-	void sendMsgFanout() throws Exception {
-		mockMvc.perform(post("/provider/sendMsgFanout").contentType(MediaType.APPLICATION_JSON).content(body))
-			.andDo(print())
-			.andExpect(status().isOk());
+	void sendMsgFanout() {
+		tester.post()
+			.uri("/provider/sendMsgFanout")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(body)
+			.assertThat()
+			.debug()
+			.hasStatusOk();
 	}
 
 	@Test
-	void sendMsgTopic() throws Exception {
-		mockMvc
-			.perform(post("/provider/sendMsgTopic/{key}", "rabbit.a.b").contentType(MediaType.APPLICATION_JSON)
-				.content(body))
-			.andDo(print())
-			.andExpect(status().isOk());
+	void sendMsgTopic() {
+		tester.post()
+			.uri("/provider/sendMsgTopic/{key}", "rabbit.a.b")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(body)
+			.assertThat()
+			.debug()
+			.hasStatusOk();
 
-		mockMvc
-			.perform(post("/provider/sendMsgTopic/{key}", "a.b").contentType(MediaType.APPLICATION_JSON).content(body))
-			.andDo(print())
-			.andExpect(status().isOk());
+		tester.post()
+			.uri("/provider/sendMsgTopic/{key}", "a.b")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(body)
+			.assertThat()
+			.debug()
+			.hasStatusOk();
 	}
 
 	@Test
-	void sendMsgHeaders() throws Exception {
-		mockMvc
-			.perform(post("/provider/sendMsgHeaders").queryParam("json", "{\"auth\":\"livk\"}")
-				.contentType(MediaType.APPLICATION_JSON)
-				.content(body))
-			.andDo(print())
-			.andExpect(status().isOk());
+	void sendMsgHeaders() {
+		tester.post()
+			.uri("/provider/sendMsgHeaders")
+			.param("json", "{\"auth\":\"livk\"}")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(body)
+			.assertThat()
+			.debug()
+			.hasStatusOk();
 
-		mockMvc
-			.perform(
-					post("/provider/sendMsgHeaders").queryParam("json", "{\"username\":\"livk\",\"password\":\"livk\"}")
-						.contentType(MediaType.APPLICATION_JSON)
-						.content(body))
-			.andDo(print())
-			.andExpect(status().isOk());
+		tester.post()
+			.uri("/provider/sendMsgHeaders")
+			.param("json", "{\"username\":\"livk\",\"password\":\"livk\"}")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(body)
+			.assertThat()
+			.debug()
+			.hasStatusOk();
 	}
 
 }

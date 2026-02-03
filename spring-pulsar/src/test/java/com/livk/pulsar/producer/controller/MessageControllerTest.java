@@ -26,17 +26,13 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.pulsar.PulsarContainer;
 
 import java.time.Duration;
 import java.util.Map;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -59,16 +55,18 @@ class MessageControllerTest {
 	}
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Test
-	void testSend() throws Exception {
+	void testSend() {
 		var map = Map.of("username", "livk", "password", "123456");
-		mockMvc
-			.perform(post("/producer").contentType(MediaType.APPLICATION_JSON)
-				.content(JsonMapperUtils.writeValueAsString(map)))
-			.andExpect(status().isOk())
-			.andDo(print());
+		tester.post()
+			.uri("/producer")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(JsonMapperUtils.writeValueAsString(map))
+			.assertThat()
+			.debug()
+			.hasStatusOk();
 	}
 
 }

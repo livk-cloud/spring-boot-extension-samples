@@ -16,7 +16,6 @@
 
 package com.livk.auth.server;
 
-import com.livk.commons.jackson.JsonMapperUtils;
 import com.livk.commons.web.HttpParameters;
 import com.nimbusds.jose.util.Base64;
 import org.junit.jupiter.api.Test;
@@ -26,14 +25,10 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
+import tools.jackson.databind.JsonNode;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -47,102 +42,127 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class AuthServerAppTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Test
-	void testPassword() throws Exception {
+	void testPassword() {
 		var params = new HttpParameters();
 		params.set("grant_type", "password");
 		params.set("username", "livk");
 		params.set("password", "123456");
 		params.set("scope", "livk.read");
-		byte[] body = mockMvc
-			.perform(post("/oauth2/token")
-				.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.params(params))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(jsonPath("sub").value("livk"))
-			.andExpect(jsonPath("iss").value("http://localhost"))
-			.andExpect(jsonPath("token_type").value("Bearer"))
-			.andExpect(jsonPath("client_id").value("livk-client"))
-			.andExpect(jsonPath("access_token").isNotEmpty())
-			.andReturn()
-			.getResponse()
-			.getContentAsByteArray();
+		JsonNode body = tester.post()
+			.uri("/oauth2/token")
+			.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+			.params(params)
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(jsonPath("sub").value("livk"))
+			.matches(jsonPath("iss").value("http://localhost"))
+			.matches(jsonPath("token_type").value("Bearer"))
+			.matches(jsonPath("client_id").value("livk-client"))
+			.matches(jsonPath("access_token").isNotEmpty())
+			.matches(jsonPath("refresh_token").isNotEmpty())
+			.bodyJson()
+			.convertTo(JsonNode.class)
+			.actual();
 
-		String accessToken = JsonMapperUtils.readTree(body).get("access_token").asString();
-		String refreshToken = JsonMapperUtils.readTree(body).get("refresh_token").asString();
-		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(content().string("hello"));
+		String accessToken = body.get("access_token").asString();
+		String refreshToken = body.get("refresh_token").asString();
+		tester.get()
+			.uri("/api/hello")
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+			.assertThat()
+			.debug()
+			.hasStatusOk();
 
 		var refreshTokenParams = new HttpParameters();
 		refreshTokenParams.set("grant_type", "refresh_token");
 		refreshTokenParams.set("refresh_token", refreshToken);
 
-		body = mockMvc
-			.perform(post("/oauth2/token")
-				.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
-				.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-				.params(refreshTokenParams))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(jsonPath("scope").value("livk.read"))
-			.andExpect(jsonPath("token_type").value("Bearer"))
-			.andExpect(jsonPath("refresh_token").isNotEmpty())
-			.andExpect(jsonPath("access_token").isNotEmpty())
-			.andReturn()
-			.getResponse()
-			.getContentAsByteArray();
-		accessToken = JsonMapperUtils.readTree(body).get("access_token").asString();
-		mockMvc.perform(post("/api/logout").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-			.andExpect(status().isOk())
-			.andDo(print());
+		body = tester.post()
+			.uri("/oauth2/token")
+			.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+			.params(refreshTokenParams)
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(jsonPath("scope").value("livk.read"))
+			.matches(jsonPath("token_type").value("Bearer"))
+			.matches(jsonPath("refresh_token").isNotEmpty())
+			.matches(jsonPath("access_token").isNotEmpty())
+			.bodyJson()
+			.convertTo(JsonNode.class)
+			.actual();
 
-		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-			.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()))
-			.andDo(print());
+		accessToken = body.get("access_token").asString();
+		tester.post()
+			.uri("/api/logout")
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+			.assertThat()
+			.debug()
+			.hasStatusOk();
+
+		tester.get()
+			.uri("/api/hello")
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+			.assertThat()
+			.debug()
+			.hasStatus(HttpStatus.UNAUTHORIZED);
 	}
 
 	@Test
-	void testSms() throws Exception {
+	void testSms() {
 		var params = new HttpParameters();
 		params.set("grant_type", "sms");
 		params.set("mobile", "18664960000");
 		params.set("code", "123456");
 		params.set("scope", "livk.read");
-		byte[] body = mockMvc
-			.perform(post("/oauth2/token")
-				.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
-				.contentType(MediaType.MULTIPART_FORM_DATA_VALUE)
-				.params(params))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(jsonPath("sub").value("18664960000"))
-			.andExpect(jsonPath("iss").value("http://localhost"))
-			.andExpect(jsonPath("token_type").value("Bearer"))
-			.andExpect(jsonPath("client_id").value("livk-client"))
-			.andExpect(jsonPath("access_token").isNotEmpty())
-			.andReturn()
-			.getResponse()
-			.getContentAsByteArray();
+		JsonNode body = tester.post()
+			.uri("/oauth2/token")
+			.header(HttpHeaders.AUTHORIZATION, "Basic " + Base64.encode("livk-client:secret"))
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+			.params(params)
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(jsonPath("sub").value("18664960000"))
+			.matches(jsonPath("iss").value("http://localhost"))
+			.matches(jsonPath("token_type").value("Bearer"))
+			.matches(jsonPath("client_id").value("livk-client"))
+			.matches(jsonPath("access_token").isNotEmpty())
+			.matches(jsonPath("refresh_token").isNotEmpty())
+			.bodyJson()
+			.convertTo(JsonNode.class)
+			.actual();
 
-		String accessToken = JsonMapperUtils.readTree(body).get("access_token").asString();
-		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(content().string("hello"));
+		String accessToken = body.get("access_token").asString();
+		tester.get()
+			.uri("/api/hello")
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.bodyText()
+			.isEqualTo("hello");
 
-		mockMvc.perform(post("/api/logout").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-			.andExpect(status().isOk())
-			.andDo(print());
+		tester.post()
+			.uri("/api/logout")
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+			.assertThat()
+			.debug()
+			.hasStatusOk();
 
-		mockMvc.perform(get("/api/hello").header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken))
-			.andExpect(status().is(HttpStatus.UNAUTHORIZED.value()))
-			.andDo(print());
+		tester.get()
+			.uri("/api/hello")
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
+			.assertThat()
+			.debug()
+			.hasStatus(HttpStatus.UNAUTHORIZED);
 	}
 
 }

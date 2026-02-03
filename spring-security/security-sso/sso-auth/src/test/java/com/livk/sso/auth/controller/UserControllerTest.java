@@ -23,13 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
-import org.springframework.test.web.servlet.MockMvc;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
 /**
  * @author livk
@@ -40,24 +34,32 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Test
-	void testList() throws Exception {
+	void testList() {
 		var user = new User().setUsername("livk").setPassword("123456");
-		mockMvc.perform(get("/user/list").header(HttpHeaders.AUTHORIZATION, "Bearer " + JwtUtils.generateToken(user)))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(content().string("list"));
+		tester.get()
+			.uri("/user/list")
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + JwtUtils.generateToken(user))
+			.assertThat()
+			.hasStatusOk()
+			.debug()
+			.bodyText()
+			.matches("list");
 	}
 
 	@Test
-	void testUpdate() throws Exception {
+	void testUpdate() {
 		var user = new User().setUsername("livk").setPassword("123456");
-		mockMvc.perform(put("/user/update").header(HttpHeaders.AUTHORIZATION, "Bearer " + JwtUtils.generateToken(user)))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andExpect(content().string("update"));
+		tester.put()
+			.uri("/user/update")
+			.header(HttpHeaders.AUTHORIZATION, "Bearer " + JwtUtils.generateToken(user))
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.bodyText()
+			.isEqualTo("update");
 	}
 
 }

@@ -24,15 +24,12 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executors;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -53,7 +50,7 @@ class LockControllerTest {
 	}
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Test
 	void lock() throws InterruptedException {
@@ -62,13 +59,8 @@ class LockControllerTest {
 			for (var i = 0; i < 10; i++) {
 				var param = String.valueOf(i);
 				service.execute(() -> {
-					try {
-						mockMvc.perform(get("/lock").queryParam("id", param)).andExpect(status().isOk());
-						countDownLatch.countDown();
-					}
-					catch (Exception e) {
-						throw new RuntimeException(e);
-					}
+					tester.get().uri("/lock").param("id", param).assertThat().debug().hasStatusOk();
+					countDownLatch.countDown();
 				});
 			}
 			countDownLatch.await();

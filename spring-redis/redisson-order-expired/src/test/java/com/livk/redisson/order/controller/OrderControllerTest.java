@@ -26,7 +26,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
@@ -34,9 +34,6 @@ import org.testcontainers.shaded.org.awaitility.Awaitility;
 import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -58,14 +55,14 @@ class OrderControllerTest {
 	}
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Autowired
 	OrderQueueConsumer consumer;
 
 	@Test
-	void create() throws Exception {
-		mockMvc.perform(post("/order/create")).andDo(print()).andExpect(status().isOk());
+	void create() {
+		tester.post().uri("/order/create").assertThat().debug().hasStatusOk();
 
 		Awaitility.waitAtMost(Duration.ofMinutes(4)).untilAsserted(() -> assertThat(consumer.isEmpty()).isTrue());
 	}

@@ -20,12 +20,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.test.web.servlet.MockMvc;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 
 /**
  * @author livk
@@ -35,14 +30,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class MicrometerTraceAppTest {
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Test
-	void testHome() throws Exception {
-		mockMvc.perform(get("/home"))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(content().string("Hello World!"));
+	void testHome() {
+		tester.get().uri("/home").assertThat().debug().hasStatusOk().bodyText().isEqualTo("Hello World!");
 	}
 
 }

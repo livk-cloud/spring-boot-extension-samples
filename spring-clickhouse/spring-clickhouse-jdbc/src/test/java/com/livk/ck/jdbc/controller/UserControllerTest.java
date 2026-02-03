@@ -31,7 +31,7 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.testcontainers.clickhouse.ClickHouseContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -40,13 +40,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -71,44 +65,45 @@ class UserControllerTest {
 	}
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Order(2)
 	@Test
 	void testList() throws Exception {
-		mockMvc.perform(get("/user"))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(jsonPath("[0].appId").value("appId"))
-			.andExpect(jsonPath("[0].version").value("version"));
+		tester.get()
+			.uri("/user")
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.matches(jsonPath("[0].appId").value("appId"))
+			.matches(jsonPath("[0].version").value("version"));
 	}
 
 	@Order(3)
 	@Test
-	void testRemove() throws Exception {
+	void testRemove() {
 		var format = Jsr310Utils.formatDate(LocalDateTime.now());
-		mockMvc.perform(delete("/user/" + format)).andDo(print()).andExpect(status().isOk());
+		tester.delete().uri("/user/" + format).assertThat().debug().hasStatusOk();
 
-		mockMvc.perform(get("/user"))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(content().contentType(MediaType.APPLICATION_JSON))
-			.andExpect(jsonPath("$", hasSize(0)));
+		tester.get().uri("/user").assertThat().debug().hasStatusOk().matches(jsonPath("$", hasSize(0)));
 	}
 
 	@Order(1)
 	@Test
-	void testSave() throws Exception {
+	void testSave() {
 		var user = new User().setId(Integer.MAX_VALUE)
 			.setAppId("appId")
 			.setVersion("version")
 			.setRegTime(LocalDate.now());
-		mockMvc
-			.perform(post("/user").contentType(MediaType.APPLICATION_JSON)
-				.content(JsonMapperUtils.writeValueAsString(user)))
-			.andDo(print())
-			.andExpect(status().isOk())
-			.andExpect(content().string("true"));
+		tester.post()
+			.uri("/user")
+			.contentType(MediaType.APPLICATION_JSON)
+			.content(JsonMapperUtils.writeValueAsString(user))
+			.assertThat()
+			.debug()
+			.hasStatusOk()
+			.bodyText()
+			.isEqualTo("true");
 	}
 
 }

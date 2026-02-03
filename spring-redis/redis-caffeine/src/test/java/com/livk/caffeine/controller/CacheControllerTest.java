@@ -28,7 +28,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ScanOptions;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
@@ -36,12 +36,6 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author livk
@@ -63,60 +57,38 @@ class CacheControllerTest {
 	}
 
 	@Autowired
-	MockMvc mockMvc;
+	MockMvcTester tester;
 
 	@Autowired
 	RedisTemplate<String, Object> redisTemplate;
 
 	@Test
-	void testGet() throws Exception {
+	void testGet() {
 		var result = new HashSet<>();
-		var uuid = mockMvc.perform(get("/cache"))
-			.andExpect(status().isOk())
-			.andDo(print())
-			.andReturn()
-			.getResponse()
-			.getContentAsString();
+		var uuid = tester.get().uri("/cache").assertThat().debug().hasStatusOk().bodyText().actual();
 		result.add(uuid);
 		for (var i = 0; i < 3; i++) {
-			var newUUID = mockMvc.perform(get("/cache"))
-				.andExpect(status().isOk())
-				.andDo(print())
-				.andExpect(content().string(uuid))
-				.andReturn()
-				.getResponse()
-				.getContentAsString();
+			var newUUID = tester.get().uri("/cache").assertThat().debug().hasStatusOk().bodyText().actual();
 			result.add(newUUID);
 		}
 		assertThat(result).hasSize(1);
 	}
 
 	@Test
-	void testPut() throws Exception {
+	void testPut() {
 		var result = new HashSet<>();
 		for (var i = 0; i < 3; i++) {
-			var uuid = mockMvc.perform(post("/cache"))
-				.andExpect(status().isOk())
-				.andDo(print())
-				.andReturn()
-				.getResponse()
-				.getContentAsString();
+			var uuid = tester.post().uri("/cache").assertThat().debug().hasStatusOk().bodyText().actual();
 			result.add(uuid);
-			var newUUID = mockMvc.perform(get("/cache"))
-				.andExpect(status().isOk())
-				.andDo(print())
-				.andExpect(content().string(uuid))
-				.andReturn()
-				.getResponse()
-				.getContentAsString();
+			var newUUID = tester.get().uri("/cache").assertThat().debug().hasStatusOk().bodyText().actual();
 			result.add(newUUID);
 		}
 		assertThat(result).hasSize(3);
 	}
 
 	@Test
-	void testDelete() throws Exception {
-		mockMvc.perform(delete("/cache")).andExpect(status().isOk()).andDo(print()).andExpect(content().string("over"));
+	void testDelete() {
+		tester.delete().uri("/cache").assertThat().debug().hasStatusOk().bodyText().isEqualTo("over");
 	}
 
 	@Test
