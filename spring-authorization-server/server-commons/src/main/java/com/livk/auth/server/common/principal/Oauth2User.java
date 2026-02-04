@@ -39,9 +39,10 @@ public class Oauth2User extends User implements OAuth2AuthenticatedPrincipal {
 	@Serial
 	private static final long serialVersionUID = 3396186244563092877L;
 
-	public Oauth2User(Long id, String username, String password) {
+	public Oauth2User(Long id, String username, String password, Oauth2UserType type) {
 		super(username, password, AuthorityUtils.createAuthorityList("ROLE_USER"));
 		this.id = id;
+		this.type = type;
 	}
 
 	/**
@@ -52,7 +53,7 @@ public class Oauth2User extends User implements OAuth2AuthenticatedPrincipal {
 	/**
 	 * 手机号
 	 */
-	private String mobile;
+	private Oauth2UserType type;
 
 	/**
 	 * Get the OAuth 2.0 token attributes
@@ -68,6 +69,11 @@ public class Oauth2User extends User implements OAuth2AuthenticatedPrincipal {
 	@Override
 	public String getName() {
 		return this.getUsername();
+	}
+
+	@Override
+	public String toString() {
+		return "Oauth2User{" + "id=" + id + ", username=" + super.getUsername() + ", type=" + type + '}';
 	}
 
 }

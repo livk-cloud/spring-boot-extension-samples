@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -44,10 +45,11 @@ import java.time.Duration;
 public class JdbcConfig {
 
 	@Bean
-	public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
+	public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate,
+			PasswordEncoder passwordEncoder) {
 		var client = RegisteredClient.withId("livk")
 			.clientId("livk-client")
-			.clientSecret(new BCryptPasswordEncoder().encode("secret"))
+			.clientSecret(passwordEncoder.encode("secret"))
 			.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
 			.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
 			.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)

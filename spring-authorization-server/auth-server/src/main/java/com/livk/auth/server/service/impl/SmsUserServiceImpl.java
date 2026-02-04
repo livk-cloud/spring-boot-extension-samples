@@ -2,6 +2,7 @@ package com.livk.auth.server.service.impl;
 
 import com.livk.auth.server.common.constant.SecurityConstants;
 import com.livk.auth.server.common.principal.Oauth2User;
+import com.livk.auth.server.common.principal.Oauth2UserType;
 import com.livk.auth.server.domain.User;
 import com.livk.auth.server.mapper.UsersMapper;
 import com.livk.auth.server.service.UserService;
@@ -32,7 +33,7 @@ public class SmsUserServiceImpl implements UserService {
 	public Oauth2User loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = usersMapper.getByMobile(username);
 		if (user != null) {
-			return new Oauth2User(user.getId(), user.getMobile(), user.getPassword());
+			return new Oauth2User(user.getId(), user.getMobile(), user.getPassword(), Oauth2UserType.MOBILE);
 		}
 		return null;
 	}

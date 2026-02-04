@@ -18,6 +18,7 @@ package com.livk.auth.server.service.impl;
 
 import com.livk.auth.server.common.constant.SecurityConstants;
 import com.livk.auth.server.common.principal.Oauth2User;
+import com.livk.auth.server.common.principal.Oauth2UserType;
 import com.livk.auth.server.domain.User;
 import com.livk.auth.server.mapper.UsersMapper;
 import com.livk.auth.server.service.UserService;
@@ -43,7 +44,7 @@ public class UserServiceImpl implements UserService {
 	public Oauth2User loadUserByUsername(String username) throws UsernameNotFoundException {
 		User user = usersMapper.getByUsername(username);
 		if (user != null) {
-			return new Oauth2User(user.getId(), user.getUsername(), user.getPassword());
+			return new Oauth2User(user.getId(), user.getUsername(), user.getPassword(), Oauth2UserType.USERNAME);
 		}
 		return null;
 	}
