@@ -56,7 +56,7 @@ class UserControllerTest {
 
 	@Test
 	void send() {
-		tester.get().uri("/user/send").assertThat().debug().hasStatusOk();
+		tester.get().uri("/user/send").assertThat().hasStatusOk();
 	}
 
 }

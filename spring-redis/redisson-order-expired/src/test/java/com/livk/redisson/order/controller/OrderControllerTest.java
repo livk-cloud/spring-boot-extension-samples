@@ -62,7 +62,7 @@ class OrderControllerTest {
 
 	@Test
 	void create() {
-		tester.post().uri("/order/create").assertThat().debug().hasStatusOk();
+		tester.post().uri("/order/create").assertThat().hasStatusOk();
 
 		Awaitility.waitAtMost(Duration.ofMinutes(4)).untilAsserted(() -> assertThat(consumer.isEmpty()).isTrue());
 	}

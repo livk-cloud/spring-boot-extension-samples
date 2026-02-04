@@ -69,11 +69,10 @@ class UserControllerTest {
 
 	@Order(2)
 	@Test
-	void testList() throws Exception {
+	void testList() {
 		tester.get()
 			.uri("/user")
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(jsonPath("[0].appId").value("appId"))
 			.matches(jsonPath("[0].version").value("version"));
@@ -83,9 +82,9 @@ class UserControllerTest {
 	@Test
 	void testRemove() {
 		var format = Jsr310Utils.formatDate(LocalDateTime.now());
-		tester.delete().uri("/user/" + format).assertThat().debug().hasStatusOk();
+		tester.delete().uri("/user/" + format).assertThat().hasStatusOk();
 
-		tester.get().uri("/user").assertThat().debug().hasStatusOk().matches(jsonPath("$", hasSize(0)));
+		tester.get().uri("/user").assertThat().hasStatusOk().matches(jsonPath("$", hasSize(0)));
 	}
 
 	@Order(1)
@@ -100,7 +99,6 @@ class UserControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(JsonMapperUtils.writeValueAsString(user))
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.bodyText()
 			.isEqualTo("true");

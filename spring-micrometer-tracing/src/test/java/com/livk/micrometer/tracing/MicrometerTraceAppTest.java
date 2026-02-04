@@ -34,7 +34,7 @@ class MicrometerTraceAppTest {
 
 	@Test
 	void testHome() {
-		tester.get().uri("/home").assertThat().debug().hasStatusOk().bodyText().isEqualTo("Hello World!");
+		tester.get().uri("/home").assertThat().hasStatusOk().bodyText().isEqualTo("Hello World!");
 	}
 
 }

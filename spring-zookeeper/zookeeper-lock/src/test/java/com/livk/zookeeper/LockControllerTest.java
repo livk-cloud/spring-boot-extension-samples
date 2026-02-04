@@ -59,7 +59,7 @@ class LockControllerTest {
 			for (var i = 0; i < 10; i++) {
 				var param = String.valueOf(i);
 				service.execute(() -> {
-					tester.get().uri("/lock").param("id", param).assertThat().debug().hasStatusOk();
+					tester.get().uri("/lock").param("id", param).assertThat().hasStatusOk();
 					countDownLatch.countDown();
 				});
 			}

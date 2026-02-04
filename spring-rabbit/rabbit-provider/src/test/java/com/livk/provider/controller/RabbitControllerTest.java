@@ -65,7 +65,6 @@ class RabbitControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(body)
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 	}
 
@@ -76,7 +75,6 @@ class RabbitControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(body)
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 	}
 
@@ -87,7 +85,6 @@ class RabbitControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(body)
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 
 		tester.post()
@@ -95,7 +92,6 @@ class RabbitControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(body)
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 	}
 
@@ -107,7 +103,6 @@ class RabbitControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(body)
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 
 		tester.post()
@@ -116,7 +111,6 @@ class RabbitControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(body)
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 	}
 

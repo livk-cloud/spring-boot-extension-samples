@@ -57,7 +57,6 @@ class AuthServerAppTest {
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 			.params(params)
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(jsonPath("sub").value("livk"))
 			.matches(jsonPath("iss").value("http://localhost"))
@@ -76,7 +75,6 @@ class AuthServerAppTest {
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 
 		var refreshTokenParams = new HttpParameters();
@@ -89,7 +87,6 @@ class AuthServerAppTest {
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 			.params(refreshTokenParams)
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(jsonPath("scope").value("livk.read"))
 			.matches(jsonPath("token_type").value("Bearer"))
@@ -104,14 +101,12 @@ class AuthServerAppTest {
 			.uri("/api/logout")
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 
 		tester.get()
 			.uri("/api/hello")
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 			.assertThat()
-			.debug()
 			.hasStatus(HttpStatus.UNAUTHORIZED);
 	}
 
@@ -128,7 +123,6 @@ class AuthServerAppTest {
 			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
 			.params(params)
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(jsonPath("sub").value("18664960000"))
 			.matches(jsonPath("iss").value("http://localhost"))
@@ -145,7 +139,6 @@ class AuthServerAppTest {
 			.uri("/api/hello")
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.bodyText()
 			.isEqualTo("hello");
@@ -154,14 +147,12 @@ class AuthServerAppTest {
 			.uri("/api/logout")
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 
 		tester.get()
 			.uri("/api/hello")
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
 			.assertThat()
-			.debug()
 			.hasStatus(HttpStatus.UNAUTHORIZED);
 	}
 

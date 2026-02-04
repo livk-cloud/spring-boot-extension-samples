@@ -42,7 +42,7 @@ class JobControllerTest {
 
 	@Test
 	void doJobTest() {
-		tester.get().uri("/doJob").assertThat().debug().hasStatusOk();
+		tester.get().uri("/doJob").assertThat().hasStatusOk();
 		var names = jdbcTemplate.queryForList("select * from sys_user")
 			.stream()
 			.map(map -> map.get("user_name"))

@@ -36,7 +36,7 @@ class DocControllerTest {
 
 	@Test
 	void test() {
-		tester.get().uri("/v3/api-docs").assertThat().debug().hasStatusOk().matches(jsonPath("openapi").value("3.1.0"));
+		tester.get().uri("/v3/api-docs").assertThat().hasStatusOk().matches(jsonPath("openapi").value("3.1.0"));
 
 	}
 

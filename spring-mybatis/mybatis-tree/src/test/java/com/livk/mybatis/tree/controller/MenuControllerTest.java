@@ -36,7 +36,7 @@ class MenuControllerTest {
 
 	@Test
 	void list() {
-		tester.get().uri("/menu").assertThat().debug().hasStatusOk();
+		tester.get().uri("/menu").assertThat().hasStatusOk();
 	}
 
 }

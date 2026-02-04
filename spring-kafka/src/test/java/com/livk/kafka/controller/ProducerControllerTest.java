@@ -61,7 +61,7 @@ class ProducerControllerTest {
 
 	@Test
 	void producer() {
-		tester.get().uri("/kafka/send").assertThat().debug().hasStatusOk();
+		tester.get().uri("/kafka/send").assertThat().hasStatusOk();
 
 		Awaitility.waitAtMost(Duration.ofMinutes(4)).untilAsserted(() -> assertThat(messages).hasSize(3));
 	}

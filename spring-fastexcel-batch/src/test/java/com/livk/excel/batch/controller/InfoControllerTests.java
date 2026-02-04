@@ -65,7 +65,7 @@ class InfoControllerTests {
 		var resource = new ClassPathResource("mobile-test.xlsx");
 		var file = new MockMultipartFile("file", "mobile-test.xlsx", MediaType.MULTIPART_FORM_DATA_VALUE,
 				resource.getInputStream());
-		tester.post().uri("/upload").multipart().file(file).assertThat().debug().hasStatusOk();
+		tester.post().uri("/upload").multipart().file(file).assertThat().hasStatusOk();
 	}
 
 	@Test
@@ -80,7 +80,6 @@ class InfoControllerTests {
 			.multipart()
 			.file(file)
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(jsonPath("$.length()").value(100000))
 			.matches(jsonPath("$[99999]").exists());

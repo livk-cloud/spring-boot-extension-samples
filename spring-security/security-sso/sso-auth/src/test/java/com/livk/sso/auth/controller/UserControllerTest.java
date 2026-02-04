@@ -44,7 +44,6 @@ class UserControllerTest {
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + JwtUtils.generateToken(user))
 			.assertThat()
 			.hasStatusOk()
-			.debug()
 			.bodyText()
 			.matches("list");
 	}
@@ -56,7 +55,6 @@ class UserControllerTest {
 			.uri("/user/update")
 			.header(HttpHeaders.AUTHORIZATION, "Bearer " + JwtUtils.generateToken(user))
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.bodyText()
 			.isEqualTo("update");

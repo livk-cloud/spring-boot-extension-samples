@@ -76,7 +76,6 @@ class UserControllerTest {
 			.uri("/user/list")
 			.header(HttpHeaders.AUTHORIZATION, token)
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.bodyText()
 			.isEqualTo("list");
@@ -88,7 +87,6 @@ class UserControllerTest {
 			.uri("/user/update")
 			.header(HttpHeaders.AUTHORIZATION, token)
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.bodyText()
 			.isEqualTo("update");

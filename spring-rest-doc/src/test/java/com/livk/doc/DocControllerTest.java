@@ -60,7 +60,6 @@ class DocControllerTest {
 			.uri("/doc")
 			.param("name", "world")
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(status().isOk())
 			.matches(content().string("hello world"));
@@ -74,7 +73,6 @@ class DocControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(mapper.writeValueAsString(map))
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(jsonPath("$.username").value("livk"))
 			.matches(jsonPath("$.password").value("123456"));

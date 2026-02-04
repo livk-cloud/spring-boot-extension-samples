@@ -65,10 +65,10 @@ class CacheControllerTest {
 	@Test
 	void testGet() {
 		var result = new HashSet<>();
-		var uuid = tester.get().uri("/cache").assertThat().debug().hasStatusOk().bodyText().actual();
+		var uuid = tester.get().uri("/cache").assertThat().hasStatusOk().bodyText().actual();
 		result.add(uuid);
 		for (var i = 0; i < 3; i++) {
-			var newUUID = tester.get().uri("/cache").assertThat().debug().hasStatusOk().bodyText().actual();
+			var newUUID = tester.get().uri("/cache").assertThat().hasStatusOk().bodyText().actual();
 			result.add(newUUID);
 		}
 		assertThat(result).hasSize(1);
@@ -78,9 +78,9 @@ class CacheControllerTest {
 	void testPut() {
 		var result = new HashSet<>();
 		for (var i = 0; i < 3; i++) {
-			var uuid = tester.post().uri("/cache").assertThat().debug().hasStatusOk().bodyText().actual();
+			var uuid = tester.post().uri("/cache").assertThat().hasStatusOk().bodyText().actual();
 			result.add(uuid);
-			var newUUID = tester.get().uri("/cache").assertThat().debug().hasStatusOk().bodyText().actual();
+			var newUUID = tester.get().uri("/cache").assertThat().hasStatusOk().bodyText().actual();
 			result.add(newUUID);
 		}
 		assertThat(result).hasSize(3);
@@ -88,7 +88,7 @@ class CacheControllerTest {
 
 	@Test
 	void testDelete() {
-		tester.delete().uri("/cache").assertThat().debug().hasStatusOk().bodyText().isEqualTo("over");
+		tester.delete().uri("/cache").assertThat().hasStatusOk().bodyText().isEqualTo("over");
 	}
 
 	@Test

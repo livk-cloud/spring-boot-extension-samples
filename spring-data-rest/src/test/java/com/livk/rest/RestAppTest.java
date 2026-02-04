@@ -48,7 +48,6 @@ class RestAppTest {
 		tester.get()
 			.uri("/rest/api/user/{id}", 1)
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(jsonPath("username").value("root"))
 			.matches(jsonPath("password").value("root"))
@@ -67,7 +66,6 @@ class RestAppTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(JsonMapperUtils.writeValueAsString(user))
 			.assertThat()
-			.debug()
 			.hasStatus(HttpStatus.CREATED);
 	}
 
@@ -83,14 +81,13 @@ class RestAppTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(JsonMapperUtils.writeValueAsString(user))
 			.assertThat()
-			.debug()
 			.hasStatus(HttpStatus.NO_CONTENT);
 	}
 
 	@Order(6)
 	@Test
 	void testDelete() {
-		tester.delete().uri("/rest/api/user/{id}", 1).assertThat().debug().hasStatus(HttpStatus.NO_CONTENT);
+		tester.delete().uri("/rest/api/user/{id}", 1).assertThat().hasStatus(HttpStatus.NO_CONTENT);
 	}
 
 	@Order(4)
@@ -101,7 +98,6 @@ class RestAppTest {
 			.param("name", "admin")
 			.param("pwd", "admin")
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(jsonPath("$.username").value("admin"))
 			.matches(jsonPath("$.password").value("admin"))
@@ -114,7 +110,6 @@ class RestAppTest {
 		tester.get()
 			.uri("/rest/api/user")
 			.assertThat()
-			.debug()
 			.hasStatusOk()
 			.matches(jsonPath("_embedded.users[0].username").value("admin"))
 			.matches(jsonPath("_embedded.users[0].password").value("admin"))

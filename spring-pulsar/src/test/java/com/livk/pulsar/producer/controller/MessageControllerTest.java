@@ -65,7 +65,6 @@ class MessageControllerTest {
 			.contentType(MediaType.APPLICATION_JSON)
 			.content(JsonMapperUtils.writeValueAsString(map))
 			.assertThat()
-			.debug()
 			.hasStatusOk();
 	}
 

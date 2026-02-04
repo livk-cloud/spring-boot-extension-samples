@@ -36,9 +36,9 @@ class FilterControllerTest {
 
 	@Test
 	void uuid() {
-		var uuid1 = tester.get().uri("/uuid").assertThat().debug().hasStatusOk().bodyText().actual();
+		var uuid1 = tester.get().uri("/uuid").assertThat().hasStatusOk().bodyText().actual();
 
-		var uuid2 = tester.get().uri("/uuid").assertThat().debug().hasStatusOk().bodyText().actual();
+		var uuid2 = tester.get().uri("/uuid").assertThat().hasStatusOk().bodyText().actual();
 
 		assertThat(uuid1).isNotEqualTo(uuid2);
 	}
