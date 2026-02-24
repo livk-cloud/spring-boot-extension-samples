@@ -35,8 +35,6 @@ public class DockerImageNames {
 
 	public static final String REDIS_IMAGE = "redis";
 
-	public static final String REDIS_STACK_IMAGE = "redis/redis-stack-server";
-
 	public static final String CLICKHOUSE_IMAGE = "clickhouse/clickhouse-server";
 
 	public static final String KAFKA_IMAGE = "apache/kafka";
@@ -75,14 +73,6 @@ public class DockerImageNames {
 
 	public static DockerImageName redis(String tag) {
 		return DockerImageName.parse(REDIS_IMAGE).withTag(tag);
-	}
-
-	public static DockerImageName redisStack() {
-		return redisStack(LATEST_TAG);
-	}
-
-	public static DockerImageName redisStack(String tag) {
-		return DockerImageName.parse(REDIS_STACK_IMAGE).withTag(tag);
 	}
 
 	public static DockerImageName clickhouse() {

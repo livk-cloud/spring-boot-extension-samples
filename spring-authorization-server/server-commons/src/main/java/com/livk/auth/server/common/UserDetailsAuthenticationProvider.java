@@ -125,10 +125,9 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 
 		try {
 			var loadedUser = oauth2UserDetailsService.loadUserByUsername(username);
-			Optional.ofNullable(loadedUser)
+			return Optional.ofNullable(loadedUser)
 				.orElseThrow(() -> new InternalAuthenticationServiceException(
 						"UserDetailsService returned null, which is an interface contract violation"));
-			return loadedUser;
 		}
 		catch (UsernameNotFoundException ex) {
 			mitigateAgainstTimingAttack(authentication);

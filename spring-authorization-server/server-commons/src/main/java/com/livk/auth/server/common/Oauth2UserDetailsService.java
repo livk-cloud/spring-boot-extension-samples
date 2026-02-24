@@ -17,6 +17,7 @@
 package com.livk.auth.server.common;
 
 import com.livk.auth.server.common.principal.Oauth2User;
+import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
@@ -28,6 +29,7 @@ public interface Oauth2UserDetailsService extends UserDetailsService {
 	 */
 	boolean support(String grantType);
 
+	@Nullable
 	Oauth2User loadUserByUsername(String username) throws UsernameNotFoundException;
 
 }
