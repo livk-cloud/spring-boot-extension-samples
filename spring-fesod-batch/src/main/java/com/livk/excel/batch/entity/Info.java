@@ -16,11 +16,11 @@
 
 package com.livk.excel.batch.entity;
 
-import cn.idev.excel.annotation.ExcelIgnore;
-import cn.idev.excel.annotation.ExcelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.fesod.sheet.annotation.ExcelIgnore;
+import org.apache.fesod.sheet.annotation.ExcelProperty;
 
 import java.io.Serial;
 import java.io.Serializable;

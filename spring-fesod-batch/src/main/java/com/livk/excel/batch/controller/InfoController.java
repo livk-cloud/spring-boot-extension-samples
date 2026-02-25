@@ -17,11 +17,11 @@
 package com.livk.excel.batch.controller;
 
 import com.google.common.collect.Lists;
-import com.livk.context.fastexcel.annotation.ExcelParam;
-import com.livk.context.fastexcel.annotation.RequestExcel;
+import com.livk.context.fesod.annotation.ExcelParam;
+import com.livk.context.fesod.annotation.RequestExcel;
 import com.livk.excel.batch.entity.Info;
 import com.livk.excel.batch.listener.JobListener;
-import com.livk.excel.batch.support.FastExcelItemReader;
+import com.livk.excel.batch.support.FesodItemReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.batch.core.job.Job;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -78,7 +78,7 @@ public class InfoController {
 
 	@PostMapping("excel")
 	public HttpEntity<List<Info>> up(@RequestParam("file") MultipartFile file) throws IOException {
-		var itemReader = new FastExcelItemReader<>(file.getInputStream(), Info.class);
+		var itemReader = new FesodItemReader<>(file.getInputStream(), Info.class);
 		var list = new ArrayList<Info>();
 		while (true) {
 			var o = itemReader.read();

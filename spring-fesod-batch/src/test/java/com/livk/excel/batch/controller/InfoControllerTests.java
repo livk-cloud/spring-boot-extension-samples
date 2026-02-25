@@ -47,7 +47,7 @@ class InfoControllerTests {
 	@ServiceConnection
 	static final MySQLContainer mysql = new MySQLContainer(DockerImageNames.mysql())
 		.withEnv("MYSQL_ROOT_PASSWORD", "123456")
-		.withDatabaseName("fastexcel_batch");
+		.withDatabaseName("fesod_batch");
 
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {

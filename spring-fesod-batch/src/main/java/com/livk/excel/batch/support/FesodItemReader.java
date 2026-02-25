@@ -16,9 +16,9 @@
 
 package com.livk.excel.batch.support;
 
-import cn.idev.excel.FastExcel;
-import com.livk.context.fastexcel.listener.ExcelMapReadListener;
-import com.livk.context.fastexcel.listener.TypeExcelMapReadListener;
+import com.livk.context.fesod.listener.ExcelMapReadListener;
+import com.livk.context.fesod.listener.TypeExcelMapReadListener;
+import org.apache.fesod.sheet.FesodSheet;
 import org.springframework.batch.infrastructure.item.ItemReader;
 
 import java.io.InputStream;
@@ -28,13 +28,13 @@ import java.util.List;
 /**
  * @author livk
  */
-public class FastExcelItemReader<T> implements ItemReader<T> {
+public class FesodItemReader<T> implements ItemReader<T> {
 
 	private final List<T> data;
 
-	public FastExcelItemReader(InputStream inputStream, Class<T> type) {
+	public FesodItemReader(InputStream inputStream, Class<T> type) {
 		ExcelMapReadListener<T> excelReadListener = new TypeExcelMapReadListener<>();
-		FastExcel.read(inputStream, type, excelReadListener).sheet().doRead();
+		FesodSheet.read(inputStream, type, excelReadListener).sheet().doRead();
 		data = new ArrayList<>(excelReadListener.toListData());
 	}
 
