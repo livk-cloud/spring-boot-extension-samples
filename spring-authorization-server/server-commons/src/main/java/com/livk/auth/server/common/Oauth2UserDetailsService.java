@@ -29,7 +29,6 @@ public interface Oauth2UserDetailsService extends UserDetailsService {
 	 */
 	boolean support(String grantType);
 
-	@Nullable
-	Oauth2User loadUserByUsername(String username) throws UsernameNotFoundException;
+	@Nullable Oauth2User loadUserByUsername(String username) throws UsernameNotFoundException;
 
 }
