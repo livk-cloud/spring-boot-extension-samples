@@ -16,22 +16,16 @@
 
 package com.livk.micrometer.tracing;
 
-import com.livk.commons.micrometer.ContextSnapshots;
-import com.livk.commons.micrometer.TraceEnvironmentPostProcessor;
+import com.livk.commons.util.ContextSnapshots;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * <p>
- * {@link TraceEnvironmentPostProcessor}
- * </p>
- *
  * @author livk
  */
 @Slf4j
