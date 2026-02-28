@@ -45,6 +45,25 @@ class AuthServerAppTest {
 	MockMvcTester tester;
 
 	@Test
+	void testLogin() {
+		var params = new HttpParameters();
+		params.set("username", "livk");
+		params.set("password", "123456");
+		tester.post()
+			.uri("/api/login")
+			.contentType(MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+			.params(params)
+			.assertThat()
+			.hasStatusOk()
+			.matches(jsonPath("sub").value("livk"))
+			.matches(jsonPath("iss").value("http://localhost"))
+			.matches(jsonPath("token_type").value("Bearer"))
+			.matches(jsonPath("client_id").value("livk-client"))
+			.matches(jsonPath("access_token").isNotEmpty())
+			.matches(jsonPath("refresh_token").isNotEmpty());
+	}
+
+	@Test
 	void testPassword() {
 		var params = new HttpParameters();
 		params.set("grant_type", "password");

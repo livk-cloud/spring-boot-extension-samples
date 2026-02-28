@@ -37,6 +37,7 @@
         <module>spring-grpc</module>
         <module>spring-mongodb</module>
         <module>spring-boot-admin</module>
+        <module>spring-modules</module>
     </modules>
 
     <dependencies>
@@ -112,6 +113,14 @@
                 <groupId>io.github.livk-cloud</groupId>
                 <artifactId>spring-extension-dependencies</artifactId>
                 <version>2.0.2</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.modulith</groupId>
+                <artifactId>spring-modulith-bom</artifactId>
+                <version>2.0.3</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

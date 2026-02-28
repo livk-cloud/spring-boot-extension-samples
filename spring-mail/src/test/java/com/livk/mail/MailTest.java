@@ -21,6 +21,7 @@ import com.livk.mail.util.FreemarkerUtils;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author livk
  */
+@Slf4j
 @SpringBootTest
 class MailTest {
 
@@ -87,7 +89,7 @@ class MailTest {
 
 		var template = configuration.getTemplate("ac.ftl");
 		var text = FreeMarkerTemplateUtils.processTemplateIntoString(template, root);
-		System.out.println(text);
+		log.info(text);
 		assertThat(text).isNotBlank();
 	}
 

@@ -25,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.RestDocumentationExtension;
 import org.springframework.restdocs.mockmvc.MockMvcRestDocumentation;
+import org.springframework.restdocs.snippet.Attributes;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
 import org.springframework.web.context.WebApplicationContext;
@@ -32,6 +33,9 @@ import tools.jackson.databind.ObjectMapper;
 
 import java.util.Map;
 
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.queryParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -62,7 +66,8 @@ class DocControllerTest {
 			.assertThat()
 			.hasStatusOk()
 			.matches(status().isOk())
-			.matches(content().string("hello world"));
+			.matches(content().string("hello world"))
+			.apply(document("get", queryParameters(parameterWithName("name").description("The name"))));
 	}
 
 	@Test
@@ -75,7 +80,8 @@ class DocControllerTest {
 			.assertThat()
 			.hasStatusOk()
 			.matches(jsonPath("$.username").value("livk"))
-			.matches(jsonPath("$.password").value("123456"));
+			.matches(jsonPath("$.password").value("123456"))
+			.apply(document("post"));
 	}
 
 }

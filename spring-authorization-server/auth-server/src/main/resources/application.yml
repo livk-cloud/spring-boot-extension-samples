@@ -10,10 +10,16 @@ logging:
 
 spring:
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://livk.com:3306/oauth
-    username: root
-    password: 123456
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:test
+  sql:
+    init:
+      schema-locations:
+        - classpath*:/org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql
+        - classpath*:/org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql
+        - classpath*:/org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql
+      platform: h2
+      mode: embedded
 
 mybatis:
   configuration:

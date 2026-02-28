@@ -19,6 +19,7 @@ package com.livk.sso.resource.controller;
 import com.livk.commons.http.annotation.EnableHttpClient;
 import com.livk.commons.http.annotation.HttpClientType;
 import com.livk.commons.jackson.JsonMapperUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -36,6 +37,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 /**
  * @author livk
  */
+@Slf4j
 @Disabled("需要启动授权服务器")
 @EnableHttpClient(HttpClientType.REST_CLIENT)
 @SpringBootTest
@@ -67,7 +69,7 @@ class UserControllerTest {
 
 	@Test
 	void test() {
-		System.out.println(token);
+		log.info(token);
 	}
 
 	@Test

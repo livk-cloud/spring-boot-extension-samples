@@ -24,10 +24,11 @@ public class ResourceServerConfig {
 	public SecurityFilterChain resourceServer(HttpSecurity http, BearerTokenExtractor tokenExtractor,
 			OpaqueTokenIntrospector opaqueTokenIntrospector) throws Exception {
 		http.securityMatcher(_ -> true)
-			.authorizeHttpRequests(registry -> registry.requestMatchers("/auth/**", "/actuator/**", "/css/**", "/error")
-				.permitAll()
-				.anyRequest()
-				.authenticated())
+			.authorizeHttpRequests(
+					registry -> registry.requestMatchers("/auth/**", "/actuator/**", "/css/**", "/error", "/api/login")
+						.permitAll()
+						.anyRequest()
+						.authenticated())
 			.oauth2ResourceServer(oauth2 -> oauth2.opaqueToken(token -> token.introspector(opaqueTokenIntrospector))
 				.bearerTokenResolver(tokenExtractor))
 			.headers(headers -> headers.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
