@@ -79,7 +79,8 @@ public interface OAuth2BaseAuthenticationConverter<T extends OAuth2BaseAuthentic
 					OAuth2ErrorCodes.INVALID_CLIENT, SecurityConstants.ACCESS_TOKEN_REQUEST_ERROR_URI)));
 
 		// 扩展信息
-		Map<String, Object> additionalParameters = StreamUtils.convert(request.getParameterNames())
+		Map<String, Object> additionalParameters = Collections.list(request.getParameterNames())
+			.stream()
 			.filter(Predicate.isEqual(OAuth2ParameterNames.GRANT_TYPE)
 				.negate()
 				.and(Predicate.isEqual(OAuth2ParameterNames.SCOPE).negate()))

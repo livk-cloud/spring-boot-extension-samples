@@ -50,14 +50,14 @@
             <plugin>
                 <groupId>io.github.ascopes</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
-                <version>5.0.2</version>
+                <version>${protobuf-maven.version}</version>
                 <configuration>
-                    <protoc>4.32.0</protoc>
+                    <protoc>${protobuf.version}</protoc>
                     <plugins>
                         <plugin kind="binary-maven">
                             <groupId>io.grpc</groupId>
                             <artifactId>protoc-gen-grpc-java</artifactId>
-                            <version>1.80.0</version>
+                            <version>${grpc.version}</version>
                         </plugin>
                     </plugins>
                 </configuration>
@@ -74,7 +74,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.15.0</version>
+                <version>${maven-compiler.version}</version>
                 <configuration>
                     <!-- Java 版本 -->
                     <source>${maven.compiler.source}</source>

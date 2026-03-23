@@ -40,6 +40,21 @@
         <module>spring-modules</module>
     </modules>
 
+    <properties>
+        <spring-extension.version>2.0.3</spring-extension.version>
+        <spring-modulith.version>2.0.4</spring-modulith.version>
+        <clickhouse.version>0.9.8</clickhouse.version>
+        <spring-boot-admin.version>4.0.2</spring-boot-admin.version>
+        <springdoc-openapi.version>3.0.2</springdoc-openapi.version>
+        <protobuf.version>4.34.1</protobuf.version>
+        <grpc.version>1.80.0</grpc.version>
+        <spring-grpc.version>1.0.2</spring-grpc.version>
+        <maven-compiler.version>3.15.0</maven-compiler.version>
+        <spring-javaformat-maven.version>0.0.47</spring-javaformat-maven.version>
+        <spring-boot.version>4.0.4</spring-boot.version>
+        <protobuf-maven.version>5.0.2</protobuf-maven.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.github.livk-cloud</groupId>
@@ -98,21 +113,21 @@
             <dependency>
                 <groupId>com.clickhouse</groupId>
                 <artifactId>clickhouse-jdbc</artifactId>
-                <version>0.9.8</version>
+                <version>${clickhouse.version}</version>
                 <classifier>all</classifier>
             </dependency>
 
             <dependency>
                 <groupId>com.clickhouse</groupId>
                 <artifactId>clickhouse-r2dbc</artifactId>
-                <version>0.9.8</version>
+                <version>${clickhouse.version}</version>
                 <classifier>all</classifier>
             </dependency>
 
             <dependency>
                 <groupId>io.github.livk-cloud</groupId>
                 <artifactId>spring-extension-dependencies</artifactId>
-                <version>2.0.3</version>
+                <version>${spring-extension.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -120,7 +135,7 @@
             <dependency>
                 <groupId>org.springframework.modulith</groupId>
                 <artifactId>spring-modulith-bom</artifactId>
-                <version>2.0.4</version>
+                <version>${spring-modulith.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -128,7 +143,7 @@
             <dependency>
                 <groupId>de.codecentric</groupId>
                 <artifactId>spring-boot-admin-dependencies</artifactId>
-                <version>4.0.2</version>
+                <version>${spring-boot-admin.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -136,7 +151,7 @@
             <dependency>
                 <groupId>org.springdoc</groupId>
                 <artifactId>springdoc-openapi-bom</artifactId>
-                <version>3.0.2</version>
+                <version>${springdoc-openapi.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -144,7 +159,7 @@
             <dependency>
                 <groupId>com.google.protobuf</groupId>
                 <artifactId>protobuf-bom</artifactId>
-                <version>4.34.1</version>
+                <version>${protobuf.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -152,7 +167,7 @@
             <dependency>
                 <groupId>io.grpc</groupId>
                 <artifactId>grpc-bom</artifactId>
-                <version>1.80.0</version>
+                <version>${grpc.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -160,7 +175,7 @@
             <dependency>
                 <groupId>org.springframework.grpc</groupId>
                 <artifactId>spring-grpc-dependencies</artifactId>
-                <version>1.0.2</version>
+                <version>${spring-grpc.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -185,7 +200,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.15.0</version>
+                <version>${maven-compiler.version}</version>
                 <configuration>
                     <!-- Java 版本 -->
                     <release>25</release>
@@ -216,7 +231,7 @@
             <plugin>
                 <groupId>io.spring.javaformat</groupId>
                 <artifactId>spring-javaformat-maven-plugin</artifactId>
-                <version>0.0.47</version>
+                <version>${spring-javaformat-maven.version}</version>
                 <executions>
                     <execution>
                         <phase>validate</phase>
@@ -231,7 +246,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>4.0.4</version>
+                <version>${spring-boot.version}</version>
             </plugin>
         </plugins>
     </build>
