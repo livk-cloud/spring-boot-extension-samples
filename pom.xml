@@ -51,7 +51,7 @@
         <spring-grpc.version>1.0.2</spring-grpc.version>
         <maven-compiler.version>3.15.0</maven-compiler.version>
         <spring-javaformat-maven.version>0.0.47</spring-javaformat-maven.version>
-        <spring-boot.version>4.0.4</spring-boot.version>
+        <spring-boot.version>4.0.5</spring-boot.version>
         <protobuf-maven.version>5.1.0</protobuf-maven.version>
     </properties>
 
