@@ -18,13 +18,13 @@ package com.livk.mqtt;
 
 import com.livk.mqtt.handler.MqttSender;
 import com.livk.testcontainers.DockerImageNames;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
+import org.testcontainers.images.builder.Transferable;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.rabbitmq.RabbitMQContainer;
@@ -43,12 +43,8 @@ class MqttTest {
 	static final RabbitMQContainer rabbit = new RabbitMQContainer(DockerImageNames.rabbitmq())
 		.withExposedPorts(1883, 5672)
 		.withAdminPassword("admin")
+		.withCopyToContainer(Transferable.of("[rabbitmq_mqtt,rabbitmq_web_mqtt]."), "/etc/rabbitmq/enabled_plugins")
 		.withStartupTimeout(Duration.ofMinutes(4));
-
-	@BeforeAll
-	static void beforeAll() throws Exception {
-		rabbit.execInContainer("rabbitmq-plugins", "enable", "rabbitmq_mqtt", "rabbitmq_web_mqtt");
-	}
 
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
