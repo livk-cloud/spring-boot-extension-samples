@@ -53,7 +53,7 @@
                     <dependency>
                         <groupId>org.springframework.restdocs</groupId>
                         <artifactId>spring-restdocs-asciidoctor</artifactId>
-                        <version>4.0.0</version>
+                        <version>4.0.1</version>
                     </dependency>
                 </dependencies>
             </plugin>
