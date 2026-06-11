@@ -20,6 +20,7 @@ spring:
     server:
       port: 9091
     client:
-      default-channel:
-        address: static://localhost:${spring.grpc.server.port}
+      channel:
+        device:
+          target: static://localhost:${spring.grpc.server.port}
 

@@ -21,6 +21,7 @@ import lombok.experimental.UtilityClass;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -47,7 +48,7 @@ public class RedisSupport {
 	 * @param expireTime the expire time
 	 */
 	public void setEx(String key, Object value, Long expireTime) {
-		OPERATIONS.set(key, value, expireTime, TimeUnit.SECONDS);
+		OPERATIONS.set(key, value, Duration.ofSeconds(expireTime));
 	}
 
 	/**

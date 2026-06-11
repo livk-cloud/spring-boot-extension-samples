@@ -19,6 +19,5 @@
         <module>redis-lua</module>
         <module>redis-provider</module>
         <module>redis-repeated-submit</module>
-        <module>redisson-order-expired</module>
     </modules>
 </project>

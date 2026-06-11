@@ -41,14 +41,13 @@
     </modules>
 
     <properties>
-        <spring-extension.version>2.0.4</spring-extension.version>
+        <spring-extension.version>2.1.0</spring-extension.version>
         <spring-modulith.version>2.0.6</spring-modulith.version>
         <clickhouse.version>0.9.8</clickhouse.version>
         <spring-boot-admin.version>4.0.4</spring-boot-admin.version>
         <springdoc-openapi.version>3.0.3</springdoc-openapi.version>
         <protobuf.version>4.35.0</protobuf.version>
-        <grpc.version>1.81.0</grpc.version>
-        <spring-grpc.version>1.0.3</spring-grpc.version>
+        <grpc.version>1.82.0</grpc.version>
         <maven-compiler.version>3.15.0</maven-compiler.version>
         <spring-javaformat-maven.version>0.0.47</spring-javaformat-maven.version>
         <spring-boot.version>4.0.6</spring-boot.version>
@@ -124,6 +123,15 @@
                 <classifier>all</classifier>
             </dependency>
 
+            <!-- 顶替springboot自带的 -->
+            <dependency>
+                <groupId>com.google.protobuf</groupId>
+                <artifactId>protobuf-bom</artifactId>
+                <version>${protobuf.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <dependency>
                 <groupId>io.github.livk-cloud</groupId>
                 <artifactId>spring-extension-dependencies</artifactId>
@@ -157,25 +165,9 @@
             </dependency>
 
             <dependency>
-                <groupId>com.google.protobuf</groupId>
-                <artifactId>protobuf-bom</artifactId>
-                <version>${protobuf.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
                 <groupId>io.grpc</groupId>
                 <artifactId>grpc-bom</artifactId>
                 <version>${grpc.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework.grpc</groupId>
-                <artifactId>spring-grpc-dependencies</artifactId>
-                <version>${spring-grpc.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>

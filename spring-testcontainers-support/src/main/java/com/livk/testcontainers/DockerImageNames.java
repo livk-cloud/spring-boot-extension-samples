@@ -100,7 +100,7 @@ public class DockerImageNames {
 	}
 
 	public static DockerImageName pulsar() {
-		return pulsar("4.1.3");
+		return pulsar(LATEST_TAG);
 	}
 
 	public static DockerImageName pulsar(String tag) {
