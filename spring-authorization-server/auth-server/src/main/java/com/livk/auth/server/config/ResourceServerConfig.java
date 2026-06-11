@@ -20,12 +20,14 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class ResourceServerConfig {
 
+	private static final String[] ignore = {"/auth/**", "/actuator/**", "/css/**", "/error", "/api/login"};
+
 	@Bean
 	public SecurityFilterChain resourceServer(HttpSecurity http, BearerTokenExtractor tokenExtractor,
 			OpaqueTokenIntrospector opaqueTokenIntrospector) throws Exception {
 		http.securityMatcher(_ -> true)
 			.authorizeHttpRequests(
-					registry -> registry.requestMatchers("/auth/**", "/actuator/**", "/css/**", "/error", "/api/login")
+					registry -> registry.requestMatchers(ignore)
 						.permitAll()
 						.anyRequest()
 						.authenticated())
