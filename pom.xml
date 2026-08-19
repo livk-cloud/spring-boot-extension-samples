@@ -43,7 +43,7 @@
     <properties>
         <spring-extension.version>2.1.0</spring-extension.version>
         <spring-modulith.version>2.1.0</spring-modulith.version>
-        <clickhouse.version>0.9.8</clickhouse.version>
+        <clickhouse.version>0.10.0</clickhouse.version>
         <spring-boot-admin.version>4.1.2</spring-boot-admin.version>
         <springdoc-openapi.version>3.1.0</springdoc-openapi.version>
         <protobuf.version>4.35.1</protobuf.version>
