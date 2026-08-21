@@ -19,12 +19,12 @@ package com.livk.proto.amqp.converter;
 import com.livk.proto.User;
 import com.livk.proto.UserConverter;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.AbstractMessageConverter;
 import org.springframework.amqp.support.converter.MessageConversionException;
 import org.springframework.amqp.support.converter.MessageConverter;
-import org.jspecify.annotations.NonNull;
 
 /**
  * @author livk

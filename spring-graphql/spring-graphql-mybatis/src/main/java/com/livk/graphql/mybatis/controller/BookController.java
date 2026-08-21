@@ -16,13 +16,13 @@
 
 package com.livk.graphql.mybatis.controller;
 
-import com.livk.commons.util.BeanUtils;
 import com.livk.graphql.mybatis.entity.Author;
 import com.livk.graphql.mybatis.entity.Book;
 import com.livk.graphql.mybatis.entity.dto.BookDTO;
 import com.livk.graphql.mybatis.mapper.AuthorMapper;
 import com.livk.graphql.mybatis.mapper.BookMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
@@ -59,7 +59,9 @@ public class BookController {
 
 	@MutationMapping
 	public Mono<Boolean> createBook(@Argument BookDTO dto) {
-		return Mono.justOrEmpty(bookMapper.save(BeanUtils.copy(dto, Book.class)) != 0);
+		Book book = new Book();
+		BeanUtils.copyProperties(dto, book);
+		return Mono.justOrEmpty(bookMapper.save(book) != 0);
 	}
 
 }

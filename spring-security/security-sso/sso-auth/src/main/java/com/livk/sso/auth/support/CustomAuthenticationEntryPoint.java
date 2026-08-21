@@ -35,7 +35,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) {
 		log.error("异常：{}", authException.getMessage(), authException);
-		HttpServletUtils.outJson(response,
+		HttpServletUtils.writerJson(response,
 				Map.of("code", HttpServletResponse.SC_FORBIDDEN, "msg", authException.getMessage()));
 	}
 

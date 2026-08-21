@@ -18,7 +18,6 @@ package com.livk.export.mapper;
 
 import com.livk.export.entity.Authors;
 import org.apache.ibatis.session.ExecutorType;
-import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author livk

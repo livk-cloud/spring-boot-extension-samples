@@ -37,7 +37,7 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 			Authentication authentication) {
 		log.info("退出");
 		SecurityContextHolder.getContextHolderStrategy().clearContext();
-		HttpServletUtils.outJson(response, Map.of("code", HttpServletResponse.SC_OK, "msg", "exit successfully"));
+		HttpServletUtils.writerJson(response, Map.of("code", HttpServletResponse.SC_OK, "msg", "exit successfully"));
 	}
 
 }

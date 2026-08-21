@@ -35,7 +35,7 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
 	public void handle(HttpServletRequest request, HttpServletResponse response,
 			AccessDeniedException accessDeniedException) {
 		log.error("exception:{}", accessDeniedException.getMessage(), accessDeniedException);
-		HttpServletUtils.outJson(response,
+		HttpServletUtils.writerJson(response,
 				Map.of("code", HttpServletResponse.SC_FORBIDDEN, "msg", accessDeniedException.getMessage()));
 	}
 

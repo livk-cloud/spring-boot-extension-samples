@@ -24,8 +24,8 @@ import com.livk.redis.submit.support.RedisSupport;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
 import org.jspecify.annotations.NonNull;
+import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
@@ -71,7 +71,7 @@ public class AutoRepeatedSubmitInterceptor implements HandlerInterceptor {
 
 	private boolean outJson(HttpServletResponse response, String message) {
 		var body = Map.of("status", "500", "message", message);
-		HttpServletUtils.outJson(response, body);
+		HttpServletUtils.writerJson(response, body);
 		return false;
 	}
 

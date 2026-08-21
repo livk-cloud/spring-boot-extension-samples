@@ -41,7 +41,9 @@
     </modules>
 
     <properties>
-        <spring-extension.version>2.1.0</spring-extension.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <spring-extension.version>2.1.1</spring-extension.version>
         <spring-modulith.version>2.1.0</spring-modulith.version>
         <clickhouse.version>0.10.0</clickhouse.version>
         <spring-boot-admin.version>4.1.2</spring-boot-admin.version>
@@ -52,6 +54,8 @@
         <spring-javaformat-maven.version>0.0.48</spring-javaformat-maven.version>
         <spring-boot.version>4.1.0</spring-boot.version>
         <protobuf-maven.version>5.1.8</protobuf-maven.version>
+        <mapstruct.version>1.6.3</mapstruct.version>
+        <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
     </properties>
 
     <dependencies>
@@ -109,6 +113,24 @@
 
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mapstruct</groupId>
+                <artifactId>mapstruct-processor</artifactId>
+                <version>${mapstruct.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-mapstruct-binding</artifactId>
+                <version>${lombok-mapstruct.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>com.clickhouse</groupId>
                 <artifactId>clickhouse-jdbc</artifactId>
@@ -206,6 +228,7 @@
                         <arg>-Xlint:varargs</arg>
                         <arg>-Xlint:rawtypes</arg>
                         <arg>-Xlint:deprecation</arg>
+                        <arg>-Werror</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <path>

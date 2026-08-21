@@ -16,16 +16,16 @@
 
 package com.livk.auth.server.config;
 
-import com.livk.auth.server.common.constant.SecurityConstants;
-import com.livk.auth.server.common.password.OAuth2PasswordAuthenticationConverter;
-import com.livk.auth.server.common.password.PasswordDetailsAuthentication;
-import com.livk.auth.server.common.sms.OAuth2SmsAuthenticationConverter;
 import com.livk.auth.server.common.FormIdentityLoginConfigurer;
-import com.livk.auth.server.common.UserDetailsAuthenticationProvider;
 import com.livk.auth.server.common.OAuth2JwtTokenCustomizer;
+import com.livk.auth.server.common.UserDetailsAuthenticationProvider;
+import com.livk.auth.server.common.constant.SecurityConstants;
 import com.livk.auth.server.common.handler.AuthenticationFailureEventHandler;
 import com.livk.auth.server.common.handler.AuthenticationSuccessEventHandler;
+import com.livk.auth.server.common.password.OAuth2PasswordAuthenticationConverter;
 import com.livk.auth.server.common.password.OAuth2PasswordAuthenticationProvider;
+import com.livk.auth.server.common.password.PasswordDetailsAuthentication;
+import com.livk.auth.server.common.sms.OAuth2SmsAuthenticationConverter;
 import com.livk.auth.server.common.sms.OAuth2SmsAuthenticationProvider;
 import com.livk.auth.server.sms.SmsDetailsAuthentication;
 import org.springframework.context.annotation.Bean;

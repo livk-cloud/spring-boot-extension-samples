@@ -18,7 +18,6 @@ package com.livk.mail.support;
 
 import com.livk.commons.util.Pair;
 import freemarker.template.Configuration;
-import freemarker.template.Template;
 import jakarta.mail.internet.MimeMessage;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

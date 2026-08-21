@@ -1,7 +1,7 @@
 package com.livk.auth.server.common.password;
 
-import com.livk.auth.server.common.constant.SecurityConstants;
 import com.livk.auth.server.common.DetailsAuthentication;
+import com.livk.auth.server.common.constant.SecurityConstants;
 import com.livk.auth.server.common.principal.Oauth2User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 
 /**
  * <p>

@@ -5,7 +5,6 @@ import com.livk.grpc.proto.entity.ProtoDevice;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,20 +25,18 @@ public class DeviceController {
 
 	private final DeviceServiceGrpc.DeviceServiceBlockingStub blockingStub;
 
-	private final ConversionService conversionService;
-
 	@GetMapping
 	public HttpEntity<DeviceVO> query(@RequestParam String name) {
 		log.info("query param:{}", name);
 		var query = ProtoDevice.DeviceQuery.newBuilder().setName(name).build();
 		var device = blockingStub.query(query);
-		return ResponseEntity.ok(conversionService.convert(device, DeviceVO.class));
+		return ResponseEntity.ok(DeviceConverter.INSTANCE.convertVO(device));
 	}
 
 	@PostMapping
 	public HttpEntity<Boolean> add(@RequestBody @Valid DeviceDTO dto) {
 		log.info("{}", dto);
-		var device = conversionService.convert(dto, ProtoDevice.Device.class);
+		var device = DeviceConverter.INSTANCE.convertProto(dto);
 		var result = blockingStub.add(device).getValue();
 		return ResponseEntity.ok(result);
 	}

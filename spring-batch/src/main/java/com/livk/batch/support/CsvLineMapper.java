@@ -16,12 +16,12 @@
 
 package com.livk.batch.support;
 
-import com.livk.commons.util.BeanUtils;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.jspecify.annotations.NonNull;
 import org.springframework.batch.infrastructure.item.file.LineMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 

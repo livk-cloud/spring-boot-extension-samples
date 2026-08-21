@@ -16,8 +16,8 @@
 
 package com.livk.auth.server.common.sms;
 
-import com.livk.auth.server.common.constant.SecurityConstants;
 import com.livk.auth.server.common.OAuth2BaseAuthenticationProvider;
+import com.livk.auth.server.common.constant.SecurityConstants;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

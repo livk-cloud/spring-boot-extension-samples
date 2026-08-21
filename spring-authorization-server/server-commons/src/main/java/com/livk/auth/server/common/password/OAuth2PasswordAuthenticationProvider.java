@@ -16,15 +16,14 @@
 
 package com.livk.auth.server.common.password;
 
-import com.livk.auth.server.common.constant.SecurityConstants;
 import com.livk.auth.server.common.OAuth2BaseAuthenticationProvider;
+import com.livk.auth.server.common.constant.SecurityConstants;
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.OAuth2Token;
-import org.springframework.security.oauth2.core.endpoint.OAuth2ParameterNames;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenGenerator;

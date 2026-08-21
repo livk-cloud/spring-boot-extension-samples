@@ -17,8 +17,6 @@
 package com.livk.sso.commons.filter;
 
 import com.livk.commons.util.HttpServletUtils;
-import com.livk.sso.commons.entity.Payload;
-import com.livk.sso.commons.entity.User;
 import com.livk.sso.commons.util.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -57,12 +55,12 @@ public class TokenVerifyFilter extends BasicAuthenticationFilter {
 			}
 			else {
 				var map = Map.of("code", HttpServletResponse.SC_FORBIDDEN, "msg", "缺少用户信息");
-				HttpServletUtils.outJson(response, map);
+				HttpServletUtils.writerJson(response, map);
 			}
 		}
 		else {
 			var map = Map.of("code", HttpServletResponse.SC_FORBIDDEN, "msg", "请登录！");
-			HttpServletUtils.outJson(response, map);
+			HttpServletUtils.writerJson(response, map);
 		}
 	}
 

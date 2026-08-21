@@ -16,14 +16,13 @@
 
 package com.livk.sso.commons;
 
-import com.livk.commons.io.ResourceUtils;
-import com.livk.commons.util.ObjectUtils;
+import com.livk.commons.io.ResourceScanner;
 import com.livk.sso.commons.util.RSAUtils;
 import com.nimbusds.jose.jwk.RSAKey;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.bind.Name;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternResolver;
+import org.springframework.util.ObjectUtils;
 
 import java.io.IOException;
 
@@ -44,10 +43,10 @@ public class RsaKeyProperties {
 		if (ObjectUtils.isEmpty(location)) {
 			location = DEFAULT_LOCATION;
 		}
-		var jksResource = ResourceUtils.getResource(location);
+		var jksResource = ResourceScanner.getResource(location);
 		if (!jksResource.exists()) {
 			try {
-				var resources = ResourceUtils.getResources(location);
+				var resources = ResourceScanner.getResources(location);
 				if (resources != null) {
 					jksResource = resources[0];
 				}

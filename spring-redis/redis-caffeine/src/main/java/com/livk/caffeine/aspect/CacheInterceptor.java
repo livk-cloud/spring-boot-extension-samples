@@ -17,7 +17,7 @@
 package com.livk.caffeine.aspect;
 
 import com.livk.caffeine.annotation.DoubleCache;
-import com.livk.commons.aop.AnnotationAbstractPointcutTypeAdvisor;
+import com.livk.commons.aop.AbstractAnnotationPointcutStrategyAdvisor;
 import com.livk.commons.expression.ExpressionResolver;
 import com.livk.commons.expression.spring.SpringExpressionResolver;
 import org.aopalliance.intercept.MethodInvocation;
@@ -32,7 +32,7 @@ import java.util.concurrent.Callable;
  * @author livk
  */
 @Component
-public class CacheInterceptor extends AnnotationAbstractPointcutTypeAdvisor<DoubleCache> {
+public class CacheInterceptor extends AbstractAnnotationPointcutStrategyAdvisor<DoubleCache> {
 
 	private final Cache cache;
 
@@ -43,9 +43,11 @@ public class CacheInterceptor extends AnnotationAbstractPointcutTypeAdvisor<Doub
 	}
 
 	@Override
-	protected Object invoke(MethodInvocation invocation, DoubleCache doubleCache) throws Throwable {
+	protected Object doInvoke(MethodInvocation invocation, DoubleCache doubleCache) throws Throwable {
 		Assert.notNull(doubleCache, "doubleCache is null");
-		var spELResult = resolver.evaluate(doubleCache.key(), invocation.getMethod(), invocation.getArguments());
+		var spELResult = resolver.resolve(doubleCache.key())
+			.method(invocation.getMethod(), invocation.getArguments())
+			.evaluate();
 		var realKey = doubleCache.cacheName() + ":" + spELResult;
 		switch (doubleCache.type()) {
 			case FULL -> {

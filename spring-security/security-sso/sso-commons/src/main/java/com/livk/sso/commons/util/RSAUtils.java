@@ -20,7 +20,6 @@ import com.nimbusds.jose.jwk.RSAKey;
 import lombok.experimental.UtilityClass;
 import org.springframework.core.io.Resource;
 
-import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 

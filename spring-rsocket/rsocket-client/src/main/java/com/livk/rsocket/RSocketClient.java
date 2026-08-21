@@ -17,7 +17,6 @@
 package com.livk.rsocket;
 
 import com.livk.rsocket.common.entity.Message;
-import io.rsocket.RSocket;
 import jakarta.annotation.PreDestroy;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.rsocket.RSocketRequester;

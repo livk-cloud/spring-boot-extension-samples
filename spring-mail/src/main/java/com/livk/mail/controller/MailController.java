@@ -18,7 +18,6 @@ package com.livk.mail.controller;
 
 import com.livk.commons.util.Pair;
 import com.livk.mail.support.MailTemplate;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
@@ -32,8 +31,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author livk

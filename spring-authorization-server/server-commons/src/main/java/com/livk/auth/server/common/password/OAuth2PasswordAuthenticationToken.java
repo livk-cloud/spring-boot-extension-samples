@@ -16,8 +16,8 @@
 
 package com.livk.auth.server.common.password;
 
-import com.livk.auth.server.common.constant.SecurityConstants;
 import com.livk.auth.server.common.OAuth2BaseAuthenticationToken;
+import com.livk.auth.server.common.constant.SecurityConstants;
 import org.springframework.security.core.Authentication;
 
 import java.util.Map;

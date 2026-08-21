@@ -35,7 +35,7 @@ public class LockSupport {
 	}
 
 	public boolean tryLock(LockType type, String key, long leaseTime, long waitTime, boolean async) {
-		return LOCK.tryLock(type, key, leaseTime, waitTime, async);
+		return LOCK.lock(key).type(type).leaseTime(leaseTime).waitTime(waitTime).async(async).tryLock();
 	}
 
 	public void unlock() {

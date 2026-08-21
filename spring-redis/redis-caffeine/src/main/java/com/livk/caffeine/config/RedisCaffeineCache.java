@@ -17,8 +17,8 @@
 package com.livk.caffeine.config;
 
 import com.livk.caffeine.handler.CacheHandler;
-import org.springframework.cache.support.AbstractValueAdaptingCache;
 import org.jspecify.annotations.NonNull;
+import org.springframework.cache.support.AbstractValueAdaptingCache;
 
 import java.util.concurrent.Callable;
 import java.util.function.Supplier;

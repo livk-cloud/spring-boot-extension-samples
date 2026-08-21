@@ -35,7 +35,7 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
 	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException exception) {
 		log.error("异常：{}", exception.getMessage(), exception);
-		HttpServletUtils.outJson(response, Map.of("code", HttpServletResponse.SC_BAD_REQUEST, "msg",
+		HttpServletUtils.writerJson(response, Map.of("code", HttpServletResponse.SC_BAD_REQUEST, "msg",
 				"login failed, username or password is incorrect"));
 	}
 

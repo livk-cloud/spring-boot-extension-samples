@@ -17,7 +17,6 @@
 package com.livk.proto;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.livk.context.mapstruct.converter.Converter;
 import com.livk.proto.gen.UserProto;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -26,14 +25,14 @@ import org.mapstruct.factory.Mappers;
  * @author livk
  */
 @Mapper
-public interface UserConverter extends Converter<User, UserProto.User> {
+public interface UserConverter {
 
 	UserConverter INSTANCE = Mappers.getMapper(UserConverter.class);
 
 	default User convert(byte[] bytes) {
 		try {
 			var user = UserProto.User.parseFrom(bytes);
-			return getSource(user);
+			return convert(user);
 		}
 		catch (InvalidProtocolBufferException e) {
 			throw new RuntimeException(e);
@@ -41,7 +40,11 @@ public interface UserConverter extends Converter<User, UserProto.User> {
 	}
 
 	default byte[] convert(User user) {
-		return getTarget(user).toByteArray();
+		return convertProto(user).toByteArray();
 	}
+
+	User convert(UserProto.User user);
+
+	UserProto.User convertProto(User user);
 
 }

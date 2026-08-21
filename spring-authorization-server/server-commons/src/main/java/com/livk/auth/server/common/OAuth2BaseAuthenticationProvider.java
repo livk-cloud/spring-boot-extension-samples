@@ -17,10 +17,10 @@
 package com.livk.auth.server.common;
 
 import com.google.common.collect.Sets;
+import com.livk.auth.server.common.constant.OAuth2ErrorCodesExpand;
 import com.livk.auth.server.common.exception.BadCaptchaException;
 import com.livk.auth.server.common.util.MessageSourceUtils;
-import com.livk.auth.server.common.constant.OAuth2ErrorCodesExpand;
-import com.livk.commons.util.ClassUtils;
+import com.livk.commons.util.TypeUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.AccountExpiredException;
@@ -112,7 +112,7 @@ public abstract class OAuth2BaseAuthenticationProvider<T extends OAuth2BaseAuthe
 	 */
 	@Override
 	public boolean supports(Class<?> authentication) {
-		var childType = ClassUtils.resolveTypeArgument(this.getClass(), OAuth2BaseAuthenticationProvider.class);
+		var childType = TypeUtils.resolveTypeArgument(this.getClass(), OAuth2BaseAuthenticationProvider.class);
 		Assert.notNull(childType, "child Type is null");
 		return childType.isAssignableFrom(authentication);
 	}

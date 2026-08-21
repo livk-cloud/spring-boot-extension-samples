@@ -1,7 +1,6 @@
 package com.livk.grpc.server;
 
 import com.google.protobuf.BoolValue;
-import com.livk.context.mapstruct.converter.MapstructService;
 import com.livk.grpc.proto.DeviceServiceGrpc.DeviceServiceImplBase;
 import com.livk.grpc.proto.entity.ProtoDevice;
 import com.livk.grpc.proto.entity.ProtoDevice.DeviceQuery;
@@ -18,8 +17,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class DeviceGrpc extends DeviceServiceImplBase {
 
-	private final MapstructService mapstructService;
-
 	private final DeviceRepository deviceRepository;
 
 	@Override
@@ -27,7 +24,7 @@ public class DeviceGrpc extends DeviceServiceImplBase {
 		log.info("request name:{}", request.getName());
 		var device = deviceRepository.getByName(request.getName());
 		if (device != null) {
-			ProtoDevice.Device response = mapstructService.convert(device, ProtoDevice.Device.class);
+			ProtoDevice.Device response = DeviceConverter.INSTANCE.convertProto(device);
 			responseObserver.onNext(response);
 		}
 		else {
@@ -44,7 +41,7 @@ public class DeviceGrpc extends DeviceServiceImplBase {
 			responseObserver.onNext(BoolValue.of(false));
 		}
 		else {
-			var device = mapstructService.convert(request, Device.class);
+			var device = DeviceConverter.INSTANCE.convert(request);
 			deviceRepository.save(device);
 			responseObserver.onNext(BoolValue.of(true));
 		}

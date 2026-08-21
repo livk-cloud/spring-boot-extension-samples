@@ -16,9 +16,9 @@
 
 package com.livk.spring.factory;
 
+import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ObjectFactory;
-import org.jspecify.annotations.NonNull;
 
 import java.io.Serializable;
 

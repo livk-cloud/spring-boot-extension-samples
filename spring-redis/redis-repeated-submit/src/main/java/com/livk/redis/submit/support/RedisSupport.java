@@ -22,7 +22,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
 import java.time.Duration;
-import java.util.concurrent.TimeUnit;
 
 /**
  * The type Redis support.

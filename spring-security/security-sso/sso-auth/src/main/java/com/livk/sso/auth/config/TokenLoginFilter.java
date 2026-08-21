@@ -60,7 +60,7 @@ public class TokenLoginFilter extends AbstractAuthenticationProcessingFilter {
 		}
 		catch (IOException e) {
 			var map = Map.of("code", HttpServletResponse.SC_UNAUTHORIZED, "msg", "用户名或者密码错误！");
-			HttpServletUtils.outJson(response, map);
+			HttpServletUtils.writerJson(response, map);
 			throw new UsernameNotFoundException("用户名或者密码错误");
 		}
 	}

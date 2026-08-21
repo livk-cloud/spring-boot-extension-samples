@@ -1,4 +1,4 @@
-package com.livk.grpc.server;
+package com.livk.grpc.client;
 
 import com.livk.grpc.proto.entity.ProtoDevice;
 import org.mapstruct.Mapper;
@@ -12,8 +12,8 @@ public interface DeviceConverter {
 
 	DeviceConverter INSTANCE = Mappers.getMapper(DeviceConverter.class);
 
-	ProtoDevice.Device convertProto(Device device);
+	ProtoDevice.Device convertProto(DeviceDTO dto);
 
-	Device convert(ProtoDevice.Device device);
+	DeviceVO convertVO(ProtoDevice.Device device);
 
 }

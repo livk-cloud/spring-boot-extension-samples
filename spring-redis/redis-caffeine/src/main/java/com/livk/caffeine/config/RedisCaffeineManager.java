@@ -18,9 +18,9 @@ package com.livk.caffeine.config;
 
 import com.livk.caffeine.handler.CacheHandler;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.NonNull;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
-import org.jspecify.annotations.NonNull;
 
 import java.util.Collection;
 import java.util.Collections;

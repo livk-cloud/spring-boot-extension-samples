@@ -22,7 +22,6 @@ import com.livk.amqp.config.HeadersConfig;
 import com.livk.amqp.config.TopicConfig;
 import com.livk.amqp.entity.Message;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.rabbit.annotation.Queue;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
