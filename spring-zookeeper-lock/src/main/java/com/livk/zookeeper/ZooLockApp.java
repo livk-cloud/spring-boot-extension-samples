@@ -36,4 +36,5 @@ public class ZooLockApp {
 	public ZookeeperLockRegistry zookeeperLockRegistry(CuratorFramework framework) {
 		return new ZookeeperLockRegistry(framework);
 	}
+
 }
