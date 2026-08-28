@@ -14,28 +14,15 @@
  * limitations under the License.
  */
 
-package com.livk.spring.factory;
+package com.livk.spring;
 
-import org.jspecify.annotations.NonNull;
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.ObjectFactory;
-
-import java.io.Serializable;
+import java.util.UUID;
 
 /**
- * <p>
- * {@see AutowireUtils#resolveAutowiringValue(Object, Class)}
- * 需要注册interface并且当前类实现{@link Serializable} 则会被spring代理
- * </p>
- *
  * @author livk
  */
-public class UUIDObjectFactory implements ObjectFactory<UUIDRequest>, Serializable {
+public interface UUIDRequest {
 
-	@NonNull
-	@Override
-	public UUIDRequest getObject() throws BeansException {
-		return UUIDConTextHolder::get;
-	}
+	UUID currentUUID();
 
 }

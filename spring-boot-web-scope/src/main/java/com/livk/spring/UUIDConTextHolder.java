@@ -14,22 +14,30 @@
  * limitations under the License.
  */
 
-package com.livk.zookeeper.config;
+package com.livk.spring;
 
-import org.apache.curator.framework.CuratorFramework;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.zookeeper.lock.ZookeeperLockRegistry;
+import lombok.experimental.UtilityClass;
+
+import java.util.UUID;
 
 /**
  * @author livk
  */
-@Configuration
-public class ZooConfig {
+@UtilityClass
+public class UUIDConTextHolder {
 
-	@Bean
-	public ZookeeperLockRegistry zookeeperLockRegistry(CuratorFramework framework) {
-		return new ZookeeperLockRegistry(framework);
+	private static final ThreadLocal<UUID> UUID_CONTEXT = new ThreadLocal<>();
+
+	public UUID get() {
+		return UUID_CONTEXT.get();
+	}
+
+	public void init() {
+		UUID_CONTEXT.set(UUID.randomUUID());
+	}
+
+	public void clear() {
+		UUID_CONTEXT.remove();
 	}
 
 }

@@ -22,6 +22,8 @@ import lombok.SneakyThrows;
 import org.jspecify.annotations.NonNull;
 import org.springframework.batch.infrastructure.item.file.LineMapper;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
@@ -49,39 +51,11 @@ public class CsvLineMapper<T> implements LineMapper<T> {
 		if (fieldArray.length != fields.length) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
+		BeanWrapper wrapper = new BeanWrapperImpl(instance);
 		for (var i = 0; i < fields.length; i++) {
-			set(instance, fields[i], fieldArray[i]);
+			wrapper.setPropertyValue(fields[i], fieldArray[i]);
 		}
 		return instance;
-	}
-
-	@SneakyThrows
-	private void set(T t, String field, String valueStr) {
-		Object value;
-		var targetClass = t.getClass();
-		var declaredField = targetClass.getDeclaredField(field);
-		var type = declaredField.getType();
-		if (Integer.class.equals(type)) {
-			value = Integer.parseInt(valueStr);
-		}
-		else if (Long.class.equals(type)) {
-			value = Long.parseLong(valueStr);
-		}
-		else if (Float.class.equals(type)) {
-			value = Float.parseFloat(valueStr);
-		}
-		else if (Double.class.equals(type)) {
-			value = Double.parseDouble(valueStr);
-		}
-		else if (Boolean.class.equals(type)) {
-			value = Boolean.parseBoolean(valueStr);
-		}
-		else {
-			value = valueStr;
-		}
-		field = StringUtils.capitalize(field);
-		var method = targetClass.getMethod("set" + field, type);
-		method.invoke(t, value);
 	}
 
 	@RequiredArgsConstructor(access = AccessLevel.PRIVATE)

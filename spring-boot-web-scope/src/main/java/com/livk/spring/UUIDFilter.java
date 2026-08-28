@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.livk.spring.factory;
+package com.livk.spring;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -37,9 +37,13 @@ public class UUIDFilter extends OncePerRequestFilter {
 	@Override
 	protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 			FilterChain filterChain) throws ServletException, IOException {
-		UUIDConTextHolder.set();
-		filterChain.doFilter(request, response);
-		UUIDConTextHolder.remove();
+		try {
+			UUIDConTextHolder.init();
+			filterChain.doFilter(request, response);
+		}
+		finally {
+			UUIDConTextHolder.clear();
+		}
 	}
 
 }

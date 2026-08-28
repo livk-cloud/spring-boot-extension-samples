@@ -14,30 +14,26 @@
  * limitations under the License.
  */
 
-package com.livk.spring.factory;
+package com.livk.zookeeper;
 
-import lombok.experimental.UtilityClass;
-
-import java.util.UUID;
+import org.apache.curator.framework.CuratorFramework;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
+import org.springframework.integration.zookeeper.lock.ZookeeperLockRegistry;
 
 /**
  * @author livk
  */
-@UtilityClass
-public class UUIDConTextHolder {
+@SpringBootApplication
+public class ZooLockApp {
 
-	private static final ThreadLocal<UUID> UUID_CONTEXT = new ThreadLocal<>();
-
-	public UUID get() {
-		return UUID_CONTEXT.get();
+	void main(String[] args) {
+		SpringApplication.run(ZooLockApp.class, args);
 	}
 
-	public void set() {
-		UUID_CONTEXT.set(UUID.randomUUID());
+	@Bean
+	public ZookeeperLockRegistry zookeeperLockRegistry(CuratorFramework framework) {
+		return new ZookeeperLockRegistry(framework);
 	}
-
-	public void remove() {
-		UUID_CONTEXT.remove();
-	}
-
 }

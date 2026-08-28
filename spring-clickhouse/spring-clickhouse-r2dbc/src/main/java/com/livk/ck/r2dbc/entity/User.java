@@ -17,16 +17,16 @@
 package com.livk.ck.r2dbc.entity;
 
 import com.google.common.base.CaseFormat;
-import com.livk.commons.util.FieldUtils;
 import io.r2dbc.spi.Row;
 import io.r2dbc.spi.RowMetadata;
 import lombok.Data;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.util.ReflectionUtils;
 
-import java.lang.reflect.InvocationTargetException;
+import java.beans.PropertyDescriptor;
 import java.time.LocalDate;
 
 /**
@@ -48,19 +48,13 @@ public class User {
 
 	public static User collect(Row row, RowMetadata rowMetadata) {
 		var user = new User();
+		BeanWrapper wrapper = new BeanWrapperImpl(user);
 		for (var columnMetadata : rowMetadata.getColumnMetadatas()) {
 			var name = columnMetadata.getName();
 			var fieldName = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name);
-			var field = ReflectionUtils.findField(User.class, fieldName);
-			if (field != null) {
-				var writeMethod = FieldUtils.getWriteMethod(User.class, field);
-				try {
-					writeMethod.invoke(user, row.get(name, field.getType()));
-				}
-				catch (InvocationTargetException | IllegalAccessException e) {
-					throw new IllegalArgumentException(e);
-				}
-			}
+			PropertyDescriptor descriptor = wrapper.getPropertyDescriptor(fieldName);
+			Object value = row.get(name, descriptor.getPropertyType());
+			wrapper.setPropertyValue(fieldName, value);
 		}
 		return user;
 	}

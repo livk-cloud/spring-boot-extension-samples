@@ -33,11 +33,11 @@
         <module>spring-security</module>
         <module>spring-server-sent-events</module>
         <module>spring-testcontainers-support</module>
-        <module>spring-zookeeper</module>
         <module>spring-grpc</module>
         <module>spring-mongodb</module>
         <module>spring-boot-admin</module>
         <module>spring-modules</module>
+        <module>spring-zookeeper-lock</module>
     </modules>
 
     <properties>

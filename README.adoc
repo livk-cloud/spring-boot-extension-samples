@@ -25,9 +25,8 @@ link:spring-rabbit/rabbitmq-order-expired[Rabbit处理订单过期取消] +
 link:spring-rabbit[Spring整合Rabbit] +
 link:spring-redis/redis-lua[Spring整合Redis lua] +
 link:spring-redis/redis-caffeine[Spring整合Redis caffeine] +
-link:spring-redis/redisson-order-expired[redisson处理订单过期取消] +
 link:spring-rest-doc[Spring整合restDoc] +
 link:spring-rsocket[Spring整合rsocket] +
 link:spring-security/security-sso[Spring整合security SSO] +
 link:spring-server-sent-events[Spring整合SSE] +
-link:spring-zookeeper[Spring整合Zookeeper] +
+link:spring-zookeeper-lock[Spring整合Zookeeper] +
