@@ -53,7 +53,7 @@
         <maven-compiler.version>3.16.0</maven-compiler.version>
         <spring-javaformat-maven.version>0.0.48</spring-javaformat-maven.version>
         <spring-boot.version>4.1.1</spring-boot.version>
-        <protobuf-maven.version>5.1.8</protobuf-maven.version>
+        <protobuf-maven.version>5.1.9</protobuf-maven.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <lombok-mapstruct.version>0.2.0</lombok-mapstruct.version>
     </properties>
