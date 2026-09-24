@@ -18,7 +18,6 @@ package com.livk.ck.jdbc.controller;
 
 import com.livk.ck.jdbc.entity.User;
 import com.livk.commons.jackson.JsonMapperUtils;
-import com.livk.commons.util.Jsr310Utils;
 import com.livk.testcontainers.DockerImageNames;
 import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Order;
@@ -37,7 +36,6 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -81,8 +79,7 @@ class UserControllerTest {
 	@Order(3)
 	@Test
 	void testRemove() {
-		var format = Jsr310Utils.formatDate(LocalDateTime.now());
-		tester.delete().uri("/user/" + format).assertThat().hasStatusOk();
+		tester.delete().uri("/user/{id}", Integer.MAX_VALUE).assertThat().hasStatusOk();
 
 		tester.get().uri("/user").assertThat().hasStatusOk().matches(jsonPath("$", hasSize(0)));
 	}

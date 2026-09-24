@@ -46,9 +46,9 @@ public class UserController {
 		return ResponseEntity.ok(userService.list());
 	}
 
-	@DeleteMapping("/{regTime}")
-	public HttpEntity<Void> remove(@PathVariable String regTime) {
-		userService.remove(regTime);
+	@DeleteMapping("/{id}")
+	public HttpEntity<Void> remove(@PathVariable Integer id) {
+		userService.remove(id);
 		return ResponseEntity.ok().build();
 	}
 

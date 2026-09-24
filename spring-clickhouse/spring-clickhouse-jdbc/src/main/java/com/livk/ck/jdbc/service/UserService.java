@@ -17,7 +17,6 @@
 package com.livk.ck.jdbc.service;
 
 import com.livk.ck.jdbc.entity.User;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -28,7 +27,7 @@ public interface UserService {
 
 	List<User> list();
 
-	void remove(@Param("regTime") String regTime);
+	void remove(Integer id);
 
 	boolean save(User user);
 

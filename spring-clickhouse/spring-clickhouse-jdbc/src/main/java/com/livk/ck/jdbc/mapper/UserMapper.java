@@ -35,8 +35,8 @@ public interface UserMapper {
 	@Select("select id, app_id, version, reg_time from user")
 	List<User> selectList();
 
-	@Delete("alter table user delete where reg_time=#{regTime}")
-	int delete(@Param("regTime") LocalDate regTime);
+	@Delete("alter table user delete where id=#{id}")
+	int delete(@Param("id") Integer id);
 
 	@Insert("insert into user values (#{id},#{appId},#{version},#{regTime})")
 	int insert(User user);
