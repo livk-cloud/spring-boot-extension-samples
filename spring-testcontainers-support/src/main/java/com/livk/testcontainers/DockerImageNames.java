@@ -76,7 +76,7 @@ public class DockerImageNames {
 	}
 
 	public static DockerImageName clickhouse() {
-		return clickhouse(LATEST_TAG);
+		return clickhouse("25.8");
 	}
 
 	public static DockerImageName clickhouse(String tag) {

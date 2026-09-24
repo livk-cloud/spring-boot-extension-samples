@@ -22,6 +22,7 @@ import com.livk.ck.jdbc.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -40,7 +41,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public void remove(String regTime) {
-		userMapper.delete(regTime);
+		userMapper.delete(LocalDate.parse(regTime));
 	}
 
 	@Override

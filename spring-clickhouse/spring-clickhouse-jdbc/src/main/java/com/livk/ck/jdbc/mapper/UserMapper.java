@@ -23,6 +23,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -35,7 +36,7 @@ public interface UserMapper {
 	List<User> selectList();
 
 	@Delete("alter table user delete where reg_time=#{regTime}")
-	int delete(@Param("regTime") String regTime);
+	int delete(@Param("regTime") LocalDate regTime);
 
 	@Insert("insert into user values (#{id},#{appId},#{version},#{regTime})")
 	int insert(User user);
