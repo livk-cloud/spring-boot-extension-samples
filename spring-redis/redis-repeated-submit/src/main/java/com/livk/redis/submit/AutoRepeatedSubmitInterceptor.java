@@ -16,10 +16,12 @@
 
 package com.livk.redis.submit;
 
+import com.livk.commons.SpringContextHolder;
 import com.livk.commons.util.HttpServletUtils;
+import com.livk.context.lock.DistLockFactory;
 import com.livk.context.lock.LockType;
+import com.livk.context.lock.support.RedissonLockFactory;
 import com.livk.redis.submit.annotation.AutoRepeatedSubmit;
-import com.livk.redis.submit.support.LockSupport;
 import com.livk.redis.submit.support.RedisSupport;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -38,6 +40,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class AutoRepeatedSubmitInterceptor implements HandlerInterceptor {
 
+	private static final DistLockFactory FACTORY = SpringContextHolder.getBean(RedissonLockFactory.class);
+
 	@Override
 	public boolean preHandle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
 			@NonNull Object handler) {
@@ -45,8 +49,9 @@ public class AutoRepeatedSubmitInterceptor implements HandlerInterceptor {
 				&& handlerMethod.hasMethodAnnotation(AutoRepeatedSubmit.class)) {
 			var token = request.getHeader(HttpHeaders.AUTHORIZATION);
 			if (StringUtils.hasText(token)) {
+				DistLockFactory.SpecLock lock = FACTORY.lock(token, LockType.LOCK).leaseTime(3).waitTime(3);
 				try {
-					if (LockSupport.tryLock(LockType.LOCK, token, 3, 3, false)) {
+					if (lock.tryLock()) {
 						if (RedisSupport.exists(token)) {
 							return outJson(response, "重复提交3s后重试");
 						}
@@ -60,7 +65,7 @@ public class AutoRepeatedSubmitInterceptor implements HandlerInterceptor {
 					}
 				}
 				finally {
-					LockSupport.unlock();
+					lock.unlock();
 				}
 			}
 			return outJson(response, "丢失Token");
