@@ -17,15 +17,22 @@
 package com.livk.auth.server;
 
 import com.livk.commons.web.HttpParameters;
+import com.livk.testcontainers.DockerImageNames;
 import com.nimbusds.jose.util.Base64;
+import com.redis.testcontainers.RedisContainer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
 import org.springframework.test.web.servlet.assertj.MockMvcTester;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 import tools.jackson.databind.JsonNode;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,12 +41,23 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @author livk
  */
 @SpringBootTest({ "spring.datasource.driver-class-name=org.h2.Driver", "spring.datasource.url=jdbc:h2:mem:test",
-		"spring.sql.init.schema-locations[0]=classpath*:/org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql",
-		"spring.sql.init.schema-locations[1]=classpath*:/org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql",
-		"spring.sql.init.schema-locations[2]=classpath*:/org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql",
+		// "spring.sql.init.schema-locations[0]=classpath*:/org/springframework/security/oauth2/server/authorization/client/oauth2-registered-client-schema.sql",
+		// "spring.sql.init.schema-locations[1]=classpath*:/org/springframework/security/oauth2/server/authorization/oauth2-authorization-consent-schema.sql",
+		// "spring.sql.init.schema-locations[2]=classpath*:/org/springframework/security/oauth2/server/authorization/oauth2-authorization-schema.sql",
 		"spring.sql.init.platform=h2", "spring.sql.init.mode=embedded" })
 @AutoConfigureMockMvc
+@Testcontainers(disabledWithoutDocker = true, parallel = true)
 class AuthServerAppTest {
+
+	@Container
+	@ServiceConnection
+	static final RedisContainer redis = new RedisContainer(DockerImageNames.redis());
+
+	@DynamicPropertySource
+	static void redisProperties(DynamicPropertyRegistry registry) {
+		registry.add("spring.data.redis.host", redis::getHost);
+		registry.add("spring.data.redis.port", redis::getFirstMappedPort);
+	}
 
 	@Autowired
 	MockMvcTester tester;

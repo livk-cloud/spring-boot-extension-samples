@@ -16,64 +16,24 @@
 
 package com.livk.auth.server.config;
 
-import com.livk.auth.server.common.constant.SecurityConstants;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat;
-import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
-
-import java.time.Duration;
 
 /**
  * @author livk
  */
-@Configuration
+// @Configuration
 public class JdbcConfig {
 
 	@Bean
-	public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate,
-			PasswordEncoder passwordEncoder) {
-		var client = RegisteredClient.withId("livk")
-			.clientId("livk-client")
-			.clientSecret(passwordEncoder.encode("secret"))
-			.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-			.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-			.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_JWT)
-			.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-			.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-			.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-			.authorizationGrantType(SecurityConstants.GRANT_TYPE_PASSWORD)
-			.authorizationGrantType(SecurityConstants.GRANT_TYPE_SMS)
-			.redirectUri("http://127.0.0.1:8080/login/oauth2/code/livk-client-oidc")
-			.redirectUri("http://127.0.0.1:8080/authorized")
-			.redirectUri("https://www.baidu.com")
-			.scope(OidcScopes.OPENID)
-			.scope("livk.read")
-			.scope("livk.write")
-			.tokenSettings(TokenSettings.builder()
-				.accessTokenFormat(OAuth2TokenFormat.REFERENCE)
-				.accessTokenTimeToLive(Duration.ofHours(24L))
-				.refreshTokenTimeToLive(Duration.ofHours(12L))
-				.reuseRefreshTokens(false)
-				.build())
-			.clientSettings(ClientSettings.builder().requireAuthorizationConsent(false).build())
-			.build();
-		var repository = new JdbcRegisteredClientRepository(jdbcTemplate);
-		repository.save(client);
-		return repository;
+	public RegisteredClientRepository registeredClientRepository(JdbcTemplate jdbcTemplate) {
+		return new JdbcRegisteredClientRepository(jdbcTemplate);
 	}
 
 	@Bean
