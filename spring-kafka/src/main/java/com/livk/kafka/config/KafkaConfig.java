@@ -18,6 +18,7 @@ package com.livk.kafka.config;
 
 import com.livk.kafka.KafkaConstant;
 import org.apache.kafka.clients.admin.NewTopic;
+import org.springframework.boot.kafka.autoconfigure.KafkaConfigBuilder;
 import org.springframework.boot.kafka.autoconfigure.KafkaProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +32,7 @@ public class KafkaConfig {
 
 	@Bean
 	public KafkaAdmin myKafkaAdmin(KafkaProperties kafkaProperties) {
-		var admin = new KafkaAdmin(kafkaProperties.buildAdminProperties());
+		var admin = new KafkaAdmin(KafkaConfigBuilder.of(kafkaProperties).admin().build());
 		admin.setFatalIfBrokerNotAvailable(true);
 		return admin;
 	}

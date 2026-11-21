@@ -18,7 +18,7 @@ package com.livk.mqtt.handler;
 
 import com.livk.mqtt.config.MqttSenderConfig;
 import org.springframework.integration.annotation.MessagingGateway;
-import org.springframework.integration.mqtt.support.MqttHeaders;
+import org.springframework.integration.mqtt.client.support.MqttHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 
 /**

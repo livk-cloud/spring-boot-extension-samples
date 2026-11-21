@@ -16,41 +16,46 @@
 
 package com.livk.graphql.mybatis.controller;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.graphql.test.tester.HttpGraphQlTester;
-import org.springframework.graphql.test.tester.WebGraphQlTester;
-import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.graphql.test.tester.WebSocketGraphQlTester;
+import org.springframework.web.reactive.socket.client.ReactorNettyWebSocketClient;
 
-import java.util.Map;
+import java.time.Duration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * @author livk
  */
-@SpringBootTest({ "spring.datasource.driver-class-name=org.h2.Driver", "spring.datasource.url=jdbc:h2:mem:test",
-		"spring.sql.init.platform=h2", "spring.sql.init.mode=embedded" })
-@AutoConfigureWebTestClient(timeout = "15000")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+		properties = { "spring.datasource.driver-class-name=org.h2.Driver", "spring.datasource.url=jdbc:h2:mem:test",
+				"spring.sql.init.platform=h2", "spring.sql.init.mode=embedded" })
 class GreetingControllerTest {
 
-	@Autowired
-	WebTestClient webTestClient;
+	@LocalServerPort
+	int port;
 
-	@Value("${spring.graphql.path:/graphql}")
+	@Value("${spring.graphql.websocket.path:${spring.graphql.path:/graphql}}")
 	String graphqlPath;
 
-	WebGraphQlTester tester;
+	WebSocketGraphQlTester tester;
 
 	@BeforeEach
 	void init() {
-		var builder = webTestClient.mutate().baseUrl(graphqlPath);
-		tester = HttpGraphQlTester.builder(builder).build();
+		var url = "http://localhost:" + this.port + this.graphqlPath;
+		this.tester = WebSocketGraphQlTester.builder(url, new ReactorNettyWebSocketClient()).build();
+	}
+
+	@AfterEach
+	void tearDown() {
+		if (this.tester != null) {
+			this.tester.stop().block(Duration.ofSeconds(5));
+		}
 	}
 
 	@Test
@@ -60,13 +65,13 @@ class GreetingControllerTest {
 				subscription {
 				  greetings
 				}""";
-		var result = tester.document(document)
-			.execute()
-			.path("upstreamPublisher")
-			.entity(new ParameterizedTypeReference<Map<String, Object>>() {
-			})
-			.get();
-		assertThat(result).isNotNull().isNotEmpty();
+		var greeting = this.tester.document(document)
+			.executeSubscription()
+			.toFlux("greetings", String.class)
+			.next()
+			.block(Duration.ofSeconds(15));
+
+		assertThat(greeting).isNotNull().startsWith("Hello GraphQL ");
 	}
 
 }

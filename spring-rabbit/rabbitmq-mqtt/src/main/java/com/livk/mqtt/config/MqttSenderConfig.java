@@ -16,12 +16,13 @@
 
 package com.livk.mqtt.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
-import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
-import org.springframework.integration.mqtt.outbound.MqttPahoMessageHandler;
+import org.springframework.integration.mqtt.client.core.Mqtt3ClientManager;
+import org.springframework.integration.mqtt.client.outbound.Mqtt3MessageHandler;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
@@ -46,9 +47,9 @@ public class MqttSenderConfig {
 	 */
 	@Bean
 	@ServiceActivator(inputChannel = CHANNEL_NAME_OUT)
-	public MessageHandler mqttOutbound(MqttPahoClientFactory mqttPahoClientFactory, MqttProperties mqttProperties) {
-		var messageHandler = new MqttPahoMessageHandler(mqttProperties.getSender().getClientId(),
-				mqttPahoClientFactory);
+	public MessageHandler mqttOutbound(@Qualifier(MqttConfig.SENDER_CLIENT_MANAGER) Mqtt3ClientManager clientManager,
+			MqttProperties mqttProperties) {
+		var messageHandler = new Mqtt3MessageHandler(clientManager);
 		messageHandler.setAsync(true);
 		messageHandler.setDefaultTopic(mqttProperties.getSender().getDefaultTopic());
 		return messageHandler;

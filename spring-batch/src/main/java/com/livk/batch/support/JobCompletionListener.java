@@ -32,17 +32,17 @@ public class JobCompletionListener implements JobExecutionListener {
 	// 用于批处理开始前执行
 	@Override
 	public void beforeJob(JobExecution jobExecution) {
-		log.info("任务id={}开始于{}", jobExecution.getJobInstanceId(), jobExecution.getStartTime());
+		log.info("任务id={}开始于{}", jobExecution.getJobInstance(), jobExecution.getStartTime());
 	}
 
 	// 用于批处理开始后执行
 	@Override
 	public void afterJob(JobExecution jobExecution) {
 		if (jobExecution.getStatus() == BatchStatus.COMPLETED) {
-			log.info("任务id={}结束于{}", jobExecution.getJobInstanceId(), jobExecution.getEndTime());
+			log.info("任务id={}结束于{}", jobExecution.getJobInstance(), jobExecution.getEndTime());
 		}
 		else {
-			log.info("任务id={}执行异常状态={}", jobExecution.getJobInstanceId(), jobExecution.getStatus());
+			log.info("任务id={}执行异常状态={}", jobExecution.getJobInstance(), jobExecution.getStatus());
 		}
 	}
 

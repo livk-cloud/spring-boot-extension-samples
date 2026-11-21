@@ -16,15 +16,17 @@
 
 package com.livk.mqtt.config;
 
+import com.hivemq.client.mqtt.datatypes.MqttQos;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.integration.annotation.ServiceActivator;
 import org.springframework.integration.channel.DirectChannel;
 import org.springframework.integration.core.MessageProducer;
-import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
-import org.springframework.integration.mqtt.inbound.MqttPahoMessageDrivenChannelAdapter;
-import org.springframework.integration.mqtt.support.DefaultPahoMessageConverter;
+import org.springframework.integration.mqtt.client.core.Mqtt3ClientManager;
+import org.springframework.integration.mqtt.client.inbound.Mqtt3MessageDrivenChannelAdapter;
+import org.springframework.integration.mqtt.client.support.MqttHeaders;
 import org.springframework.messaging.MessageChannel;
 import org.springframework.messaging.MessageHandler;
 
@@ -51,14 +53,12 @@ public class MqttReceiverConfig {
 	 * MQTT消息订阅绑定（消费者）
 	 */
 	@Bean
-	public MessageProducer inbound(MqttPahoClientFactory factory, MqttProperties mqttProperties) {
-		// 可以同时消费（订阅）多个Topic
-		var adapter = new MqttPahoMessageDrivenChannelAdapter(mqttProperties.getReceiver().getClientId(), factory,
+	public MessageProducer inbound(@Qualifier(MqttConfig.RECEIVER_CLIENT_MANAGER) Mqtt3ClientManager clientManager,
+			MqttProperties mqttProperties) {
+		var adapter = new Mqtt3MessageDrivenChannelAdapter(clientManager,
 				mqttProperties.getReceiver().getDefaultTopic());
-		adapter.setCompletionTimeout(5000);
-		adapter.setConverter(new DefaultPahoMessageConverter());
-		adapter.setQos(1);
-		// 设置订阅通道
+		adapter.setQos(MqttQos.AT_LEAST_ONCE);
+		adapter.setPayloadType(String.class);
 		adapter.setOutputChannel(mqttInboundChannel());
 		return adapter;
 	}
@@ -70,7 +70,7 @@ public class MqttReceiverConfig {
 	@ServiceActivator(inputChannel = CHANNEL_NAME_IN)
 	public MessageHandler handler() {
 		return message -> {
-			var topic = Objects.requireNonNull(message.getHeaders().get("mqtt_receivedTopic")).toString();
+			var topic = Objects.requireNonNull(message.getHeaders().get(MqttHeaders.RECEIVED_TOPIC)).toString();
 			var msg = message.getPayload().toString();
 			log.info("接收到订阅消息:\ttopic:{}\tmessage:{}", topic, msg);
 		};

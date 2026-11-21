@@ -16,12 +16,16 @@
 
 package com.livk.mqtt.config;
 
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
+import com.hivemq.client.mqtt.mqtt3.Mqtt3Client;
+import com.hivemq.client.mqtt.mqtt3.message.connect.Mqtt3Connect;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.integration.mqtt.core.DefaultMqttPahoClientFactory;
-import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
+import org.springframework.integration.mqtt.client.core.Mqtt3ClientManager;
+import org.springframework.util.Assert;
+
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @author livk
@@ -30,22 +34,42 @@ import org.springframework.integration.mqtt.core.MqttPahoClientFactory;
 @EnableConfigurationProperties(MqttProperties.class)
 public class MqttConfig {
 
-	@Bean
-	public MqttConnectOptions mqttConnectOptions(MqttProperties properties) {
-		var options = new MqttConnectOptions();
-		options.setUserName(properties.getUsername());
-		options.setPassword(properties.getPassword().toCharArray());
-		options.setServerURIs(properties.getUrl().split(";"));
-		options.setConnectionTimeout(properties.getConnectTimeout());
-		options.setKeepAliveInterval(properties.getKeepAliveInterval());
-		return options;
+	public static final String SENDER_CLIENT_MANAGER = "mqttSenderClientManager";
+
+	public static final String RECEIVER_CLIENT_MANAGER = "mqttReceiverClientManager";
+
+	@Bean(name = SENDER_CLIENT_MANAGER)
+	public Mqtt3ClientManager mqttSenderClientManager(MqttProperties properties) {
+		return createClientManager(properties, properties.getSender().getClientId());
 	}
 
-	@Bean
-	public MqttPahoClientFactory mqttPahoClientFactory(MqttConnectOptions mqttConnectOptions) {
-		var factory = new DefaultMqttPahoClientFactory();
-		factory.setConnectionOptions(mqttConnectOptions);
-		return factory;
+	@Bean(name = RECEIVER_CLIENT_MANAGER)
+	public Mqtt3ClientManager mqttReceiverClientManager(MqttProperties properties) {
+		return createClientManager(properties, properties.getReceiver().getClientId());
+	}
+
+	private static Mqtt3ClientManager createClientManager(MqttProperties properties, String clientId) {
+		Assert.hasText(clientId, "MQTT clientId must not be empty");
+		var broker = URI.create(properties.getUrl().split(";")[0].trim());
+		var host = broker.getHost();
+		Assert.hasText(host, "MQTT broker host must not be empty");
+		var port = broker.getPort() > 0 ? broker.getPort() : 1883;
+
+		var clientConfig = Mqtt3Client.builder()
+			.identifier(clientId)
+			.serverHost(host)
+			.serverPort(port)
+			.simpleAuth()
+			.username(properties.getUsername())
+			.password(properties.getPassword().getBytes(StandardCharsets.UTF_8))
+			.applySimpleAuth()
+			.automaticReconnectWithDefaultConfig()
+			.build()
+			.getConfig();
+
+		var manager = new Mqtt3ClientManager(clientConfig);
+		manager.setMqttConnect(Mqtt3Connect.builder().keepAlive(properties.getKeepAliveInterval()).build());
+		return manager;
 	}
 
 }
