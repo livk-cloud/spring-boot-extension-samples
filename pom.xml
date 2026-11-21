@@ -47,7 +47,7 @@
         <spring-modulith.version>2.2.0</spring-modulith.version>
         <clickhouse.version>0.11.2</clickhouse.version>
         <spring-boot-admin.version>4.1.5</spring-boot-admin.version>
-        <springdoc-openapi.version>3.2.0</springdoc-openapi.version>
+        <springdoc-openapi.version>3.2.1</springdoc-openapi.version>
         <protobuf.version>4.36.2</protobuf.version>
         <grpc.version>1.85.1</grpc.version>
         <maven-compiler.version>3.16.0</maven-compiler.version>
