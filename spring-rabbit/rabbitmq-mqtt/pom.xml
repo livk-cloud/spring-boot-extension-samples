@@ -34,7 +34,7 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-amqp</artifactId>
+            <artifactId>spring-boot-rabbitmq</artifactId>
             <scope>test</scope>
         </dependency>
 

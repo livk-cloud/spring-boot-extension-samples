@@ -16,13 +16,11 @@
 
 package com.livk.order.config;
 
-import com.rabbitmq.client.Channel;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.Message;
+import org.springframework.amqp.core.AmqpAcknowledgment;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -33,24 +31,24 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class OrderListener {
 
-	@RabbitListener(queues = RabbitConfig.dealQueueOrder)
-	public void processFail(String order, Message message, Channel channel) throws IOException {
-		channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+	@RabbitListener(queues = RabbitConfig.dealQueueOrder, ackMode = "MANUAL")
+	public void processFail(String order, AmqpAcknowledgment acknowledgment) {
+		acknowledgment.acknowledge();
 		log.error("【订单号】 - [{}]被取消", order);
 	}
 
-	@RabbitListener(queues = RabbitConfig.orderQueue)
-	public void processSuc(String order, Message message, Channel channel) throws IOException, InterruptedException {
+	@RabbitListener(queues = RabbitConfig.orderQueue, ackMode = "MANUAL")
+	public void processSuc(String order, AmqpAcknowledgment acknowledgment) throws InterruptedException {
 		log.info("【订单号】 - [{}]", order);
 		TimeUnit.SECONDS.sleep(1);
 		// 是否支付
 		var i = ThreadLocalRandom.current().nextInt(1, 100);
 		if (i == 6) {
-			channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+			acknowledgment.acknowledge();
 			log.info("支付成功！");
 		}
 		else {
-			channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+			acknowledgment.acknowledge(AmqpAcknowledgment.Status.REQUEUE);
 			log.warn("缺少支付！");
 		}
 	}

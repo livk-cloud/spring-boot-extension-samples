@@ -49,8 +49,10 @@ class RabbitControllerTest {
 
 	@DynamicPropertySource
 	static void properties(DynamicPropertyRegistry registry) {
-		registry.add("spring.rabbitmq.host", rabbit::getHost);
-		registry.add("spring.rabbitmq.port", rabbit::getFirstMappedPort);
+		registry.add("spring.amqp.rabbitmq.host", rabbit::getHost);
+		registry.add("spring.amqp.rabbitmq.port", rabbit::getAmqpPort);
+		registry.add("spring.amqp.rabbitmq.username", rabbit::getAdminUsername);
+		registry.add("spring.amqp.rabbitmq.password", rabbit::getAdminPassword);
 	}
 
 	static final String body = JsonMapperUtils.writeValueAsString(Map.of("msg", "hello", "data", "By Livk"));

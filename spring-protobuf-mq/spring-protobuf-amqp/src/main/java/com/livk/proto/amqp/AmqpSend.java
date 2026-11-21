@@ -19,8 +19,10 @@ package com.livk.proto.amqp;
 import com.livk.proto.ProtobufSend;
 import com.livk.proto.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.amqp.rabbitmq.client.RabbitAmqpTemplate;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author livk
@@ -29,11 +31,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AmqpSend implements ProtobufSend<User> {
 
-	private final RabbitTemplate rabbitTemplate;
+	private final RabbitAmqpTemplate rabbitAmqpTemplate;
 
 	@Override
 	public void send(String key, User data) {
-		rabbitTemplate.convertAndSend(key, data);
+		rabbitAmqpTemplate.convertAndSend(key, data).orTimeout(10, TimeUnit.SECONDS).join();
 	}
 
 }

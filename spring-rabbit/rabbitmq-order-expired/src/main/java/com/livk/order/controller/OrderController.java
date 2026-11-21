@@ -19,7 +19,7 @@ package com.livk.order.controller;
 import com.livk.order.config.RabbitConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.amqp.core.AmqpTemplate;
+import org.springframework.amqp.rabbitmq.client.RabbitAmqpTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author livk
@@ -38,7 +39,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class OrderController {
 
-	private final AmqpTemplate rabbitTemplate;
+	private final RabbitAmqpTemplate rabbitAmqpTemplate;
 
 	/**
 	 * 模拟提交订单
@@ -49,7 +50,9 @@ public class OrderController {
 	public HttpEntity<Map<String, String>> submit() {
 		var orderId = UUID.randomUUID().toString();
 		log.info("submit order {}", orderId);
-		this.rabbitTemplate.convertAndSend(RabbitConfig.orderExchange, RabbitConfig.routingKeyOrder, orderId);
+		this.rabbitAmqpTemplate.convertAndSend(RabbitConfig.orderExchange, RabbitConfig.routingKeyOrder, orderId)
+			.orTimeout(10, TimeUnit.SECONDS)
+			.join();
 		return ResponseEntity.ok(Map.of("orderId", orderId));
 	}
 

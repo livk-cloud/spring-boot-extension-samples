@@ -1,7 +1,8 @@
 spring:
-  rabbitmq:
-    host: livk.com
-    username: admin
-    password: admin
+  amqp:
+    rabbitmq:
+      host: livk.com
+      username: admin
+      password: admin
 server:
   port: 9877
